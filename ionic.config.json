@@ -1,0 +1,7 @@
+{
+  "name": "vendas",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
