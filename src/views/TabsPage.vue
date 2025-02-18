@@ -9,49 +9,47 @@ import {
   IonTabs,
 } from '@ionic/vue'
 
-import { ellipse, square, triangle } from 'ionicons/icons'
+import { home, peopleCircle } from 'ionicons/icons'
+
+type TabsItem = {
+  icon: string
+  label: string
+  href: string
+  tab: string
+}
+
+const TABS: TabsItem[] = [
+  {
+    label: 'Início',
+    href: '/tabs/inicio',
+    icon: home,
+    tab: 'home',
+  },
+  {
+    label: 'Clientes',
+    href: '/tabs/clientes',
+    icon: peopleCircle,
+    tab: 'clients',
+  },
+]
 </script>
 
 <template>
   <IonPage>
     <IonTabs>
-      <IonRouterOutlet></IonRouterOutlet>
-      <template #bottom>
-        <IonTabBar>
-          <IonTabButton
-            tab="tab1"
-            href="/tabs/tab1"
-          >
-            <IonIcon
-              aria-hidden="true"
-              :icon="triangle"
-            />
-            <IonLabel>Tab 1</IonLabel>
-          </IonTabButton>
+      <IonRouterOutlet />
 
-          <IonTabButton
-            tab="tab2"
-            href="/tabs/tab2"
-          >
-            <IonIcon
-              aria-hidden="true"
-              :icon="ellipse"
-            />
-            <IonLabel>Tab 2</IonLabel>
-          </IonTabButton>
-
-          <IonTabButton
-            tab="tab3"
-            href="/tabs/tab3"
-          >
-            <IonIcon
-              aria-hidden="true"
-              :icon="square"
-            />
-            <IonLabel>Tab 3</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </template>
+      <IonTabBar slot="bottom">
+        <IonTabButton
+          v-for="tab in TABS"
+          :key="tab.tab"
+          :tab="tab.tab"
+          :href="tab.href"
+        >
+          <IonIcon :icon="tab.icon" />
+          <IonLabel>{{ tab.label }}</IonLabel>
+        </IonTabButton>
+      </IonTabBar>
     </IonTabs>
   </IonPage>
 </template>
