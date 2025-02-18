@@ -6,6 +6,6 @@ import { IonPage } from '@ionic/vue'
 
 <template>
   <IonPage>
-    <HeaderTitle> Início </HeaderTitle>
+    <HeaderTitle>Balanço Mensal</HeaderTitle>
   </IonPage>
 </template>

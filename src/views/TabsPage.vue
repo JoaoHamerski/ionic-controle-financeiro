@@ -9,7 +9,7 @@ import {
   IonTabs,
 } from '@ionic/vue'
 
-import { home, peopleCircle } from 'ionicons/icons'
+import { calendar, home } from 'ionicons/icons'
 
 type TabsItem = {
   icon: string
@@ -26,10 +26,10 @@ const TABS: TabsItem[] = [
     tab: 'home',
   },
   {
-    label: 'Clientes',
-    href: '/tabs/clientes',
-    icon: peopleCircle,
-    tab: 'clients',
+    label: 'Balanço Mensal',
+    href: '/tabs/balanco-mensal',
+    icon: calendar,
+    tab: 'monthly-balance',
   },
 ]
 </script>

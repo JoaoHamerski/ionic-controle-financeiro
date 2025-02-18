@@ -20,8 +20,9 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/home/HomePage.vue'),
       },
       {
-        path: 'clientes',
-        component: () => import('@/views/clients/ClientsPage.vue'),
+        path: 'balanco-mensal',
+        component: () =>
+          import('@/views/monthly-balance/MonthlyBalancePage.vue'),
       },
     ],
   },

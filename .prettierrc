@@ -2,5 +2,7 @@
     "plugins": ["prettier-plugin-organize-imports"],
     "semi": false,
     "singleAttributePerLine": true,
-    "singleQuote": true
+    "singleQuote": true,
+    "quoteProps": "consistent",
+    "printWidth": 100
 }
