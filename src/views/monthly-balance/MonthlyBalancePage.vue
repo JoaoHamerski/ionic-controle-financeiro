@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import HeaderTitle from '@/components/HeaderTitle.vue'
-
-import { IonPage } from '@ionic/vue'
+import { IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue'
 </script>
 
 <template>
   <IonPage>
-    <HeaderTitle>Balanço Mensal</HeaderTitle>
+    <IonHeader>
+      <IonToolbar>
+        <IonTitle> Balanço Mensal </IonTitle>
+      </IonToolbar>
+    </IonHeader>
   </IonPage>
 </template>
