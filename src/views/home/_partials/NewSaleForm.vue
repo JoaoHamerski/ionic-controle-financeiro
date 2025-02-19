@@ -1,3 +1,11 @@
+<script setup lang="ts">
+import { IonInput } from '@ionic/vue'
+</script>
+
 <template>
-  <div>form</div>
+  <IonInput
+    label="Cliente"
+    fill="outline"
+    label-placement="floating"
+  />
 </template>

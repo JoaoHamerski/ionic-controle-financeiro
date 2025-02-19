@@ -8,10 +8,10 @@ import {
   IonModal,
   IonToolbar,
 } from '@ionic/vue'
-import NewSaleForm from './NewSaleForm.vue'
 
 import { arrowBackOutline } from 'ionicons/icons'
 import { ref } from 'vue'
+import NewClientForm from './NewClientForm.vue'
 
 const modal = ref()
 </script>
@@ -32,7 +32,7 @@ const modal = ref()
     </IonHeader>
 
     <IonContent class="ion-padding">
-      <NewSaleForm />
+      <NewClientForm />
     </IonContent>
   </IonModal>
 </template>

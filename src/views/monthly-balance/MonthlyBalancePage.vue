@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue'
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue'
 </script>
 
 <template>
@@ -9,5 +9,6 @@ import { IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue'
         <IonTitle> Balanço Mensal </IonTitle>
       </IonToolbar>
     </IonHeader>
+    <IonContent class="ion-padding"> Hello World </IonContent>
   </IonPage>
 </template>
