@@ -3,13 +3,16 @@ import {
   IonButton,
   IonButtons,
   IonContent,
+  IonFab,
+  IonFabButton,
+  IonFooter,
   IonHeader,
   IonIcon,
   IonModal,
   IonToolbar,
 } from '@ionic/vue'
 
-import { arrowBackOutline } from 'ionicons/icons'
+import { arrowBackOutline, checkmark } from 'ionicons/icons'
 import { ref } from 'vue'
 import NewClientForm from './NewClientForm.vue'
 
@@ -34,6 +37,15 @@ const modal = ref()
     <IonContent class="ion-padding">
       <NewClientForm />
     </IonContent>
+    <IonFooter>
+      <IonFab
+        slot="fixed"
+        vertical="bottom"
+        horizontal="end"
+      >
+        <IonFabButton> <IonIcon :icon="checkmark" /> </IonFabButton>
+      </IonFab>
+    </IonFooter>
   </IonModal>
 </template>
 

@@ -54,7 +54,6 @@ import { checkmark, peopleCircle } from 'ionicons/icons'
       </IonRow>
     </IonGrid>
     <IonFab
-      slot="fixed"
       vertical="bottom"
       horizontal="end"
     >
