@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { stripNonDigits } from '@/helpers'
 import {
   IonCol,
   IonContent,
@@ -10,8 +11,32 @@ import {
   IonRow,
   IonText,
 } from '@ionic/vue'
-
+import type { MaskitoOptions } from '@maskito/core'
+import { maskito as vMaskito } from '@maskito/vue'
 import { checkmark, peopleCircle } from 'ionicons/icons'
+import { computed, ref } from 'vue'
+
+const form = ref({
+  name: '',
+  phone: '',
+})
+
+const phoneRaw = computed(() => stripNonDigits(form.value.phone))
+
+const phoneOptions = computed<MaskitoOptions>(() => ({
+  mask: () =>
+    phoneRaw.value.length <= 10
+      ? ['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, /\d/]
+      : ['(', /\d/, /\d/, ')', ' ', /\d/, ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
+  elementPredicate: (el: HTMLIonInputElement) => {
+    return new Promise((resolve) => {
+      requestAnimationFrame(async () => {
+        const input = await el.getInputElement()
+        resolve(input)
+      })
+    })
+  },
+}))
 </script>
 
 <template>
@@ -28,12 +53,15 @@ import { checkmark, peopleCircle } from 'ionicons/icons'
       </IonRow>
       <IonRow class="ion-text-center ion-margin-bottom">
         <IonCol>
-          <IonText> <h3>Cadastre um novo cliente</h3> </IonText>
+          <IonText>
+            <h3>Cadastre um novo cliente</h3>
+          </IonText>
         </IonCol>
       </IonRow>
       <IonRow>
         <IonCol>
           <IonInput
+            v-model="form.name"
             label="Nome"
             label-placement="floating"
             fill="outline"
@@ -44,7 +72,10 @@ import { checkmark, peopleCircle } from 'ionicons/icons'
       <IonRow>
         <IonCol>
           <IonInput
-            type="number"
+            v-model="form.phone"
+            v-maskito="phoneOptions"
+            type="text"
+            inputmode="numeric"
             fill="outline"
             label="Celular"
             label-placement="floating"
