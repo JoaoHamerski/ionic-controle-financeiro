@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { stripNonDigits } from '@/helpers'
+import { stripNonDigits } from '@/support/helpers'
 import {
   IonCol,
   IonContent,

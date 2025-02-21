@@ -13,6 +13,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@capacitor-community/sqlite": "^7.0.0",
     "@capacitor/android": "7.0.1",
     "@capacitor/app": "7.0.0",
     "@capacitor/core": "7.0.1",
@@ -25,6 +26,7 @@
     "@maskito/vue": "^3.2.1",
     "ionicons": "^7.0.0",
     "libphonenumber-js": "^1.11.20",
+    "pinia": "^3.0.1",
     "vue": "^3.3.0",
     "vue-router": "^4.2.0"
   },
