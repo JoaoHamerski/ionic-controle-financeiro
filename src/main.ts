@@ -9,6 +9,10 @@ import { createApp } from 'vue'
 
 import '@/bootstrap/styles'
 
+if (import.meta.hot) {
+  import.meta.hot.on('vite:beforeUpdate', () => console.clear())
+}
+
 const pinia = createPinia()
 const app = createApp(App).use(IonicVue).use(router).use(pinia)
 

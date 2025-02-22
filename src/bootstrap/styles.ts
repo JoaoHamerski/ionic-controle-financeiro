@@ -26,4 +26,4 @@ import '@ionic/vue/css/text-transformation.css'
 // import '@ionic/vue/css/palettes/dark.system.css'
 
 /* Theme variables */
-import './theme/variables.css'
+import '@/theme/variables.css'

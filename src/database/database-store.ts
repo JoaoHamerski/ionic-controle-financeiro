@@ -2,13 +2,13 @@ import MIGRATIONS from '@/database/migrations'
 
 import { CapacitorSQLite, SQLiteConnection, SQLiteDBConnection } from '@capacitor-community/sqlite'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { Ref, ref } from 'vue'
 
 const DATABASE_NAME = 'sales'
 
 export const useDatabaseStore = defineStore('database', () => {
   const connection = new SQLiteConnection(CapacitorSQLite)
-  const db = ref<SQLiteDBConnection>()
+  const db = ref<SQLiteDBConnection>() as Ref<SQLiteDBConnection>
 
   const initDatabase = async () => {
     db.value = await initConnection()

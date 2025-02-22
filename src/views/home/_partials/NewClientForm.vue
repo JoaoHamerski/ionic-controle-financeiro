@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { useDatabaseStore } from '@/database/database-store'
+import Customer from '@/models/Customer'
 import { stripNonDigits } from '@/support/helpers'
+
 import {
   IonCol,
   IonContent,
@@ -15,6 +18,8 @@ import type { MaskitoOptions } from '@maskito/core'
 import { maskito as vMaskito } from '@maskito/vue'
 import { checkmark, peopleCircle } from 'ionicons/icons'
 import { computed, ref } from 'vue'
+
+const dbStore = useDatabaseStore()
 
 const form = ref({
   name: '',
@@ -37,59 +42,70 @@ const phoneOptions = computed<MaskitoOptions>(() => ({
     })
   },
 }))
+
+const submit = async () => {
+  Customer.insert({ name: `José`, phone: `55999861335` })
+}
 </script>
 
 <template>
   <IonContent>
-    <IonGrid class="ion-margin-bottom">
-      <IonRow class="ion-text-center">
-        <IonCol>
-          <IonIcon
-            class="highlight-icon"
-            :icon="peopleCircle"
-            color="success"
-          />
-        </IonCol>
-      </IonRow>
-      <IonRow class="ion-text-center ion-margin-bottom">
-        <IonCol>
-          <IonText>
-            <h3>Cadastre um novo cliente</h3>
-          </IonText>
-        </IonCol>
-      </IonRow>
-      <IonRow>
-        <IonCol>
-          <IonInput
-            v-model="form.name"
-            label="Nome"
-            label-placement="floating"
-            fill="outline"
-            placeholder="Digite o nome..."
-          />
-        </IonCol>
-      </IonRow>
-      <IonRow>
-        <IonCol>
-          <IonInput
-            v-model="form.phone"
-            v-maskito="phoneOptions"
-            type="text"
-            inputmode="numeric"
-            fill="outline"
-            label="Celular"
-            label-placement="floating"
-            placeholder="Digite o celular..."
-          />
-        </IonCol>
-      </IonRow>
-    </IonGrid>
-    <IonFab
-      vertical="bottom"
-      horizontal="end"
-    >
-      <IonFabButton> <IonIcon :icon="checkmark" /> </IonFabButton>
-    </IonFab>
+    <form @submit="submit">
+      <IonGrid class="ion-margin-bottom">
+        <IonRow class="ion-text-center">
+          <IonCol>
+            <IonIcon
+              class="highlight-icon"
+              :icon="peopleCircle"
+              color="success"
+            />
+          </IonCol>
+        </IonRow>
+        <IonRow class="ion-text-center ion-margin-bottom">
+          <IonCol>
+            <IonText>
+              <h3>Cadastre um novo cliente</h3>
+            </IonText>
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol>
+            <IonInput
+              v-model="form.name"
+              label="Nome"
+              label-placement="floating"
+              fill="outline"
+              placeholder="Digite o nome..."
+            />
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol>
+            <IonInput
+              v-model="form.phone"
+              v-maskito="phoneOptions"
+              type="text"
+              inputmode="numeric"
+              fill="outline"
+              label="Celular"
+              label-placement="floating"
+              placeholder="Digite o celular..."
+            />
+          </IonCol>
+        </IonRow>
+      </IonGrid>
+      <IonFab
+        vertical="bottom"
+        horizontal="end"
+      >
+        <IonFabButton
+          type="submit"
+          @click="submit"
+        >
+          <IonIcon :icon="checkmark" />
+        </IonFabButton>
+      </IonFab>
+    </form>
   </IonContent>
 </template>
 
