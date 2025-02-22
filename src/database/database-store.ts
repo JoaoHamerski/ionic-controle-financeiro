@@ -1,6 +1,7 @@
 import MIGRATIONS from '@/database/migrations'
 
 import { CapacitorSQLite, SQLiteConnection, SQLiteDBConnection } from '@capacitor-community/sqlite'
+import { knex, type Knex } from 'knex'
 import { defineStore } from 'pinia'
 import { Ref, ref } from 'vue'
 
@@ -8,12 +9,14 @@ const DATABASE_NAME = 'sales'
 
 export const useDatabaseStore = defineStore('database', () => {
   const connection = new SQLiteConnection(CapacitorSQLite)
-  const db = ref<SQLiteDBConnection>() as Ref<SQLiteDBConnection>
+  const database = ref<SQLiteDBConnection>() as Ref<SQLiteDBConnection>
+  const builder = ref<Knex>() as Ref<Knex>
 
   const initDatabase = async () => {
-    db.value = await initConnection()
+    database.value = await initConnection()
+    builder.value = knex({ client: 'sqlite3' })
 
-    await db.value.open()
+    await database.value.open()
 
     await migrateDatabase()
   }
@@ -37,18 +40,18 @@ export const useDatabaseStore = defineStore('database', () => {
       }
 
       for (const statement of migration.statements) {
-        await db.value!.execute(statement)
+        await database.value!.execute(statement)
       }
 
-      await db.value!.execute(`PRAGMA user_version = ${migration.version};`)
+      await database.value!.execute(`PRAGMA user_version = ${migration.version};`)
     }
   }
 
   const getDbVersion = async () => {
-    const pragmaUserVersion = await db.value?.query('PRAGMA user_version;')
+    const pragmaUserVersion = await database.value?.query('PRAGMA user_version;')
 
     return pragmaUserVersion?.values ? pragmaUserVersion.values[0]?.user_version : 0
   }
 
-  return { db, initDatabase }
+  return { database, initDatabase, builder }
 })

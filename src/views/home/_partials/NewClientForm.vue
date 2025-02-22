@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useDatabaseStore } from '@/database/database-store'
-import Customer from '@/models/Customer'
+import { dbInsert } from '@/services/db-service'
 import { stripNonDigits } from '@/support/helpers'
 
 import {
@@ -19,6 +19,7 @@ import { maskito as vMaskito } from '@maskito/vue'
 import { checkmark, peopleCircle } from 'ionicons/icons'
 import { computed, ref } from 'vue'
 
+const N = /\d/
 const dbStore = useDatabaseStore()
 
 const form = ref({
@@ -31,12 +32,13 @@ const phoneRaw = computed(() => stripNonDigits(form.value.phone))
 const phoneOptions = computed<MaskitoOptions>(() => ({
   mask: () =>
     phoneRaw.value.length <= 10
-      ? ['(', /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/, /\d/]
-      : ['(', /\d/, /\d/, ')', ' ', /\d/, ' ', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/],
+      ? ['(', N, N, ')', ' ', N, N, N, N, '-', N, N, N, N, N]
+      : ['(', N, N, ')', ' ', N, ' ', N, N, N, N, '-', N, N, N, N],
   elementPredicate: (el: HTMLIonInputElement) => {
     return new Promise((resolve) => {
       requestAnimationFrame(async () => {
         const input = await el.getInputElement()
+
         resolve(input)
       })
     })
@@ -44,7 +46,9 @@ const phoneOptions = computed<MaskitoOptions>(() => ({
 }))
 
 const submit = async () => {
-  Customer.insert({ name: `José`, phone: `55999861335` })
+  const sql = dbStore.builder('customers').insert([form.value, form.value])
+
+  await dbInsert(sql)
 }
 </script>
 
