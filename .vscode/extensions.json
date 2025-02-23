@@ -1,5 +1,9 @@
 {
     "recommendations": [
-        "ionic.ionic"
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "EditorConfig.EditorConfig",
+        "Vue.volar",
+        "YoavBls.pretty-ts-errors"
     ]
 }
