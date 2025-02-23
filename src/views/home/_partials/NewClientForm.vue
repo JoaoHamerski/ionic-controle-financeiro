@@ -1,13 +1,15 @@
 <script setup lang="ts">
+import { useForm } from '@/composables/use-form'
 import { useDatabaseStore } from '@/database/database-store'
 import { dbInsert } from '@/services/db-service'
 import { stripNonDigits } from '@/support/helpers'
-
+import { phoneMask } from '@/support/masks'
 import {
   IonCol,
   IonContent,
   IonFab,
   IonFabButton,
+  IonFooter,
   IonGrid,
   IonIcon,
   IonInput,
@@ -16,51 +18,36 @@ import {
 } from '@ionic/vue'
 import type { MaskitoOptions } from '@maskito/core'
 import { maskito as vMaskito } from '@maskito/vue'
+import { required } from '@vuelidate/validators'
 import { checkmark, peopleCircle } from 'ionicons/icons'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
-const N = /\d/
 const emit = defineEmits(['submitted'])
 const dbStore = useDatabaseStore()
 
-const form = ref({
-  name: '',
-  phone: '',
-})
+const form = useForm({ name: '', phone: '' }, { name: { required }, phone: { required } })
 
-const phoneRaw = computed(() => stripNonDigits(form.value.phone))
-
-const phoneOptions = computed<MaskitoOptions>(() => ({
-  mask: () =>
-    phoneRaw.value.length <= 10
-      ? ['(', N, N, ')', ' ', N, N, N, N, '-', N, N, N, N, N]
-      : ['(', N, N, ')', ' ', N, ' ', N, N, N, N, '-', N, N, N, N],
-  elementPredicate: (el: HTMLIonInputElement) => {
-    return new Promise((resolve) => {
-      requestAnimationFrame(async () => {
-        const input = await el.getInputElement()
-
-        resolve(input)
-      })
-    })
-  },
-}))
+const phoneOptions = computed<MaskitoOptions>(() => phoneMask(phoneRaw.value))
+const phoneRaw = computed(() => stripNonDigits(form.fields.name))
 
 const submit = async () => {
-  const sql = dbStore.builder('customers').insert({
-    name: form.value.name,
-    phone: stripNonDigits(form.value.phone),
-  })
+  if (!(await form.validate())) {
+    return
+  }
 
-  await dbInsert(sql)
+  await dbInsert(dbStore.builder.insert(form.fields).into('customers'))
 
   emit('submitted')
 }
 </script>
 
 <template>
-  <IonContent>
-    <form @submit="submit">
+  <form
+    style="height: 100%"
+    @submit="submit"
+    @focus.capture="form.clearErrorOnFocus"
+  >
+    <IonContent>
       <IonGrid class="ion-margin-bottom">
         <IonRow class="ion-text-center">
           <IonCol>
@@ -78,32 +65,51 @@ const submit = async () => {
             </IonText>
           </IonCol>
         </IonRow>
-        <IonRow>
+        <IonRow class="ion-margin-bottom">
           <IonCol>
             <IonInput
-              v-model="form.name"
+              v-model="form.fields.name"
+              :class="{
+                'ion-invalid ion-touched': !!form.errors.name,
+              }"
+              :error-text="form.errors.name"
+              name="name"
               label="Nome"
               label-placement="floating"
               fill="outline"
               placeholder="Digite o nome..."
+              autocapitalize="words"
+              autocomplete="name"
+              clear-input
             />
           </IonCol>
         </IonRow>
-        <IonRow>
+        <IonRow class="ion-margin-bottom">
           <IonCol>
             <IonInput
-              v-model="form.phone"
+              v-model="form.fields.phone"
               v-maskito="phoneOptions"
+              :class="{
+                'ion-invalid ion-touched': !!form.errors.phone,
+              }"
+              :error-text="form.errors.phone"
+              name="phone"
               type="text"
               inputmode="numeric"
               fill="outline"
               label="Celular"
               label-placement="floating"
               placeholder="Digite o celular..."
+              autocomplete="phone"
+              clear-input
+              enterkeyhint="done"
+              @keypress.enter="submit"
             />
           </IonCol>
         </IonRow>
       </IonGrid>
+    </IonContent>
+    <IonFooter>
       <IonFab
         vertical="bottom"
         horizontal="end"
@@ -115,8 +121,8 @@ const submit = async () => {
           <IonIcon :icon="checkmark" />
         </IonFabButton>
       </IonFab>
-    </form>
-  </IonContent>
+    </IonFooter>
+  </form>
 </template>
 
 <style scoped>
