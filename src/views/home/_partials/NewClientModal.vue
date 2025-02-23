@@ -35,8 +35,9 @@ const modal = ref()
     </IonHeader>
 
     <IonContent class="ion-padding">
-      <NewClientForm />
+      <NewClientForm @submitted="modal.$el.dismiss()" />
     </IonContent>
+
     <IonFooter>
       <IonFab
         slot="fixed"

@@ -14,7 +14,7 @@ export const useDatabaseStore = defineStore('database', () => {
 
   const initDatabase = async () => {
     database.value = await initConnection()
-    builder.value = knex({ client: 'sqlite3' })
+    builder.value = knex({ client: 'sqlite3', useNullAsDefault: false })
 
     await database.value.open()
 

@@ -20,6 +20,7 @@ import { checkmark, peopleCircle } from 'ionicons/icons'
 import { computed, ref } from 'vue'
 
 const N = /\d/
+const emit = defineEmits(['submitted'])
 const dbStore = useDatabaseStore()
 
 const form = ref({
@@ -46,9 +47,14 @@ const phoneOptions = computed<MaskitoOptions>(() => ({
 }))
 
 const submit = async () => {
-  const sql = dbStore.builder('customers').insert([form.value, form.value])
+  const sql = dbStore.builder('customers').insert({
+    name: form.value.name,
+    phone: stripNonDigits(form.value.phone),
+  })
 
   await dbInsert(sql)
+
+  emit('submitted')
 }
 </script>
 
