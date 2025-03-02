@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { seedDatabase } from '@/database/seed'
+import { useDatabaseStore } from '@/stores/database-store'
 import { IonApp, IonRouterOutlet } from '@ionic/vue'
 import { onMounted } from 'vue'
-import { useDatabaseStore } from './database/database-store'
 const databaseStore = useDatabaseStore()
 
 onMounted(async () => {

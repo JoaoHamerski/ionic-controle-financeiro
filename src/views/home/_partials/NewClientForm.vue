@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useForm } from '@/composables/use-form'
-import { useDatabaseStore } from '@/database/database-store'
 import { dbInsert } from '@/services/db-service'
+import { useDatabaseStore } from '@/stores/database-store'
 import { stripNonDigits } from '@/support/helpers'
 import { phoneMask } from '@/support/masks'
 import {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useDatabaseStore } from '@/database/database-store'
 import { Customer } from '@/database/models'
 import { dbSelect } from '@/services/db-service'
+import { useDatabaseStore } from '@/stores/database-store'
 import {
   IonContent,
   IonHeader,
