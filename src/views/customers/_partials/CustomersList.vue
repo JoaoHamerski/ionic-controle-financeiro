@@ -1,15 +1,11 @@
 <script setup lang="ts">
 import { Customer } from '@/database/models'
-import { AppLauncher } from '@capacitor/app-launcher'
 import { IonButton, IonIcon, IonItem, IonLabel, IonList } from '@ionic/vue'
 import { logoWhatsapp } from 'ionicons/icons'
+
 defineProps<{
   customers: Customer[]
 }>()
-
-const openInWhatsApp = async () => {
-  await AppLauncher.canOpenUrl({ url: 'whatsapp.com' })
-}
 </script>
 
 <template>
@@ -22,11 +18,13 @@ const openInWhatsApp = async () => {
         {{ customer.name }}
       </IonLabel>
       <IonButton
+        v-if="customer.phone"
         fill="clear"
         color="success"
         size="lg"
         shape="round"
-        @click="openInWhatsApp"
+        :href="`https://wa.me/55${customer.phone}`"
+        target="_blank"
       >
         <IonIcon
           slot="icon-only"

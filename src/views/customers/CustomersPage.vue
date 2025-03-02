@@ -17,7 +17,7 @@ const customers = ref<Customer[]>()
 const database = useDatabaseStore()
 
 onIonViewWillEnter(async () => {
-  const builder = database.builder.select('*').from('customers').orderBy('created_at', 'desc')
+  const builder = database.builder.select('*').from('customers').orderBy('name', 'asc')
   const values = await dbSelect(builder)
 
   customers.value = values

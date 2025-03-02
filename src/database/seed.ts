@@ -28,7 +28,9 @@ const seedCustomers = async (database: SQLiteDBConnection, builder: Knex) => {
     customers.push({
       id: i,
       name: faker.person.fullName(),
-      phone: faker.string.numeric({ length: { min: 10, max: 11 } }),
+      phone: faker.datatype.boolean({ probability: 0.5 })
+        ? faker.string.numeric({ length: { min: 10, max: 11 } })
+        : null,
       created_at: faker.date.past().toISOString(),
     })
   }
