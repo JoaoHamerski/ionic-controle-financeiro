@@ -13,7 +13,7 @@ import {
 
 import { add, cart, peopleCircle } from 'ionicons/icons'
 import { ref } from 'vue'
-import NewClientModal from './_partials/NewClientModal.vue'
+import NewCustomerModal from './_partials/NewCustomerModal.vue'
 import NewSaleModal from './_partials/NewSaleModal.vue'
 
 const isSaleModalOpen = ref<boolean>(false)
@@ -32,7 +32,7 @@ const isClientModalOpen = ref<boolean>(false)
         :is-open="isSaleModalOpen"
         @did-dismiss="isSaleModalOpen = false"
       />
-      <NewClientModal
+      <NewCustomerModal
         :is-open="isClientModalOpen"
         @did-dismiss="isClientModalOpen = false"
       />

@@ -14,7 +14,7 @@ import {
 
 import { arrowBackOutline, checkmark } from 'ionicons/icons'
 import { ref } from 'vue'
-import NewClientForm from './NewClientForm.vue'
+import NewCustomerForm from './NewCustomerForm.vue'
 
 const modal = ref()
 </script>
@@ -35,7 +35,7 @@ const modal = ref()
     </IonHeader>
 
     <IonContent class="ion-padding">
-      <NewClientForm @submitted="modal.$el.dismiss()" />
+      <NewCustomerForm @submitted="modal.$el.dismiss()" />
     </IonContent>
 
     <IonFooter>
