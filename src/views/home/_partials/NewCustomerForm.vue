@@ -23,37 +23,34 @@ import { checkmark, peopleCircle } from 'ionicons/icons'
 import { computed } from 'vue'
 
 const emit = defineEmits(['submitted'])
-const dbStore = useDatabaseStore()
+const { builder } = useDatabaseStore()
 
 const form = useForm(
   { name: '', phone: '', phoneRaw: '' },
   {
     name: { required: helpers.withMessage('Por favor, informe um nome', required) },
-    phone: {},
     phoneRaw: {
       minLength: helpers.withMessage(
-        ({ $params }) => `O número deve ter no mínimo ${$params.min} digitos`,
+        ({ $params }) => `O número deve ter no mínimo ${$params.min} dígitos`,
         minLength(10),
       ),
     },
   },
 )
 
-const phoneRaw = computed(() => stripNonDigits(form.fields.phone))
+const phoneRaw = computed(() => stripNonDigits(form.data.phone))
 const phoneOptions = computed<MaskitoOptions>(() => phoneMask(phoneRaw.value))
 
 const submit = async () => {
-  form.fields.phoneRaw = phoneRaw.value
+  form.data.phoneRaw = phoneRaw.value
 
   if (!(await form.validate())) {
     return
   }
 
-  await dbInsert(
-    dbStore.builder
-      .insert({ name: form.fields.name, phone: form.fields.phoneRaw })
-      .into('customers'),
-  )
+  const { name, phone } = form.data
+
+  await dbInsert(builder.insert({ name, phone }).into('customers'))
 
   emit('submitted')
 }
@@ -86,7 +83,7 @@ const submit = async () => {
         <IonRow class="ion-margin-bottom">
           <IonCol>
             <IonInput
-              v-model="form.fields.name"
+              v-model="form.data.name"
               :class="{
                 'ion-invalid ion-touched': !!form.errors.name,
               }"
@@ -105,7 +102,7 @@ const submit = async () => {
         <IonRow class="ion-margin-bottom">
           <IonCol>
             <IonInput
-              v-model="form.fields.phone"
+              v-model="form.data.phone"
               v-maskito="phoneOptions"
               :class="{
                 'ion-invalid ion-touched': !!form.errors.phoneRaw,
