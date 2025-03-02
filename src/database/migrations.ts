@@ -15,14 +15,14 @@ export default [
     );`,
       `CREATE TABLE IF NOT EXISTS sales (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        client_id INTEGER,
+        customer_id INTEGER,
         product_id INTEGER,
-        value DECIMAL(10, 2),
+        price DECIMAL(10, 2),
         quantity MEDIUM INTEGER,
         total DECIMAL(10, 2),
         is_paid TINY INTEGER DEFAULT 0,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`,
+    );`,
     ],
   },
 ]

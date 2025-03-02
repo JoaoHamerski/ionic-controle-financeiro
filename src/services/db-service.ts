@@ -31,3 +31,15 @@ export const dbSelectById = async (table: string, id: string | number) => {
 
   return result.values ? result.values[0] : null
 }
+
+export const dbTableColumns = async (table: string): Promise<string[]> => {
+  const { database } = useDatabaseStore()
+
+  const data = await database.query(`SELECT name FROM PRAGMA_TABLE_INFO('${table}')`)
+
+  if (!data.values || !data.values?.length) {
+    return []
+  }
+
+  return data.values.map(({ name }) => name)
+}

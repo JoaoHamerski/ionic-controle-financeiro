@@ -1,15 +1,17 @@
-import { dbInsert } from '@/services/db-service'
+import { dbInsert, dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { SQLiteDBConnection } from '@capacitor-community/sqlite'
 import { fakerPT_BR as faker } from '@faker-js/faker'
 import { Knex } from 'knex'
-import { Customer } from './models'
+import { Customer, Sale } from './models'
 
 export const seedDatabase = async () => {
   const { database, builder } = useDatabaseStore()
 
   await truncateAllTables(database)
-  await seedCustomers(database, builder)
+  await seedCustomers(builder)
+  await seedProducts(builder)
+  await seedSales(builder)
 }
 
 const truncateAllTables = async (database: SQLiteDBConnection) => {
@@ -20,12 +22,12 @@ const truncateAllTables = async (database: SQLiteDBConnection) => {
   }
 }
 
-const seedCustomers = async (database: SQLiteDBConnection, builder: Knex) => {
-  const customers: Customer[] = []
-  const quantity = faker.number.int({ min: 20, max: 40 })
+const seedCustomers = async (builder: Knex) => {
+  const data: Customer[] = []
+  const QUANTITY = faker.number.int({ min: 20, max: 40 })
 
-  for (let i = 0; i < quantity; i++) {
-    customers.push({
+  for (let i = 1; i <= QUANTITY; i++) {
+    data.push({
       id: i,
       name: faker.person.fullName(),
       phone: faker.datatype.boolean({ probability: 0.5 })
@@ -35,5 +37,47 @@ const seedCustomers = async (database: SQLiteDBConnection, builder: Knex) => {
     })
   }
 
-  await dbInsert(builder.insert(customers).into('customers'))
+  await dbInsert(builder.insert(data).into('customers'))
+}
+
+const seedProducts = async (builder: Knex) => {
+  const PRODUCTS = ['Feijão com arroz', 'Salada', 'Bife', 'Cachorro-quente', 'Sanduíche']
+
+  const sql = builder
+    .insert(
+      PRODUCTS.map((name, index) => ({
+        id: index,
+        name,
+        created_at: faker.date.past().toISOString(),
+      })),
+    )
+    .into('products')
+
+  await dbInsert(sql)
+}
+
+const seedSales = async (builder: Knex) => {
+  const QUANTITY = faker.number.int({ min: 100, max: 200 })
+
+  const customers = (await dbSelect(builder.select('id').from('customers')))?.map(({ id }) => id)
+  const products = (await dbSelect(builder.select('id').from('products')))?.map(({ id }) => id)
+  const data: Sale[] = []
+
+  for (let i = 1; i < QUANTITY; i++) {
+    const price = +faker.number.float({ min: 10, max: 50 }).toFixed(1)
+    const quantity = faker.number.int({ min: 1, max: 5 })
+
+    data.push({
+      id: i,
+      customer_id: faker.helpers.arrayElement(customers || []),
+      product_id: faker.helpers.arrayElement(products || []),
+      price,
+      quantity,
+      total: price * quantity,
+      is_paid: faker.datatype.boolean({ probability: 0.8 }),
+      created_at: faker.date.between({ from: '2025-01-01', to: '2025-03-02' }).toISOString(),
+    })
+  }
+
+  await dbInsert(builder.insert(data).into('sales'))
 }
