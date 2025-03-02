@@ -18,24 +18,42 @@ import {
 } from '@ionic/vue'
 import type { MaskitoOptions } from '@maskito/core'
 import { maskito as vMaskito } from '@maskito/vue'
-import { required } from '@vuelidate/validators'
+import { helpers, minLength, required } from '@vuelidate/validators'
 import { checkmark, peopleCircle } from 'ionicons/icons'
 import { computed } from 'vue'
 
 const emit = defineEmits(['submitted'])
 const dbStore = useDatabaseStore()
 
-const form = useForm({ name: '', phone: '' }, { name: { required }, phone: { required } })
+const form = useForm(
+  { name: '', phone: '', phoneRaw: '' },
+  {
+    name: { required: helpers.withMessage('Por favor, informe um nome', required) },
+    phone: {},
+    phoneRaw: {
+      minLength: helpers.withMessage(
+        ({ $params }) => `O número deve ter no mínimo ${$params.min} digitos`,
+        minLength(10),
+      ),
+    },
+  },
+)
 
+const phoneRaw = computed(() => stripNonDigits(form.fields.phone))
 const phoneOptions = computed<MaskitoOptions>(() => phoneMask(phoneRaw.value))
-const phoneRaw = computed(() => stripNonDigits(form.fields.name))
 
 const submit = async () => {
+  form.fields.phoneRaw = phoneRaw.value
+
   if (!(await form.validate())) {
     return
   }
 
-  await dbInsert(dbStore.builder.insert(form.fields).into('customers'))
+  await dbInsert(
+    dbStore.builder
+      .insert({ name: form.fields.name, phone: form.fields.phoneRaw })
+      .into('customers'),
+  )
 
   emit('submitted')
 }
@@ -90,10 +108,10 @@ const submit = async () => {
               v-model="form.fields.phone"
               v-maskito="phoneOptions"
               :class="{
-                'ion-invalid ion-touched': !!form.errors.phone,
+                'ion-invalid ion-touched': !!form.errors.phoneRaw,
               }"
-              :error-text="form.errors.phone"
-              name="phone"
+              :error-text="form.errors.phoneRaw"
+              name="phoneRaw"
               type="text"
               inputmode="numeric"
               fill="outline"
