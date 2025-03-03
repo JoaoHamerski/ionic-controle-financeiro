@@ -66,6 +66,8 @@ const seedSales = async (builder: Knex) => {
   for (let i = 1; i < QUANTITY; i++) {
     const price = +faker.number.float({ min: 10, max: 50 }).toFixed(1)
     const quantity = faker.number.int({ min: 1, max: 5 })
+    const total = +(price * quantity).toFixed(1)
+    const created_at = faker.date.between({ from: '2025-01-01', to: '2025-03-02' })
 
     data.push({
       id: i,
@@ -73,9 +75,10 @@ const seedSales = async (builder: Knex) => {
       product_id: faker.helpers.arrayElement(products || []),
       price,
       quantity,
-      total: price * quantity,
+      total: faker.datatype.boolean({ probability: 0.8 }) ? total : -total,
       is_paid: faker.datatype.boolean({ probability: 0.8 }),
-      created_at: faker.date.between({ from: '2025-01-01', to: '2025-03-02' }).toISOString(),
+      date: created_at.toISOString(),
+      created_at: created_at.toISOString(),
     })
   }
 

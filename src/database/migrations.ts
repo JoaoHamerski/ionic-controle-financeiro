@@ -21,6 +21,7 @@ export default [
         quantity MEDIUM INTEGER,
         total DECIMAL(10, 2),
         is_paid TINY INTEGER DEFAULT 0,
+        date DATE DEFAULT CURRENT_DATE,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );`,
     ],

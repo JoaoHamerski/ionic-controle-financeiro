@@ -20,7 +20,7 @@ export const dbSelect = async (builder: Knex.QueryBuilder) => {
   const native = builder.toSQL().toNative()
   const result = await database.query(native.sql, native.bindings as any[])
 
-  return result.values
+  return result.values || []
 }
 
 export const dbSelectById = async (table: string, id: string | number) => {

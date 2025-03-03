@@ -11,13 +11,35 @@ import {
   IonToolbar,
 } from '@ionic/vue'
 
+import { dbSelect } from '@/services/db-service'
+import { useDatabaseStore } from '@/stores/database-store'
+import { prefixColumns } from '@/support/helpers'
 import { add, cart, peopleCircle } from 'ionicons/icons'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import HomeContent from './_partials/HomeContent.vue'
 import NewCustomerModal from './_partials/NewCustomerModal.vue'
 import NewSaleModal from './_partials/NewSaleModal.vue'
+const { builder } = useDatabaseStore()
 
 const isSaleModalOpen = ref<boolean>(false)
 const isClientModalOpen = ref<boolean>(false)
+const items = ref<any[]>([])
+
+onMounted(async () => {
+  const builderQuery = builder
+    .select([
+      'sales.id as id',
+      ...(await prefixColumns('*', 'customers', 'customer')),
+      ...(await prefixColumns('*', 'products', 'product')),
+      ...(await prefixColumns('*', 'sales', 'sale')),
+    ])
+    .from('sales')
+    .join('customers', 'sales.customer_id', '=', 'customers.id')
+    .join('products', 'sales.product_id', '=', 'products.id')
+    .orderBy('sales.date', 'desc')
+
+  items.value = await dbSelect(builderQuery)
+})
 </script>
 
 <template>
@@ -27,7 +49,8 @@ const isClientModalOpen = ref<boolean>(false)
         <IonTitle> Início </IonTitle>
       </IonToolbar>
     </IonHeader>
-    <IonContent class="ion-padding">
+
+    <IonContent>
       <NewSaleModal
         :is-open="isSaleModalOpen"
         @did-dismiss="isSaleModalOpen = false"
@@ -36,6 +59,8 @@ const isClientModalOpen = ref<boolean>(false)
         :is-open="isClientModalOpen"
         @did-dismiss="isClientModalOpen = false"
       />
+
+      <HomeContent :items="items" />
 
       <IonFab
         slot="fixed"
