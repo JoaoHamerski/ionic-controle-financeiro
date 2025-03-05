@@ -1,10 +1,4 @@
 <script setup lang="ts">
-import AppInput from '@/components/AppInput.vue'
-import { useForm } from '@/composables/use-form'
-import { dbInsert } from '@/services/db-service'
-import { useDatabaseStore } from '@/stores/database-store'
-import { stripNonDigits } from '@/support/helpers'
-import { phoneMask } from '@/support/masks'
 import {
   IonCol,
   IonContent,
@@ -20,6 +14,14 @@ import { maskito as vMaskito } from '@maskito/vue'
 import { helpers, minLength, required } from '@vuelidate/validators'
 import { checkmark, peopleCircle } from 'ionicons/icons'
 import { computed } from 'vue'
+
+import AppInput from '@/components/AppInput.vue'
+import { useForm } from '@/composables/use-form'
+import { dbInsert } from '@/services/db-service'
+import { useDatabaseStore } from '@/stores/database-store'
+import { stripNonDigits } from '@/support/helpers'
+import { phoneMask } from '@/support/masks'
+
 import FormHeaderRows from './FormHeaderRows.vue'
 
 const emit = defineEmits(['submitted'])

@@ -1,5 +1,6 @@
-import { useDatabaseStore } from '@/stores/database-store'
 import { Knex } from 'knex'
+
+import { useDatabaseStore } from '@/stores/database-store'
 
 export const dbInsert = async (builder: Knex.QueryBuilder) => {
   const { database } = useDatabaseStore()

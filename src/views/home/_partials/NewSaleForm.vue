@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { useForm } from '@/composables/use-form'
 import { IonCol, IonContent, IonGrid, IonRow } from '@ionic/vue'
-
-import AppInput from '@/components/AppInput.vue'
-import { currencyBrlMask, positiveIntMask } from '@/support/masks'
 import { maskito as vMaskito } from '@maskito/vue'
 import { basketSharp } from 'ionicons/icons'
+
+import AppInput from '@/components/AppInput.vue'
+import { useForm } from '@/composables/use-form'
+import { currencyBrlMask, positiveIntMask } from '@/support/masks'
+
 import FormHeaderRows from './FormHeaderRows.vue'
 
 const form = useForm({

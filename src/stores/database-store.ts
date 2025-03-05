@@ -1,9 +1,9 @@
-import MIGRATIONS from '@/database/migrations'
-
 import { CapacitorSQLite, SQLiteConnection, SQLiteDBConnection } from '@capacitor-community/sqlite'
-import { knex, type Knex } from 'knex'
+import { type Knex, knex } from 'knex'
 import { defineStore } from 'pinia'
 import { Ref, ref } from 'vue'
+
+import MIGRATIONS from '@/database/migrations'
 
 const DATABASE_NAME = 'sales'
 

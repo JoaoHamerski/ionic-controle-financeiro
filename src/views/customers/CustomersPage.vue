@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { Customer } from '@/database/models'
-import { dbSelect } from '@/services/db-service'
-import { useDatabaseStore } from '@/stores/database-store'
 import {
   IonContent,
   IonHeader,
@@ -11,6 +8,11 @@ import {
   onIonViewWillEnter,
 } from '@ionic/vue'
 import { ref } from 'vue'
+
+import { Customer } from '@/database/models'
+import { dbSelect } from '@/services/db-service'
+import { useDatabaseStore } from '@/stores/database-store'
+
 import CustomersList from './_partials/CustomersList.vue'
 
 const customers = ref<Customer[]>()

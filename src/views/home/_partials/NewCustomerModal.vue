@@ -11,9 +11,9 @@ import {
   IonModal,
   IonToolbar,
 } from '@ionic/vue'
-
 import { arrowBackOutline, checkmark } from 'ionicons/icons'
 import { ref } from 'vue'
+
 import NewCustomerForm from './NewCustomerForm.vue'
 
 const modal = ref()

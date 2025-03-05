@@ -1,15 +1,14 @@
-import App from './App.vue'
-
 import '@/support/plugins'
-import router from './router'
+import '@/bootstrap/styles'
 
+import { SplashScreen } from '@capacitor/splash-screen'
 import { IonicVue } from '@ionic/vue'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 
-import '@/bootstrap/styles'
-import { SplashScreen } from '@capacitor/splash-screen'
+import App from './App.vue'
 import { seedDatabase } from './database/seed'
+import router from './router'
 import { useDatabaseStore } from './stores/database-store'
 
 if (import.meta.hot) {

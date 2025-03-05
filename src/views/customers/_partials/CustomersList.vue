@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { Customer } from '@/database/models'
 import { IonButton, IonIcon, IonItem, IonLabel, IonList } from '@ionic/vue'
 import { createOutline, logoWhatsapp } from 'ionicons/icons'
+
+import { Customer } from '@/database/models'
 
 defineProps<{
   customers: Customer[]

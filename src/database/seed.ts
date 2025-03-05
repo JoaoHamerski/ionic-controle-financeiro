@@ -1,8 +1,10 @@
-import { dbInsert, dbSelect } from '@/services/db-service'
-import { useDatabaseStore } from '@/stores/database-store'
 import { SQLiteDBConnection } from '@capacitor-community/sqlite'
 import { fakerPT_BR as faker } from '@faker-js/faker'
 import { Knex } from 'knex'
+
+import { dbInsert, dbSelect } from '@/services/db-service'
+import { useDatabaseStore } from '@/stores/database-store'
+
 import { Customer, Sale } from './models'
 
 export const seedDatabase = async () => {

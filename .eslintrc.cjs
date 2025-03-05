@@ -3,6 +3,7 @@ module.exports = {
   env: {
     node: true,
   },
+  plugins: ['simple-import-sort'],
   extends: [
     'plugin:vue/vue3-recommended',
     'eslint:recommended',
@@ -11,6 +12,7 @@ module.exports = {
   ],
   parserOptions: {
     ecmaVersion: 2020,
+    sourceType: 'module',
   },
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
@@ -18,6 +20,8 @@ module.exports = {
     'vue/no-deprecated-slot-attribute': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'vue/component-name-in-template-casing': ['error', 'PascalCase'],
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
     'vue/html-self-closing': [
       'error',
       {

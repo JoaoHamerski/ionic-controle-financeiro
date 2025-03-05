@@ -10,12 +10,13 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/vue'
+import { add, cart, peopleCircle } from 'ionicons/icons'
+import { onMounted, ref } from 'vue'
 
 import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { prefixColumns } from '@/support/helpers'
-import { add, cart, peopleCircle } from 'ionicons/icons'
-import { onMounted, ref } from 'vue'
+
 import HomeContent from './_partials/HomeContent.vue'
 import NewCustomerModal from './_partials/NewCustomerModal.vue'
 import NewSaleModal from './_partials/NewSaleModal.vue'

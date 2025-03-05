@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { formatCurrency } from '@/support/helpers'
 import { IonIcon, IonItem, IonLabel, IonList } from '@ionic/vue'
 import { calendarSharp, checkmarkCircleSharp, personSharp, timeSharp } from 'ionicons/icons'
 import { DateTime } from 'luxon'
+
+import { formatCurrency } from '@/support/helpers'
 
 defineProps<{
   items: any[]

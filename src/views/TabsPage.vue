@@ -8,7 +8,6 @@ import {
   IonTabButton,
   IonTabs,
 } from '@ionic/vue'
-
 import { calendar, home, peopleCircle } from 'ionicons/icons'
 
 type TabsItem = {
