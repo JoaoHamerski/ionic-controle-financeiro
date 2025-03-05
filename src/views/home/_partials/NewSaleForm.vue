@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { useForm } from '@/composables/use-form'
-import { IonCol, IonContent, IonGrid, IonIcon, IonInput, IonRow, IonText } from '@ionic/vue'
+import { IonCol, IonContent, IonGrid, IonRow } from '@ionic/vue'
 
+import AppInput from '@/components/AppInput.vue'
+import { currencyBrlMask, positiveIntMask } from '@/support/masks'
+import { maskito as vMaskito } from '@maskito/vue'
 import { basketSharp } from 'ionicons/icons'
+import FormHeaderRows from './FormHeaderRows.vue'
 
 const form = useForm({
   price: '',
@@ -21,36 +25,32 @@ const form = useForm({
   >
     <IonContent>
       <IonGrid class="ion-margin-bottom">
-        <IonRow class="ion-text-center">
-          <IonCol>
-            <IonIcon
-              :icon="basketSharp"
-              :style="{ fontSize: '10rem' }"
-              color="success"
-            />
-          </IonCol>
-        </IonRow>
-        <IonRow class="ion-text-center ion-margin-bottom">
-          <IonCol>
-            <IonText>
-              <h3>Registre uma nova venda ou despesa</h3>
-            </IonText>
-          </IonCol>
-        </IonRow>
+        <FormHeaderRows
+          text="Registre uma nova venda ou despesa"
+          :icon="basketSharp"
+        />
+
         <IonRow class="ion-margin-bottom">
           <IonCol>
-            <IonInput
+            <AppInput
               v-model="form.data.price"
-              :class="{
-                'ion-invalid ion-touched': !!form.data.price,
-              }"
-              :error-text="form.errors.price"
+              v-maskito="currencyBrlMask"
               name="price"
-              label-placement="floating"
-              fill="outline"
+              :error="form.errors.price"
               placeholder="R$ "
               clear-input
-              label="Preço"
+              label="Valor"
+              inputmode="numeric"
+            />
+          </IonCol>
+          <IonCol>
+            <AppInput
+              v-model="form.data.quantity"
+              v-maskito="positiveIntMask()"
+              name="quantity"
+              label="Qtd."
+              type="text"
+              inputmode="numeric"
             />
           </IonCol>
         </IonRow>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AppInput from '@/components/AppInput.vue'
 import { useForm } from '@/composables/use-form'
 import { dbInsert } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
@@ -12,15 +13,14 @@ import {
   IonFooter,
   IonGrid,
   IonIcon,
-  IonInput,
   IonRow,
-  IonText,
 } from '@ionic/vue'
 import type { MaskitoOptions } from '@maskito/core'
 import { maskito as vMaskito } from '@maskito/vue'
 import { helpers, minLength, required } from '@vuelidate/validators'
 import { checkmark, peopleCircle } from 'ionicons/icons'
 import { computed } from 'vue'
+import FormHeaderRows from './FormHeaderRows.vue'
 
 const emit = defineEmits(['submitted'])
 const { builder } = useDatabaseStore()
@@ -39,7 +39,7 @@ const form = useForm(
 )
 
 const phoneRaw = computed(() => stripNonDigits(form.data.phone))
-const phoneOptions = computed<MaskitoOptions>(() => phoneMask(phoneRaw.value))
+const phoneDynamicMask = computed<MaskitoOptions>(() => phoneMask(phoneRaw.value))
 
 const submit = async () => {
   form.data.phoneRaw = phoneRaw.value
@@ -64,35 +64,18 @@ const submit = async () => {
   >
     <IonContent>
       <IonGrid class="ion-margin-bottom">
-        <IonRow class="ion-text-center">
-          <IonCol>
-            <IonIcon
-              :style="{ fontSize: '10rem' }"
-              class="highlight-icon"
-              :icon="peopleCircle"
-              color="success"
-            />
-          </IonCol>
-        </IonRow>
-        <IonRow class="ion-text-center ion-margin-bottom">
-          <IonCol>
-            <IonText>
-              <h3>Cadastre um novo cliente</h3>
-            </IonText>
-          </IonCol>
-        </IonRow>
+        <FormHeaderRows
+          text="Cadastre um novo cliente"
+          :icon="peopleCircle"
+        />
+
         <IonRow class="ion-margin-bottom">
           <IonCol>
-            <IonInput
+            <AppInput
               v-model="form.data.name"
-              :class="{
-                'ion-invalid ion-touched': !!form.errors.name,
-              }"
-              :error-text="form.errors.name"
+              :error="form.errors.name"
               name="name"
               label="Nome"
-              label-placement="floating"
-              fill="outline"
               placeholder="Digite o nome..."
               autocapitalize="words"
               autocomplete="name"
@@ -102,19 +85,14 @@ const submit = async () => {
         </IonRow>
         <IonRow class="ion-margin-bottom">
           <IonCol>
-            <IonInput
+            <AppInput
               v-model="form.data.phone"
-              v-maskito="phoneOptions"
-              :class="{
-                'ion-invalid ion-touched': !!form.errors.phoneRaw,
-              }"
-              :error-text="form.errors.phoneRaw"
+              v-maskito="phoneDynamicMask"
+              :error="form.errors.phoneRaw"
               name="phoneRaw"
               type="text"
               inputmode="numeric"
-              fill="outline"
               label="Celular"
-              label-placement="floating"
               placeholder="Digite o celular..."
               autocomplete="phone"
               clear-input
