@@ -24,7 +24,7 @@ router.isReady().then(async () => {
   await initDatabase()
   await seedDatabase()
 
-  await SplashScreen.show()
+  await SplashScreen.hide()
 
   app.mount('#app')
 })

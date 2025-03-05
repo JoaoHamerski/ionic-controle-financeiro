@@ -23,7 +23,7 @@ import NewSaleModal from './_partials/NewSaleModal.vue'
 const { builder } = useDatabaseStore()
 
 const isSaleModalOpen = ref<boolean>(false)
-const isClientModalOpen = ref<boolean>(false)
+const isNewCustomerModalOpen = ref<boolean>(false)
 const items = ref<any[]>([])
 
 onMounted(async () => {
@@ -57,8 +57,8 @@ onMounted(async () => {
         @did-dismiss="isSaleModalOpen = false"
       />
       <NewCustomerModal
-        :is-open="isClientModalOpen"
-        @did-dismiss="isClientModalOpen = false"
+        :is-open="isNewCustomerModalOpen"
+        @did-dismiss="isNewCustomerModalOpen = false"
       />
 
       <HomeContent :items="items" />
@@ -83,7 +83,7 @@ onMounted(async () => {
           <IonFabButton
             color="light"
             data-label="Novo cliente"
-            @click="isClientModalOpen = true"
+            @click="isNewCustomerModalOpen = true"
           >
             <IonIcon :icon="peopleCircle" />
           </IonFabButton>

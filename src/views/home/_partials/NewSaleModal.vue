@@ -38,7 +38,7 @@ const modal = ref()
 </template>
 
 <style scoped>
-ion-button {
+ion-toolbar ion-button {
   --padding-top: 15px;
   --padding-bottom: 15px;
 }

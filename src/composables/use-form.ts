@@ -1,9 +1,9 @@
 import useVuelidate from '@vuelidate/core'
 import { reactive } from 'vue'
 
-export const useForm = <T extends Record<string, any>>(formData: T, rules: any = {}) => {
+export const useForm = <T extends object, K extends keyof T>(formData: T, rules: any = {}) => {
   const data = reactive<T>(formData)
-  const errors = reactive<T>({} as T)
+  const errors = reactive<Record<K, string> | Record<string, any>>({})
   const v$ = useVuelidate(rules, formData)
 
   const validate = async () => {
@@ -16,7 +16,7 @@ export const useForm = <T extends Record<string, any>>(formData: T, rules: any =
     return result
   }
 
-  const clearError = async (field: keyof typeof data) => {
+  const clearError = async (field: string) => {
     delete errors[field]
   }
 
