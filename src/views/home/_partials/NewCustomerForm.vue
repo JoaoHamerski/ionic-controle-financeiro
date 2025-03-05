@@ -67,6 +67,7 @@ const submit = async () => {
         <IonRow class="ion-text-center">
           <IonCol>
             <IonIcon
+              :style="{ fontSize: '10rem' }"
               class="highlight-icon"
               :icon="peopleCircle"
               color="success"
@@ -141,10 +142,6 @@ const submit = async () => {
 </template>
 
 <style scoped>
-ion-icon.highlight-icon {
-  font-size: 10rem;
-}
-
 ion-fab {
   margin-bottom: var(--ion-safe-area-bottom, 0);
 }

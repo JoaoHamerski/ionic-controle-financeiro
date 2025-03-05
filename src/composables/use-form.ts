@@ -1,7 +1,7 @@
 import useVuelidate from '@vuelidate/core'
 import { reactive } from 'vue'
 
-export const useForm = <T extends Record<string, any>>(formData: T, rules: any) => {
+export const useForm = <T extends Record<string, any>>(formData: T, rules?: any) => {
   const data = reactive<T>(formData)
   const errors = reactive<T>({} as T)
   const v$ = useVuelidate(rules, formData)
