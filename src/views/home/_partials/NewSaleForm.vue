@@ -126,7 +126,7 @@ const isCustomerModalOpen = ref(false)
           </IonCol>
         </IonRow>
 
-        <IonRow>
+        <IonRow v-if="form.data.type === 'sell'">
           <IonCol>
             <IonCheckbox
               v-model="form.data.is_paid"
