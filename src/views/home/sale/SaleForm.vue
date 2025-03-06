@@ -21,7 +21,7 @@ import { useForm } from '@/composables/use-form'
 import { Customer, Product } from '@/database/models'
 import { currencyBrlMask, positiveIntMask } from '@/support/masks'
 
-import SaleFormSelectCustomerModal from './SaleFormSelectCustomerModal.vue'
+import SelectCustomerModal from '../_partials/SelectCustomerModal.vue'
 
 type SaleFormFields = {
   price: string
@@ -43,10 +43,10 @@ const form = useForm<SaleFormFields, keyof SaleFormFields>({
   type: 'sell',
 })
 
-const isCustomerModalOpen = ref(false)
+const isSelectCustomerModalOpen = ref(false)
 
 const onCustomerSelected = ({ customer }: { customer: Customer }) => {
-  isCustomerModalOpen.value = false
+  isSelectCustomerModalOpen.value = false
   form.data.customer = customer
 }
 </script>
@@ -114,7 +114,7 @@ const onCustomerSelected = ({ customer }: { customer: Customer }) => {
               interface="popover"
               fill="outline"
               label-placement="floating"
-              @click.capture.stop="isCustomerModalOpen = true"
+              @click.capture.stop="isSelectCustomerModalOpen = true"
             >
               <IonSelectOption
                 v-if="form.data.customer"
@@ -175,10 +175,10 @@ const onCustomerSelected = ({ customer }: { customer: Customer }) => {
       </IonFab>
     </IonFooter>
 
-    <SaleFormSelectCustomerModal
-      :is-open="isCustomerModalOpen"
+    <SelectCustomerModal
+      :is-open="isSelectCustomerModalOpen"
       @customer-selected="onCustomerSelected"
-      @did-dismiss="isCustomerModalOpen = false"
+      @did-dismiss="isSelectCustomerModalOpen = false"
     />
   </form>
 </template>
