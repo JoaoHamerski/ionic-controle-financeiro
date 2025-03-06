@@ -20,7 +20,7 @@ import { Customer } from '@/database/models'
 import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 
-const { builder } = useDatabaseStore()
+const { knex } = useDatabaseStore()
 
 const modal = ref()
 const customers = ref<Customer[]>([])
@@ -28,7 +28,7 @@ const clientSearch = ref<string>('')
 const isInitFetched = ref<boolean>(false)
 
 const fetch = async (search?: string) => {
-  const sql = builder.select('*').from('customers').orderBy('name')
+  const sql = knex.select('*').from('customers').orderBy('name')
 
   if (search) {
     sql.whereLike('name', `%${search}%`)

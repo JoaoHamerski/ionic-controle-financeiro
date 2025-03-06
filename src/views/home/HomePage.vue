@@ -17,17 +17,17 @@ import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { prefixColumns } from '@/support/helpers'
 
-import HomeContent from './_partials/HomeContent.vue'
-import NewCustomerModal from './_partials/NewCustomerModal.vue'
-import NewSaleModal from './_partials/NewSaleModal.vue'
-const { builder } = useDatabaseStore()
+import CreateCustomerModal from './customer/CreateCustomerModal.vue'
+import HomeContent from './HomeContent.vue'
+import CreateSaleModal from './sale/CreateSaleModal.vue'
+const { knex } = useDatabaseStore()
 
-const isSaleModalOpen = ref<boolean>(false)
-const isNewCustomerModalOpen = ref<boolean>(false)
+const isCreateSaleModalOpen = ref<boolean>(false)
+const isCreateCustomerModalOpen = ref<boolean>(false)
 const items = ref<any[]>([])
 
 onMounted(async () => {
-  const builderQuery = builder
+  const builder = knex
     .select([
       'sales.id as id',
       ...(await prefixColumns('*', 'customers', 'customer')),
@@ -39,7 +39,7 @@ onMounted(async () => {
     .join('products', 'sales.product_id', '=', 'products.id')
     .orderBy('sales.date', 'desc')
 
-  items.value = await dbSelect(builderQuery)
+  items.value = await dbSelect(builder)
 })
 </script>
 
@@ -52,13 +52,13 @@ onMounted(async () => {
     </IonHeader>
 
     <IonContent>
-      <NewSaleModal
-        :is-open="isSaleModalOpen"
-        @did-dismiss="isSaleModalOpen = false"
+      <CreateSaleModal
+        :is-open="isCreateSaleModalOpen"
+        @did-dismiss="isCreateSaleModalOpen = false"
       />
-      <NewCustomerModal
-        :is-open="isNewCustomerModalOpen"
-        @did-dismiss="isNewCustomerModalOpen = false"
+      <CreateCustomerModal
+        :is-open="isCreateCustomerModalOpen"
+        @did-dismiss="isCreateCustomerModalOpen = false"
       />
 
       <HomeContent :items="items" />
@@ -76,14 +76,14 @@ onMounted(async () => {
           <IonFabButton
             color="light"
             data-label="Nova venda"
-            @click="isSaleModalOpen = true"
+            @click="isCreateSaleModalOpen = true"
           >
             <IonIcon :icon="cart" />
           </IonFabButton>
           <IonFabButton
             color="light"
             data-label="Novo cliente"
-            @click="isNewCustomerModalOpen = true"
+            @click="isCreateCustomerModalOpen = true"
           >
             <IonIcon :icon="peopleCircle" />
           </IonFabButton>

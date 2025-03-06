@@ -8,12 +8,12 @@ import { useDatabaseStore } from '@/stores/database-store'
 import { Customer, Sale } from './models'
 
 export const seedDatabase = async () => {
-  const { database, builder } = useDatabaseStore()
+  const { database, knex } = useDatabaseStore()
 
   await truncateAllTables(database)
-  await seedCustomers(builder)
-  await seedProducts(builder)
-  await seedSales(builder)
+  await seedCustomers(knex)
+  await seedProducts(knex)
+  await seedSales(knex)
 }
 
 const truncateAllTables = async (database: SQLiteDBConnection) => {
@@ -24,7 +24,7 @@ const truncateAllTables = async (database: SQLiteDBConnection) => {
   }
 }
 
-const seedCustomers = async (builder: Knex) => {
+const seedCustomers = async (knex: Knex) => {
   const data: Customer[] = []
   const QUANTITY = faker.number.int({ min: 20, max: 40 })
 
@@ -39,13 +39,13 @@ const seedCustomers = async (builder: Knex) => {
     })
   }
 
-  await dbInsert(builder.insert(data).into('customers'))
+  await dbInsert(knex.insert(data).into('customers'))
 }
 
-const seedProducts = async (builder: Knex) => {
+const seedProducts = async (knex: Knex) => {
   const PRODUCTS = ['Feijão com arroz', 'Salada', 'Bife', 'Cachorro-quente', 'Sanduíche']
 
-  const sql = builder
+  const sql = knex
     .insert(
       PRODUCTS.map((name, index) => ({
         id: index,
@@ -58,11 +58,11 @@ const seedProducts = async (builder: Knex) => {
   await dbInsert(sql)
 }
 
-const seedSales = async (builder: Knex) => {
+const seedSales = async (knex: Knex) => {
   const QUANTITY = faker.number.int({ min: 100, max: 200 })
 
-  const customers = (await dbSelect(builder.select('id').from('customers')))?.map(({ id }) => id)
-  const products = (await dbSelect(builder.select('id').from('products')))?.map(({ id }) => id)
+  const customers = (await dbSelect(knex.select('id').from('customers')))?.map(({ id }) => id)
+  const products = (await dbSelect(knex.select('id').from('products')))?.map(({ id }) => id)
   const data: Sale[] = []
 
   for (let i = 1; i < QUANTITY; i++) {
@@ -84,5 +84,5 @@ const seedSales = async (builder: Knex) => {
     })
   }
 
-  await dbInsert(builder.insert(data).into('sales'))
+  await dbInsert(knex.insert(data).into('sales'))
 }

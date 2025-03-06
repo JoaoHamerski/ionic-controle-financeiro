@@ -20,7 +20,7 @@ import AppInput from '@/components/AppInput.vue'
 import { useForm } from '@/composables/use-form'
 import { currencyBrlMask, positiveIntMask } from '@/support/masks'
 
-import NewSaleFormCustomerModal from './NewSaleFormCustomerModal.vue'
+import SaleFormSelectCustomerModal from './SaleFormSelectCustomerModal.vue'
 
 const form = useForm({
   price: '',
@@ -151,7 +151,7 @@ const isCustomerModalOpen = ref(false)
       </IonFab>
     </IonFooter>
 
-    <NewSaleFormCustomerModal
+    <SaleFormSelectCustomerModal
       :is-open="isCustomerModalOpen"
       @did-dismiss="isCustomerModalOpen = false"
     />

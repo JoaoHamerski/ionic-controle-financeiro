@@ -1,5 +1,5 @@
 import { CapacitorSQLite, SQLiteConnection, SQLiteDBConnection } from '@capacitor-community/sqlite'
-import { type Knex, knex } from 'knex'
+import { type Knex, knex as knexBuilder } from 'knex'
 import { defineStore } from 'pinia'
 import { Ref, ref } from 'vue'
 
@@ -10,11 +10,11 @@ const DATABASE_NAME = 'sales'
 export const useDatabaseStore = defineStore('database', () => {
   const connection = new SQLiteConnection(CapacitorSQLite)
   const database = ref<SQLiteDBConnection>() as Ref<SQLiteDBConnection>
-  const builder = ref<Knex>() as Ref<Knex>
+  const knex = ref<Knex>() as Ref<Knex>
 
   const initDatabase = async () => {
     database.value = await initConnection()
-    builder.value = knex({ client: 'sqlite3', useNullAsDefault: false })
+    knex.value = knexBuilder({ client: 'sqlite3', useNullAsDefault: false })
 
     await database.value.open()
 
@@ -53,5 +53,5 @@ export const useDatabaseStore = defineStore('database', () => {
     return pragmaUserVersion?.values ? pragmaUserVersion.values[0]?.user_version : 0
   }
 
-  return { database, initDatabase, builder }
+  return { database, initDatabase, knex }
 })

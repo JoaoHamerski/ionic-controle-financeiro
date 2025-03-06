@@ -3,18 +3,15 @@ import {
   IonButton,
   IonButtons,
   IonContent,
-  IonFab,
-  IonFabButton,
-  IonFooter,
   IonHeader,
   IonIcon,
   IonModal,
   IonToolbar,
 } from '@ionic/vue'
-import { arrowBackOutline, checkmark } from 'ionicons/icons'
+import { arrowBackOutline } from 'ionicons/icons'
 import { ref } from 'vue'
 
-import NewCustomerForm from './NewCustomerForm.vue'
+import SaleForm from './SaleForm.vue'
 
 const modal = ref()
 </script>
@@ -35,23 +32,13 @@ const modal = ref()
     </IonHeader>
 
     <IonContent class="ion-padding">
-      <NewCustomerForm @submitted="modal.$el.dismiss()" />
+      <SaleForm />
     </IonContent>
-
-    <IonFooter>
-      <IonFab
-        slot="fixed"
-        vertical="bottom"
-        horizontal="end"
-      >
-        <IonFabButton> <IonIcon :icon="checkmark" /> </IonFabButton>
-      </IonFab>
-    </IonFooter>
   </IonModal>
 </template>
 
 <style scoped>
-ion-button {
+ion-toolbar ion-button {
   --padding-top: 15px;
   --padding-bottom: 15px;
 }

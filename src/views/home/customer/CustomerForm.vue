@@ -22,10 +22,10 @@ import { useDatabaseStore } from '@/stores/database-store'
 import { stripNonDigits } from '@/support/helpers'
 import { phoneMask } from '@/support/masks'
 
-import FormHeaderRows from './FormHeaderRows.vue'
+import FormHeaderRows from '../_partials/FormHeaderRows.vue'
 
 const emit = defineEmits(['submitted'])
-const { builder } = useDatabaseStore()
+const { knex } = useDatabaseStore()
 
 const form = useForm(
   { name: '', phone: '', phoneRaw: '' },
@@ -52,7 +52,7 @@ const submit = async () => {
 
   const { name, phone } = form.data
 
-  await dbInsert(builder.insert({ name, phone }).into('customers'))
+  await dbInsert(knex.insert({ name, phone }).into('customers'))
 
   emit('submitted')
 }
