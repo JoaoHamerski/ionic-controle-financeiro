@@ -4,13 +4,13 @@ export default [
     statements: [
       `CREATE TABLE IF NOT EXISTS customers (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
+        name TEXT NOT NULL COLLATE NOCASE,
         phone TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP    
     );`,
       `CREATE TABLE IF NOT EXISTS products (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
+        name TEXT COLLATE NOCASE,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP    
     );`,
       `CREATE TABLE IF NOT EXISTS sales (

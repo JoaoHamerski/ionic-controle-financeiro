@@ -29,9 +29,11 @@ const seedCustomers = async (knex: Knex) => {
   const QUANTITY = faker.number.int({ min: 20, max: 40 })
 
   for (let i = 1; i <= QUANTITY; i++) {
+    const name = faker.person.firstName() + ' ' + faker.person.lastName()
+
     data.push({
       id: i,
-      name: faker.person.fullName(),
+      name: faker.datatype.boolean({ probability: 0.5 }) ? name.toLowerCase() : name,
       phone: faker.datatype.boolean({ probability: 0.5 })
         ? faker.string.numeric({ length: { min: 10, max: 11 } })
         : null,

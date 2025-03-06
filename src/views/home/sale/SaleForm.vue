@@ -18,21 +18,37 @@ import { ref } from 'vue'
 
 import AppInput from '@/components/AppInput.vue'
 import { useForm } from '@/composables/use-form'
+import { Customer, Product } from '@/database/models'
 import { currencyBrlMask, positiveIntMask } from '@/support/masks'
 
 import SaleFormSelectCustomerModal from './SaleFormSelectCustomerModal.vue'
 
-const form = useForm({
+type SaleFormFields = {
+  price: string
+  quantity: number
+  customer: Customer | null
+  product: Product | null
+  is_paid: boolean
+  date: string
+  type: 'sell' | 'expense'
+}
+
+const form = useForm<SaleFormFields, keyof SaleFormFields>({
   price: '',
   quantity: 1,
-  customer: {},
-  product: {},
+  customer: null,
+  product: null,
   is_paid: false,
   date: '',
   type: 'sell',
 })
 
 const isCustomerModalOpen = ref(false)
+
+const onCustomerSelected = ({ customer }: { customer: Customer }) => {
+  isCustomerModalOpen.value = false
+  form.data.customer = customer
+}
 </script>
 
 <template>
@@ -92,13 +108,21 @@ const isCustomerModalOpen = ref(false)
         >
           <IonCol>
             <IonSelect
+              :value="form.data.customer?.id"
+              label="Cliente"
               name="customer"
               interface="popover"
-              label="Cliente"
               fill="outline"
               label-placement="floating"
               @click.capture.stop="isCustomerModalOpen = true"
-            />
+            >
+              <IonSelectOption
+                v-if="form.data.customer"
+                :value="form.data.customer.id"
+              >
+                {{ form.data.customer.name }}
+              </IonSelectOption>
+            </IonSelect>
           </IonCol>
         </IonRow>
         <IonRow class="ion-margin-bottom">
@@ -153,6 +177,7 @@ const isCustomerModalOpen = ref(false)
 
     <SaleFormSelectCustomerModal
       :is-open="isCustomerModalOpen"
+      @customer-selected="onCustomerSelected"
       @did-dismiss="isCustomerModalOpen = false"
     />
   </form>

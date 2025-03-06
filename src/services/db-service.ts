@@ -25,9 +25,9 @@ export const dbSelect = async (builder: Knex.QueryBuilder) => {
 }
 
 export const dbSelectById = async (table: string, id: string | number) => {
-  const { database, builder } = useDatabaseStore()
+  const { database, knex } = useDatabaseStore()
 
-  const native = builder(table).where({ id }).toSQL().toNative()
+  const native = knex(table).where({ id }).toSQL().toNative()
   const result = await database.query(native.sql, native.bindings as any[])
 
   return result.values ? result.values[0] : null

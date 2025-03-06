@@ -16,10 +16,11 @@ import { useDatabaseStore } from '@/stores/database-store'
 import CustomersList from './_partials/CustomersList.vue'
 
 const customers = ref<Customer[]>()
-const database = useDatabaseStore()
+const { knex } = useDatabaseStore()
 
 onIonViewWillEnter(async () => {
-  const builder = database.builder.select('*').from('customers').orderBy('name', 'asc')
+  const builder = knex.select('*').from('customers').orderByRaw('name COLLATE NOCASE')
+  console.log(builder.toSQL().toNative().sql)
   const values = await dbSelect(builder)
 
   customers.value = values
@@ -34,7 +35,10 @@ onIonViewWillEnter(async () => {
       </IonToolbar>
     </IonHeader>
     <IonContent>
-      <CustomersList :customers="customers!" />
+      <CustomersList
+        v-if="customers"
+        :customers="customers"
+      />
     </IonContent>
   </IonPage>
 </template>
