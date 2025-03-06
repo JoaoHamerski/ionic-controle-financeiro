@@ -14,6 +14,7 @@ import {
 } from '@ionic/vue'
 import { maskito as vMaskito } from '@maskito/vue'
 import { checkmark } from 'ionicons/icons'
+import { DateTime } from 'luxon'
 import { ref } from 'vue'
 
 import AppInput from '@/components/AppInput.vue'
@@ -39,7 +40,7 @@ const form = useForm<SaleFormFields, keyof SaleFormFields>({
   customer: null,
   product: null,
   is_paid: false,
-  date: '',
+  date: DateTime.now().toISODate(),
   type: 'sell',
 })
 

@@ -12,6 +12,7 @@ import {
   IonToolbar,
 } from '@ionic/vue'
 import { arrowBackOutline } from 'ionicons/icons'
+import { upperFirst } from 'lodash'
 import { ref } from 'vue'
 
 import AppInput from '@/components/AppInput.vue'
@@ -19,16 +20,16 @@ import { Customer } from '@/database/models'
 import { dbInsert, dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 
+const { knex } = useDatabaseStore()
+
 const emit = defineEmits(['customer-selected'])
 
 const modal = ref()
 const customers = ref<Customer[]>([])
 const customerSearch = ref<string>('')
-const isInitFetched = ref<boolean>(false)
-const { knex } = useDatabaseStore()
 
 const fetch = async (search?: string) => {
-  const sql = knex.select('*').from('customers').orderBy('name')
+  const sql = knex.select(['id', 'name']).from('customers').orderByRaw('name COLLATE NOCASE')
 
   if (search) {
     sql.whereLike('name', `%${search}%`)
@@ -59,13 +60,10 @@ const selectCustomer = (customer: Customer) => {
 
 const onModalWillPresent = async () => {
   await fetch()
-
-  isInitFetched.value = true
 }
 
 const onModalDidDismiss = () => {
   customerSearch.value = ''
-  isInitFetched.value = false
 }
 </script>
 
@@ -126,7 +124,7 @@ const onModalDidDismiss = () => {
           @click="selectCustomer(customer)"
         >
           <IonLabel>
-            {{ customer.name }}
+            {{ upperFirst(customer.name) }}
           </IonLabel>
 
           <IonLabel
