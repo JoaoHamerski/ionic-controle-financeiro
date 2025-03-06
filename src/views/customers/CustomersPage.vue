@@ -20,7 +20,6 @@ const { knex } = useDatabaseStore()
 
 onIonViewWillEnter(async () => {
   const builder = knex.select('*').from('customers').orderByRaw('name COLLATE NOCASE')
-  console.log(builder.toSQL().toNative().sql)
   const values = await dbSelect(builder)
 
   customers.value = values

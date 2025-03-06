@@ -2,26 +2,25 @@
 import { ref } from 'vue'
 
 import AppTypeaheadModal from '@/components/AppTypeaheadModal.vue'
-import { Customer } from '@/database/models'
+import { Product } from '@/database/models'
 import { dbInsert, dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 
 const { knex } = useDatabaseStore()
 
-const emit = defineEmits(['customer-selected'])
-
-const customers = ref<Customer[]>([])
+const emit = defineEmits(['product-selected'])
+const products = ref<Product[]>([])
 
 const onSearch = (search?: string) => {
   fetch(search)
 }
 
-const onModalWillPresent = async () => {
-  await fetch()
+const onModalWillPresent = () => {
+  fetch()
 }
 
 const fetch = async (search?: string) => {
-  const builder = knex.select(['id', 'name']).from('customers').orderByRaw('name COLLATE NOCASE')
+  const builder = knex.select(['id', 'name']).from('products').orderByRaw('name COLLATE NOCASE')
 
   if (search) {
     builder.whereLike('name', `%${search}%`)
@@ -29,36 +28,36 @@ const fetch = async (search?: string) => {
 
   const data = await dbSelect(builder)
 
-  customers.value = data
+  products.value = data
 }
 
-const createCustomer = async (search: string) => {
-  const data = await dbInsert(knex.insert({ name: search }).into('customers'))
+const createProduct = async (search: string) => {
+  const data = await dbInsert(knex.insert({ name: search }).into('products'))
 
   if (!data) {
-    throw new Error('Error on creating customer')
+    throw new Error('Error on creating product')
   }
 
-  selectCustomer(data as Customer)
+  selectProduct(data as Product)
 }
 
-const selectCustomer = (customer: Customer) => {
-  emit('customer-selected', { customer })
+const selectProduct = (product: Product) => {
+  emit('product-selected', { product })
 }
 </script>
 
 <template>
   <AppTypeaheadModal
-    title="Selecione um cliente"
-    :items="customers"
+    title="Selecione um produto"
+    :items="products"
     item-prop="name"
     :input-attrs="{
-      label: 'Cliente',
+      label: 'Produto',
       placeholder: 'Digite o nome...',
       helperText: 'Ou digite o nome para cadastrar',
     }"
-    @select="selectCustomer"
-    @create="createCustomer"
+    @select="selectProduct"
+    @create="createProduct"
     @ion-modal-will-present="onModalWillPresent"
     @update:search="onSearch"
   />

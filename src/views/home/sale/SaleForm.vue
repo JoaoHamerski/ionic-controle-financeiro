@@ -23,6 +23,7 @@ import { Customer, Product } from '@/database/models'
 import { currencyBrlMask, positiveIntMask } from '@/support/masks'
 
 import SelectCustomerModal from '../_partials/SelectCustomerModal.vue'
+import SelectProductModal from '../_partials/SelectProductModal.vue'
 
 type SaleFormFields = {
   price: string
@@ -45,10 +46,16 @@ const form = useForm<SaleFormFields, keyof SaleFormFields>({
 })
 
 const isSelectCustomerModalOpen = ref(false)
+const isSelectProductModalOpen = ref(false)
 
 const onCustomerSelected = ({ customer }: { customer: Customer }) => {
   isSelectCustomerModalOpen.value = false
   form.data.customer = customer
+}
+
+const onProductSelected = ({ product }: { product: Product }) => {
+  isSelectProductModalOpen.value = false
+  form.data.product = product
 }
 </script>
 
@@ -129,13 +136,21 @@ const onCustomerSelected = ({ customer }: { customer: Customer }) => {
         <IonRow class="ion-margin-bottom">
           <IonCol>
             <IonSelect
+              :value="form.data.product?.id"
               name="product"
               interface="popover"
               label="Produto"
               fill="outline"
               label-placement="floating"
-              @click.capture.stop
-            />
+              @click.capture.stop="isSelectProductModalOpen = true"
+            >
+              <IonSelectOption
+                v-if="form.data.product"
+                :value="form.data.product.id"
+              >
+                {{ form.data.product.name }}
+              </IonSelectOption>
+            </IonSelect>
           </IonCol>
         </IonRow>
         <IonRow class="ion-margin-bottom">
@@ -179,6 +194,12 @@ const onCustomerSelected = ({ customer }: { customer: Customer }) => {
     <SelectCustomerModal
       :is-open="isSelectCustomerModalOpen"
       @customer-selected="onCustomerSelected"
+      @did-dismiss="isSelectCustomerModalOpen = false"
+    />
+
+    <SelectProductModal
+      :is-open="isSelectProductModalOpen"
+      @product-selected="onProductSelected"
       @did-dismiss="isSelectCustomerModalOpen = false"
     />
   </form>
