@@ -13,7 +13,14 @@ import { ref } from 'vue'
 
 import SaleForm from './SaleForm.vue'
 
+const emit = defineEmits(['submitted'])
 const modal = ref()
+
+const onFormSubmit = () => {
+  modal.value.$el.dismiss()
+
+  emit('submitted')
+}
 </script>
 
 <template>
@@ -32,7 +39,7 @@ const modal = ref()
     </IonHeader>
 
     <IonContent class="ion-padding">
-      <SaleForm />
+      <SaleForm @submitted="onFormSubmit" />
     </IonContent>
   </IonModal>
 </template>

@@ -27,6 +27,10 @@ const isCreateCustomerModalOpen = ref<boolean>(false)
 const items = ref<any[]>([])
 
 onMounted(async () => {
+  await fetch()
+})
+
+const fetch = async () => {
   const builder = knex
     .select([
       'sales.id as id',
@@ -38,9 +42,10 @@ onMounted(async () => {
     .join('customers', 'sales.customer_id', '=', 'customers.id')
     .join('products', 'sales.product_id', '=', 'products.id')
     .orderBy('sales.date', 'desc')
+    .orderBy('sales.created_at', 'desc')
 
   items.value = await dbSelect(builder)
-})
+}
 </script>
 
 <template>
@@ -54,6 +59,7 @@ onMounted(async () => {
     <IonContent>
       <CreateSaleModal
         :is-open="isCreateSaleModalOpen"
+        @submitted="fetch"
         @did-dismiss="isCreateSaleModalOpen = false"
       />
       <CreateCustomerModal

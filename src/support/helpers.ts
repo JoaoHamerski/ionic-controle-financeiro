@@ -1,3 +1,5 @@
+import { upperFirst } from 'lodash'
+
 import { dbTableColumns } from '@/services/db-service'
 
 export const stripNonDigits = (value: string) => value.replace(/\D/g, '')
@@ -8,5 +10,15 @@ export const prefixColumns = async (columns: string[] | '*', table: string, pref
   return allColumns.map((column) => `${table}.${column} as ${prefix}_${column}`)
 }
 
-export const formatCurrency = (value: string | number) =>
+export const formatCurrencyBRL = (value: string | number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(+value)
+
+export const parseCurrencyBRL = (value: string) => {
+  return value.replaceAll('.', '').replaceAll(',', '.').replaceAll('R$ ', '')
+}
+
+export const titleCase = (value: string, except: string[] = ['de', 'da', 'dos', 'do', 'das']) =>
+  value
+    .split(' ')
+    .map((word) => (except.includes(word) ? word : upperFirst(word)))
+    .join(' ')

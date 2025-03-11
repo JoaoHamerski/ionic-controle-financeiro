@@ -9,17 +9,22 @@ import {
   IonGrid,
   IonIcon,
   IonRow,
-  IonSelect,
   IonSelectOption,
 } from '@ionic/vue'
 import { maskito as vMaskito } from '@maskito/vue'
+import { helpers, minValue, required } from '@vuelidate/validators'
 import { checkmark } from 'ionicons/icons'
 import { DateTime } from 'luxon'
 import { ref } from 'vue'
+import { computed } from 'vue'
 
 import AppInput from '@/components/AppInput.vue'
+import AppSelect from '@/components/AppSelect.vue'
 import { useForm } from '@/composables/use-form'
 import { Customer, Product } from '@/database/models'
+import { dbInsert } from '@/services/db-service'
+import { useDatabaseStore } from '@/stores/database-store'
+import { parseCurrencyBRL } from '@/support/helpers'
 import { currencyBrlMask, positiveIntMask } from '@/support/masks'
 
 import SelectCustomerModal from '../_partials/SelectCustomerModal.vue'
@@ -35,18 +40,40 @@ type SaleFormFields = {
   type: 'sell' | 'expense'
 }
 
+const { knex } = useDatabaseStore()
+
+const emit = defineEmits(['submitted'])
+
 const form = useForm<SaleFormFields, keyof SaleFormFields>({
+  type: 'sell',
   price: '',
   quantity: 1,
   customer: null,
   product: null,
   is_paid: false,
   date: DateTime.now().toISODate(),
-  type: 'sell',
 })
 
 const isSelectCustomerModalOpen = ref(false)
 const isSelectProductModalOpen = ref(false)
+
+const rules = computed(() => {
+  const localRules: Partial<Record<keyof SaleFormFields, object>> = {
+    type: { required: helpers.withMessage('Por favor, selecione o tipo', required) },
+    price: { required: helpers.withMessage('Por favor, informe um preço', required) },
+    quantity: { minValue: helpers.withMessage('Mín. 1', minValue(1)) },
+    product: { required: helpers.withMessage('Por favor, selecione um produto', required) },
+    date: { required: helpers.withMessage('Por favor, informe uma data', required) },
+  }
+
+  if (form.data.type === 'sell') {
+    localRules.customer = {
+      required: helpers.withMessage('Por favor, selecione um cliente', required),
+    }
+  }
+
+  return localRules
+})
 
 const onCustomerSelected = ({ customer }: { customer: Customer }) => {
   isSelectCustomerModalOpen.value = false
@@ -57,12 +84,46 @@ const onProductSelected = ({ product }: { product: Product }) => {
   isSelectProductModalOpen.value = false
   form.data.product = product
 }
+
+const onTypeChange = () => {
+  form.data.customer = null
+}
+
+const submit = async () => {
+  form.setRules(rules.value)
+
+  if (!(await form.validate())) {
+    return
+  }
+  await insert()
+  emit('submitted')
+}
+
+const insert = async () => {
+  const price = +parseCurrencyBRL(form.data.price)
+  const quantity = form.data.quantity
+  const total = (price * quantity).toFixed(2)
+
+  const data = {
+    customer_id: form.data.customer?.id || null,
+    product_id: form.data.product!.id,
+    price,
+    quantity,
+    is_paid: form.data.is_paid,
+    date: form.data.date,
+    total,
+  }
+
+  dbInsert(knex.insert(data).into('sales'))
+}
 </script>
 
 <template>
   <form
     action=""
     style="height: 100%"
+    @submit.prevent="submit"
+    @focus.capture="form.clearErrorOnFocus"
   >
     <IonContent>
       <IonGrid class="ion-margin-bottom">
@@ -73,16 +134,16 @@ const onProductSelected = ({ product }: { product: Product }) => {
         </IonRow>
         <IonRow class="ion-margin-bottom">
           <IonCol>
-            <IonSelect
+            <AppSelect
               v-model="form.data.type"
               interface="popover"
               label="Tipo de entrada"
-              fill="outline"
-              label-placement="floating"
+              :error="form.errors.type"
+              @ion-change="onTypeChange"
             >
               <IonSelectOption value="sell">Venda</IonSelectOption>
               <IonSelectOption value="expense">Despesa</IonSelectOption>
-            </IonSelect>
+            </AppSelect>
           </IonCol>
         </IonRow>
 
@@ -115,13 +176,12 @@ const onProductSelected = ({ product }: { product: Product }) => {
           class="ion-margin-bottom"
         >
           <IonCol>
-            <IonSelect
+            <AppSelect
               :value="form.data.customer?.id"
+              :error="form.errors.customer"
               label="Cliente"
               name="customer"
               interface="popover"
-              fill="outline"
-              label-placement="floating"
               @click.capture.stop="isSelectCustomerModalOpen = true"
             >
               <IonSelectOption
@@ -130,18 +190,17 @@ const onProductSelected = ({ product }: { product: Product }) => {
               >
                 {{ form.data.customer.name }}
               </IonSelectOption>
-            </IonSelect>
+            </AppSelect>
           </IonCol>
         </IonRow>
         <IonRow class="ion-margin-bottom">
           <IonCol>
-            <IonSelect
+            <AppSelect
               :value="form.data.product?.id"
+              :error="form.errors.product"
               name="product"
               interface="popover"
               label="Produto"
-              fill="outline"
-              label-placement="floating"
               @click.capture.stop="isSelectProductModalOpen = true"
             >
               <IonSelectOption
@@ -150,7 +209,7 @@ const onProductSelected = ({ product }: { product: Product }) => {
               >
                 {{ form.data.product.name }}
               </IonSelectOption>
-            </IonSelect>
+            </AppSelect>
           </IonCol>
         </IonRow>
         <IonRow class="ion-margin-bottom">
@@ -185,7 +244,10 @@ const onProductSelected = ({ product }: { product: Product }) => {
         vertical="bottom"
         horizontal="end"
       >
-        <IonFabButton type="submit">
+        <IonFabButton
+          type="submit"
+          @click="submit"
+        >
           <IonIcon :icon="checkmark" />
         </IonFabButton>
       </IonFab>
@@ -200,7 +262,7 @@ const onProductSelected = ({ product }: { product: Product }) => {
     <SelectProductModal
       :is-open="isSelectProductModalOpen"
       @product-selected="onProductSelected"
-      @did-dismiss="isSelectCustomerModalOpen = false"
+      @did-dismiss="isSelectProductModalOpen = false"
     />
   </form>
 </template>

@@ -3,7 +3,8 @@ import { IonIcon, IonItem, IonLabel, IonList } from '@ionic/vue'
 import { calendarSharp, checkmarkCircleSharp, personSharp, timeSharp } from 'ionicons/icons'
 import { DateTime } from 'luxon'
 
-import { formatCurrency } from '@/support/helpers'
+import { titleCase } from '@/support/helpers'
+import { formatCurrencyBRL } from '@/support/helpers'
 
 defineProps<{
   items: any[]
@@ -30,11 +31,14 @@ defineProps<{
                       : 'var(--ion-color-danger-shade)',
                 }"
               >
-                {{ formatCurrency(item.sale_total) }}
+                {{ formatCurrencyBRL(item.sale_total) }}
               </h2>
-              <div :style="{ fontSize: '.8rem', color: 'var(--ion-color-medium)' }">
+              <div
+                v-if="item.sale_total > 0"
+                :style="{ fontSize: '.8rem', color: 'var(--ion-color-medium)' }"
+              >
                 <IonIcon :icon="personSharp" />
-                {{ item.customer_name }}
+                {{ titleCase(item.customer_name) }}
               </div>
               <div
                 :style="{ fontSize: '.8rem', color: 'var(--ion-color-medium)', marginTop: '.2rem' }"
@@ -76,7 +80,7 @@ defineProps<{
                 v-if="item.sale_quantity > 1"
                 :style="{ fontSize: '.7rem', color: 'var(--ion-color-medium)' }"
               >
-                ({{ item.sale_quantity }} x {{ formatCurrency(item.sale_price) }})
+                ({{ item.sale_quantity }} x {{ formatCurrencyBRL(item.sale_price) }})
               </span>
             </div>
           </div>

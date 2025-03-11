@@ -1,12 +1,17 @@
 import useVuelidate from '@vuelidate/core'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 
 export const useForm = <T extends object, K extends keyof T>(formData: T, rules: any = {}) => {
   const data = reactive<T>(formData)
   const errors = reactive<Record<K, string> | Record<string, any>>({})
-  const v$ = useVuelidate(rules, formData)
+  const localRules = ref(rules)
+
+  const setRules = (rules = {}) => {
+    localRules.value = rules
+  }
 
   const validate = async () => {
+    const v$ = useVuelidate(localRules.value, formData)
     const result = await v$.value.$validate()
 
     for (const error of v$.value.$errors) {
@@ -26,5 +31,5 @@ export const useForm = <T extends object, K extends keyof T>(formData: T, rules:
     clearError(target.name)
   }
 
-  return { data, errors, validate, clearError, clearErrorOnFocus }
+  return { data, setRules, errors, validate, clearError, clearErrorOnFocus }
 }

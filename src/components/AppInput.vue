@@ -12,7 +12,7 @@ defineProps<{
     :class="{
       'ion-invalid ion-touched': !!error,
     }"
-    :error-text-="error"
+    :error-text="error"
     fill="outline"
     label-placement="floating"
   />
