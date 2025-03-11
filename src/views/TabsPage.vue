@@ -8,7 +8,7 @@ import {
   IonTabButton,
   IonTabs,
 } from '@ionic/vue'
-import { calendar, home, peopleCircle } from 'ionicons/icons'
+import { calendar, cog, home } from 'ionicons/icons'
 
 type TabsItem = {
   icon: string
@@ -31,10 +31,10 @@ const TABS: TabsItem[] = [
     tab: 'monthly-balance',
   },
   {
-    label: 'Clientes',
-    href: '/tabs/clientes',
-    icon: peopleCircle,
-    tab: 'clients',
+    label: 'Opções',
+    href: '/tabs/opcoes',
+    icon: cog,
+    tab: 'opcoes',
   },
 ]
 </script>

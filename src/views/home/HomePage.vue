@@ -17,9 +17,9 @@ import { useDatabaseStore } from '@/stores/database-store'
 import { prefixColumns } from '@/support/helpers'
 
 import HomeFabButton from './_partials/HomeFabButton.vue'
-import SalesList from './_partials/SalesList.vue'
 import CreateCustomerModal from './customer/CreateCustomerModal.vue'
 import CreateSaleModal from './sale/CreateSaleModal.vue'
+import SalesList from './sales-list-item/SalesList.vue'
 
 type Segment = 'all' | 'sales' | 'expenses'
 

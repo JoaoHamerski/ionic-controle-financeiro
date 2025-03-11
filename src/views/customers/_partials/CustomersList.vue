@@ -3,6 +3,7 @@ import { IonButton, IonIcon, IonItem, IonLabel, IonList } from '@ionic/vue'
 import { createOutline, logoWhatsapp } from 'ionicons/icons'
 
 import { Customer } from '@/database/models'
+import { titleCase } from '@/support/helpers'
 
 defineProps<{
   customers: Customer[]
@@ -16,7 +17,7 @@ defineProps<{
       :key="customer.id"
     >
       <IonLabel>
-        {{ customer.name }}
+        {{ titleCase(customer.name) }}
       </IonLabel>
       <IonButton
         v-if="customer.phone"

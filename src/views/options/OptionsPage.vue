@@ -6,9 +6,9 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue
   <IonPage>
     <IonHeader>
       <IonToolbar>
-        <IonTitle> Balanço Mensal </IonTitle>
+        <IonTitle>Opções</IonTitle>
       </IonToolbar>
     </IonHeader>
-    <IonContent class="ion-padding"> Balanço Mensal </IonContent>
+    <IonContent class="ion-padding">Opções</IonContent>
   </IonPage>
 </template>
