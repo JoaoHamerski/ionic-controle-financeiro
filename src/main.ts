@@ -2,6 +2,7 @@ import '@/support/plugins'
 import '@/bootstrap/styles'
 
 import { SplashScreen } from '@capacitor/splash-screen'
+import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import { IonicVue } from '@ionic/vue'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
@@ -16,7 +17,7 @@ if (import.meta.hot) {
 }
 
 const pinia = createPinia()
-const app = createApp(App).use(IonicVue).use(router).use(pinia)
+const app = createApp(App).use(IonicVue).use(router).use(pinia).use(autoAnimatePlugin)
 
 router.isReady().then(async () => {
   const { initDatabase } = useDatabaseStore()

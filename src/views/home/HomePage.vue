@@ -1,37 +1,42 @@
 <script setup lang="ts">
 import {
   IonContent,
-  IonFab,
-  IonFabButton,
-  IonFabList,
   IonHeader,
   IonIcon,
+  IonLabel,
   IonPage,
-  IonTitle,
+  IonSegment,
+  IonSegmentButton,
   IonToolbar,
 } from '@ionic/vue'
-import { add, cart, peopleCircle } from 'ionicons/icons'
+import { basketSharp, funnelSharp, listOutline } from 'ionicons/icons'
 import { onMounted, ref } from 'vue'
 
 import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { prefixColumns } from '@/support/helpers'
 
+import HomeFabButton from './_partials/HomeFabButton.vue'
+import SalesList from './_partials/SalesList.vue'
 import CreateCustomerModal from './customer/CreateCustomerModal.vue'
-import HomeContent from './HomeContent.vue'
 import CreateSaleModal from './sale/CreateSaleModal.vue'
+
+type Segment = 'all' | 'sales' | 'expenses'
+
 const { knex } = useDatabaseStore()
 
 const isCreateSaleModalOpen = ref<boolean>(false)
 const isCreateCustomerModalOpen = ref<boolean>(false)
+
 const items = ref<any[]>([])
 
+const segment = ref<Segment>('all')
+
 onMounted(async () => {
-  await fetch()
-  console.log('fetched')
+  fetch('all')
 })
 
-const fetch = async () => {
+const fetch = async (fetchSegment: Segment) => {
   const builder = knex
     .select([
       'sales.id as id',
@@ -42,10 +47,25 @@ const fetch = async () => {
     .from('sales')
     .leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
     .join('products', 'sales.product_id', '=', 'products.id')
+    .limit(20)
     .orderBy('sales.date', 'desc')
     .orderBy('sales.created_at', 'desc')
 
+  if (fetchSegment === 'sales') {
+    builder.where('total', '>', 0)
+  }
+
+  if (fetchSegment === 'expenses') {
+    builder.where('total', '<', 0)
+  }
+
   items.value = await dbSelect(builder)
+}
+
+const onSegmentChange = async (selectedSegment: Segment) => {
+  segment.value = selectedSegment
+
+  fetch(selectedSegment)
 }
 </script>
 
@@ -53,72 +73,84 @@ const fetch = async () => {
   <IonPage>
     <IonHeader>
       <IonToolbar>
-        <IonTitle> Início </IonTitle>
+        <IonSegment
+          value="all"
+          color="light"
+        >
+          <IonSegmentButton
+            value="all"
+            @click="onSegmentChange('all')"
+          >
+            <IonIcon
+              :icon="listOutline"
+              color="white"
+            />
+            <IonLabel :style="{ color: 'var(--ion-color-light)' }">Tudo</IonLabel>
+          </IonSegmentButton>
+
+          <IonSegmentButton
+            value="sales"
+            @click="onSegmentChange('sales')"
+          >
+            <IonIcon
+              :icon="basketSharp"
+              color="white"
+            />
+            <IonLabel :style="{ color: 'var(--ion-color-light)' }">Vendas</IonLabel>
+          </IonSegmentButton>
+
+          <IonSegmentButton
+            value="expenses"
+            @click="onSegmentChange('expenses')"
+          >
+            <IonIcon
+              :icon="funnelSharp"
+              color="white"
+            />
+            <IonLabel :style="{ color: 'var(--ion-color-light)' }">Despesas</IonLabel>
+          </IonSegmentButton>
+        </IonSegment>
       </IonToolbar>
     </IonHeader>
 
-    <IonContent>
-      <CreateSaleModal
-        :is-open="isCreateSaleModalOpen"
-        @submitted="fetch"
-        @did-dismiss="isCreateSaleModalOpen = false"
-      />
-      <CreateCustomerModal
-        :is-open="isCreateCustomerModalOpen"
-        @did-dismiss="isCreateCustomerModalOpen = false"
-      />
-
-      <HomeContent :items="items" />
-
-      <IonFab
-        slot="fixed"
-        vertical="bottom"
-        horizontal="end"
+    <IonContent :style="{ backgroundColor: 'white' }">
+      <Transition
+        name="fade"
+        mode="out-in"
       >
-        <IonFabButton color="success">
-          <IonIcon :icon="add" />
-        </IonFabButton>
+        <SalesList
+          :key="segment"
+          :items="items"
+        />
+      </Transition>
 
-        <IonFabList side="top">
-          <IonFabButton
-            color="light"
-            data-label="Nova venda"
-            @click="isCreateSaleModalOpen = true"
-          >
-            <IonIcon :icon="cart" />
-          </IonFabButton>
-          <IonFabButton
-            color="light"
-            data-label="Novo cliente"
-            @click="isCreateCustomerModalOpen = true"
-          >
-            <IonIcon :icon="peopleCircle" />
-          </IonFabButton>
-        </IonFabList>
-      </IonFab>
+      <HomeFabButton
+        @sale-click="isCreateSaleModalOpen = true"
+        @customer-click="isCreateCustomerModalOpen = true"
+      />
     </IonContent>
+
+    <CreateSaleModal
+      :is-open="isCreateSaleModalOpen"
+      @submitted="fetch"
+      @did-dismiss="isCreateSaleModalOpen = false"
+    />
+
+    <CreateCustomerModal
+      :is-open="isCreateCustomerModalOpen"
+      @did-dismiss="isCreateCustomerModalOpen = false"
+    />
   </IonPage>
 </template>
 
 <style scoped>
-ion-fab-button[data-label]::after {
-  content: attr(data-label);
-  position: absolute;
-  color: var(--ion-color-light);
-  right: 45px;
-  bottom: 3px;
-  background-color: rgba(var(--ion-color-dark-rgb), 0.7);
-  padding: 0.5rem;
-  padding-right: 1rem;
-  padding-left: 1rem;
-  border-radius: 1rem;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
 }
 
-ion-fab-button {
-  margin-bottom: 1rem;
-  margin-right: 0.5rem;
-
-  --background: var(--ion-color-primary-shade);
-  --color: var(--ion-color-dark);
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

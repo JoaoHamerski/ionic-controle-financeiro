@@ -21,6 +21,7 @@
     "@capacitor/keyboard": "7.0.0",
     "@capacitor/splash-screen": "^7.0.0",
     "@capacitor/status-bar": "7.0.0",
+    "@formkit/auto-animate": "^0.8.2",
     "@ionic/vue": "^8.0.0",
     "@ionic/vue-router": "^8.0.0",
     "@maskito/core": "^3.2.1",
