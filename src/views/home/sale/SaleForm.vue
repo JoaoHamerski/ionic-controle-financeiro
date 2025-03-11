@@ -37,7 +37,7 @@ type SaleFormFields = {
   product: Product | null
   is_paid: boolean
   date: string
-  type: 'sell' | 'expense'
+  type: 'sale' | 'expense'
 }
 
 const { knex } = useDatabaseStore()
@@ -45,7 +45,7 @@ const { knex } = useDatabaseStore()
 const emit = defineEmits(['submitted'])
 
 const form = useForm<SaleFormFields, keyof SaleFormFields>({
-  type: 'sell',
+  type: 'sale',
   price: '',
   quantity: 1,
   customer: null,
@@ -66,7 +66,7 @@ const rules = computed(() => {
     date: { required: helpers.withMessage('Por favor, informe uma data', required) },
   }
 
-  if (form.data.type === 'sell') {
+  if (form.data.type === 'sale') {
     localRules.customer = {
       required: helpers.withMessage('Por favor, selecione um cliente', required),
     }
@@ -95,6 +95,7 @@ const submit = async () => {
   if (!(await form.validate())) {
     return
   }
+
   await insert()
   emit('submitted')
 }
@@ -111,7 +112,7 @@ const insert = async () => {
     quantity,
     is_paid: form.data.is_paid,
     date: form.data.date,
-    total,
+    total: form.data.type === 'sale' ? total : -total,
   }
 
   dbInsert(knex.insert(data).into('sales'))
@@ -141,7 +142,7 @@ const insert = async () => {
               :error="form.errors.type"
               @ion-change="onTypeChange"
             >
-              <IonSelectOption value="sell">Venda</IonSelectOption>
+              <IonSelectOption value="sale">Venda</IonSelectOption>
               <IonSelectOption value="expense">Despesa</IonSelectOption>
             </AppSelect>
           </IonCol>
@@ -172,7 +173,7 @@ const insert = async () => {
           </IonCol>
         </IonRow>
         <IonRow
-          v-if="form.data.type === 'sell'"
+          v-if="form.data.type === 'sale'"
           class="ion-margin-bottom"
         >
           <IonCol>
@@ -225,7 +226,7 @@ const insert = async () => {
           </IonCol>
         </IonRow>
 
-        <IonRow v-if="form.data.type === 'sell'">
+        <IonRow v-if="form.data.type === 'sale'">
           <IonCol>
             <IonCheckbox
               v-model="form.data.is_paid"

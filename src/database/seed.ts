@@ -72,14 +72,14 @@ const seedSales = async (knex: Knex) => {
     const quantity = faker.number.int({ min: 1, max: 5 })
     const total = +(price * quantity).toFixed(1)
     const created_at = faker.date.between({ from: '2025-01-01', to: '2025-03-02' })
-
+    const isSale = faker.datatype.boolean({ probability: 0.8 })
     data.push({
       id: i,
-      customer_id: faker.helpers.arrayElement(customers || []),
+      customer_id: isSale ? faker.helpers.arrayElement(customers || []) : null,
       product_id: faker.helpers.arrayElement(products || []),
       price,
       quantity,
-      total: faker.datatype.boolean({ probability: 0.8 }) ? total : -total,
+      total: isSale ? total : -total,
       is_paid: faker.datatype.boolean({ probability: 0.8 }),
       date: created_at.toISOString(),
       created_at: created_at.toISOString(),

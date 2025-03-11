@@ -28,6 +28,7 @@ const items = ref<any[]>([])
 
 onMounted(async () => {
   await fetch()
+  console.log('fetched')
 })
 
 const fetch = async () => {
@@ -39,7 +40,7 @@ const fetch = async () => {
       ...(await prefixColumns('*', 'sales', 'sale')),
     ])
     .from('sales')
-    .join('customers', 'sales.customer_id', '=', 'customers.id')
+    .leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
     .join('products', 'sales.product_id', '=', 'products.id')
     .orderBy('sales.date', 'desc')
     .orderBy('sales.created_at', 'desc')
