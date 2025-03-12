@@ -33,10 +33,10 @@ const items = ref<any[]>([])
 const segment = ref<Segment>('all')
 
 onMounted(async () => {
-  fetch('all')
+  fetch()
 })
 
-const fetch = async (fetchSegment: Segment) => {
+const fetch = async () => {
   const builder = knex
     .select([
       'sales.id as id',
@@ -51,11 +51,11 @@ const fetch = async (fetchSegment: Segment) => {
     .orderBy('sales.date', 'desc')
     .orderBy('sales.created_at', 'desc')
 
-  if (fetchSegment === 'sales') {
+  if (segment.value === 'sales') {
     builder.where('total', '>', 0)
   }
 
-  if (fetchSegment === 'expenses') {
+  if (segment.value === 'expenses') {
     builder.where('total', '<', 0)
   }
 
@@ -65,7 +65,7 @@ const fetch = async (fetchSegment: Segment) => {
 const onSegmentChange = async (selectedSegment: Segment) => {
   segment.value = selectedSegment
 
-  fetch(selectedSegment)
+  fetch()
 }
 </script>
 
