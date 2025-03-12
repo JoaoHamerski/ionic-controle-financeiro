@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { IonIcon } from '@ionic/vue'
 import { calendarSharp } from 'ionicons/icons'
+import { upperFirst } from 'lodash'
 import { DateTime } from 'luxon'
+import { computed } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   date: string
 }>()
+
+const luxonDate = computed(() => DateTime.fromISO(props.date, { locale: 'pt-BR' }))
 </script>
 
 <template>
@@ -14,9 +18,13 @@ defineProps<{
       fontSize: '.8rem',
       color: 'var(--ion-color-medium)',
       marginTop: '.2rem',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '.25rem',
     }"
   >
     <IonIcon :icon="calendarSharp" />
-    {{ DateTime.fromISO(date).toLocaleString({ dateStyle: 'short' }) }}
+    {{ upperFirst(luxonDate.toFormat('cccc')) }}
+    ({{ luxonDate.toFormat('dd/MM') }})
   </div>
 </template>
