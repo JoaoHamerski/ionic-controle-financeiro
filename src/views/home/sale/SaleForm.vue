@@ -22,7 +22,7 @@ import AppInput from '@/components/AppInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import { useForm } from '@/composables/use-form'
 import { Customer, Product } from '@/database/models'
-import { dbInsert } from '@/services/db-service'
+import { dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { parseCurrencyBRL } from '@/support/helpers'
 import { currencyBrlMask, positiveIntMask } from '@/support/masks'
@@ -115,7 +115,7 @@ const insert = async () => {
     total: form.data.type === 'sale' ? total : -total,
   }
 
-  dbInsert(knex.insert(data).into('sales'))
+  dbStatement(knex.insert(data).into('sales'))
 }
 </script>
 

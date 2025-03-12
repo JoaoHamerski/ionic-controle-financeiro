@@ -2,7 +2,7 @@ import { SQLiteDBConnection } from '@capacitor-community/sqlite'
 import { fakerPT_BR as faker } from '@faker-js/faker'
 import { Knex } from 'knex'
 
-import { dbInsert, dbSelect } from '@/services/db-service'
+import { dbStatement, dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 
 import { Customer, Sale } from './models'
@@ -41,7 +41,7 @@ const seedCustomers = async (knex: Knex) => {
     })
   }
 
-  await dbInsert(knex.insert(data).into('customers'))
+  await dbStatement(knex.insert(data).into('customers'))
 }
 
 const seedProducts = async (knex: Knex) => {
@@ -57,7 +57,7 @@ const seedProducts = async (knex: Knex) => {
     )
     .into('products')
 
-  await dbInsert(sql)
+  await dbStatement(sql)
 }
 
 const seedSales = async (knex: Knex) => {
@@ -86,5 +86,5 @@ const seedSales = async (knex: Knex) => {
     })
   }
 
-  await dbInsert(knex.insert(data).into('sales'))
+  await dbStatement(knex.insert(data).into('sales'))
 }

@@ -2,14 +2,14 @@ import { Knex } from 'knex'
 
 import { useDatabaseStore } from '@/stores/database-store'
 
-export const dbInsert = async (builder: Knex.QueryBuilder) => {
+export const dbStatement = async (builder: Knex.QueryBuilder) => {
   const { database } = useDatabaseStore()
   const native = builder.toSQL().toNative()
 
   const result = await database.run(native.sql, native.bindings as any[])
 
   if (result.changes?.changes === 1 && result.changes?.lastId) {
-    // @ts-expect-error The "_single" attribute should exist
+    // @ts-expect-error The "_single" attribute doesn't exist
     return await dbSelectById(builder._single.table, result.changes.lastId)
   }
 

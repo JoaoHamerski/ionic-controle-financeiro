@@ -17,7 +17,7 @@ import { computed } from 'vue'
 
 import AppInput from '@/components/AppInput.vue'
 import { useForm } from '@/composables/use-form'
-import { dbInsert } from '@/services/db-service'
+import { dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { stripNonDigits } from '@/support/helpers'
 import { phoneMask } from '@/support/masks'
@@ -52,7 +52,7 @@ const submit = async () => {
 
   const { name, phone } = form.data
 
-  await dbInsert(knex.insert({ name, phone }).into('customers'))
+  await dbStatement(knex.insert({ name, phone }).into('customers'))
 
   emit('submitted')
 }

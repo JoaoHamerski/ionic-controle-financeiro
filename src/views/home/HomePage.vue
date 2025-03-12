@@ -121,6 +121,7 @@ const onSegmentChange = async (selectedSegment: Segment) => {
         <SalesList
           :key="segment"
           :items="items"
+          @refetch="fetch"
         />
       </Transition>
 
@@ -142,15 +143,3 @@ const onSegmentChange = async (selectedSegment: Segment) => {
     />
   </IonPage>
 </template>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.25s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>

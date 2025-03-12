@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 import AppTypeaheadModal from '@/components/AppTypeaheadModal.vue'
 import { Customer } from '@/database/models'
-import { dbInsert, dbSelect } from '@/services/db-service'
+import { dbStatement, dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 
 const { knex } = useDatabaseStore()
@@ -33,7 +33,7 @@ const fetch = async (search?: string) => {
 }
 
 const createCustomer = async (search: string) => {
-  const data = await dbInsert(knex.insert({ name: search }).into('customers'))
+  const data = await dbStatement(knex.insert({ name: search }).into('customers'))
 
   if (!data) {
     throw new Error('Error on creating customer')
