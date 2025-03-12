@@ -1,72 +1,44 @@
 <script setup lang="ts">
-import { IonIcon, IonItemOption, IonItemOptions, IonItemSliding, IonList } from '@ionic/vue'
-import { checkmarkCircleSharp, trashSharp } from 'ionicons/icons'
-
-import { dbStatement } from '@/services/db-service'
-import { useDatabaseStore } from '@/stores/database-store'
+import { IonItemSliding, IonList } from '@ionic/vue'
+import { ref } from 'vue'
 
 import SalesListItem from './SalesListItem.vue'
+import SalesListItemDragOptions from './SalesListItemDragOptions.vue'
 
 const emit = defineEmits(['refetch'])
 
 defineProps<{
-  items: any[]
+  sales: any[]
 }>()
 
-const { knex } = useDatabaseStore()
+const list = ref()
 
-const onPayClick = async (item: any) => {
-  const builder = knex.table('sales').where('id', '=', item.id).update({
-    is_paid: 1,
-  })
-
-  await dbStatement(builder)
-
+const onRefetch = async () => {
+  await closeSlidingItems()
   emit('refetch')
 }
 
-const onDeleteClick = async (item: any) => {
-  const builder = knex.table('sales').where('id', '=', item.id).delete()
-
-  await dbStatement(builder)
-
-  emit('refetch')
+const closeSlidingItems = async () => {
+  await list.value.$el.closeSlidingItems()
 }
 </script>
 
 <template>
-  <IonList lines="full">
+  <IonList
+    ref="list"
+    lines="full"
+  >
     <TransitionGroup name="fade">
       <IonItemSliding
-        v-for="item in items"
-        :key="item.id"
+        v-for="sale in sales"
+        :key="sale.id"
       >
-        <SalesListItem :item="item" />
-        <IonItemOptions side="end">
-          <IonItemOption
-            v-if="item.sale_total > 0 && !item.sale_is_paid"
-            color="success"
-            @click="onPayClick(item)"
-          >
-            <IonIcon
-              slot="top"
-              :icon="checkmarkCircleSharp"
-              :style="{ fontSize: '1.4rem', marginBottom: '0.5rem' }"
-            />
-            Pagar
-          </IonItemOption>
-          <IonItemOption
-            color="danger"
-            @click="onDeleteClick(item)"
-          >
-            <IonIcon
-              slot="top"
-              :icon="trashSharp"
-              :style="{ fontSize: '1.4rem', marginBottom: '0.5rem' }"
-            />
-            Excluir
-          </IonItemOption>
-        </IonItemOptions>
+        <SalesListItem :sale="sale" />
+        <SalesListItemDragOptions
+          :sale="sale"
+          @refetch="onRefetch"
+          @close-sliding-items="closeSlidingItems"
+        />
       </IonItemSliding>
     </TransitionGroup>
   </IonList>

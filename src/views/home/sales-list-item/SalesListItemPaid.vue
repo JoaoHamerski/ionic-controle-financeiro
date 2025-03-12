@@ -8,20 +8,26 @@ defineProps<{
 </script>
 
 <template>
-  <div
-    :style="{
-      fontSize: '.8rem',
-      color: 'var(--ion-color-medium)',
-      marginTop: '.2rem',
-    }"
+  <Transition
+    name="fade"
+    mode="out-in"
   >
-    <template v-if="isPaid">
-      <IonIcon :icon="checkmarkCircleSharp" />
-      Pago
-    </template>
-    <template v-else>
-      <IonIcon :icon="timeSharp" />
-      Pagamento pendente
-    </template>
-  </div>
+    <div
+      :key="isPaid ? 'paid' : 'not-paid'"
+      :style="{
+        fontSize: '.8rem',
+        color: 'var(--ion-color-medium)',
+        marginTop: '.2rem',
+      }"
+    >
+      <template v-if="isPaid">
+        <IonIcon :icon="checkmarkCircleSharp" />
+        Pago
+      </template>
+      <template v-else>
+        <IonIcon :icon="timeSharp" />
+        Pagamento pendente
+      </template>
+    </div>
+  </Transition>
 </template>

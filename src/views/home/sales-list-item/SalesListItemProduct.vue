@@ -2,7 +2,7 @@
 import { formatCurrencyBRL } from '@/support/helpers'
 
 defineProps<{
-  item: any
+  sale: any
 }>()
 </script>
 
@@ -21,13 +21,13 @@ defineProps<{
         fontWeight: 500,
       }"
     >
-      {{ item.product_name }}
+      {{ sale.product_name }}
     </h2>
     <span
-      v-if="item.sale_quantity > 1"
+      v-if="sale.sale_quantity > 1"
       :style="{ fontSize: '.7rem', color: 'var(--ion-color-medium)' }"
     >
-      ({{ item.sale_quantity }} x {{ formatCurrencyBRL(item.sale_price) }})
+      ({{ sale.sale_quantity }} x {{ formatCurrencyBRL(sale.sale_price) }})
     </span>
   </div>
 </template>

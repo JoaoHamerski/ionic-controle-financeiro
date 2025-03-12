@@ -8,7 +8,7 @@ import SalesListItemPrice from './SalesListItemPrice.vue'
 import SalesListItemProduct from './SalesListItemProduct.vue'
 
 defineProps<{
-  item: any
+  sale: any
 }>()
 </script>
 
@@ -17,18 +17,18 @@ defineProps<{
     <IonLabel>
       <div :style="{ display: 'flex', justifyContent: 'space-between' }">
         <div>
-          <SalesListItemPrice :total="item.sale_total" />
+          <SalesListItemPrice :total="sale.sale_total" />
           <SalesListItemCustomer
-            v-if="item.sale_total > 0"
-            :customer-name="item.customer_name"
+            v-if="sale.sale_total > 0"
+            :customer-name="sale.customer_name"
           />
-          <SalesListItemDate :date="item.sale_date" />
+          <SalesListItemDate :date="sale.sale_date" />
           <SalesListItemPaid
-            v-if="item.sale_total > 0"
-            :is-paid="!!item.sale_is_paid"
+            v-if="sale.sale_total > 0"
+            :is-paid="!!sale.sale_is_paid"
           />
         </div>
-        <SalesListItemProduct :item="item" />
+        <SalesListItemProduct :sale="sale" />
       </div>
     </IonLabel>
   </IonItem>

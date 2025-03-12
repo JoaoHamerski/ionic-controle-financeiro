@@ -120,7 +120,7 @@ const onSegmentChange = async (selectedSegment: Segment) => {
       >
         <SalesList
           :key="segment"
-          :items="items"
+          :sales="items"
           @refetch="fetch"
         />
       </Transition>
