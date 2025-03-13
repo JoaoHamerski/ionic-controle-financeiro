@@ -14,7 +14,7 @@ defineProps<{
   <div>
     <div
       class="ion-text-center"
-      :style="{ fontWeight: 500 }"
+      :style="{ fontWeight: 500, fontSize: '.8rem' }"
     >
       {{ title }}
     </div>

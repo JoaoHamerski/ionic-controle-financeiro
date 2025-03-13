@@ -1,6 +1,15 @@
 <script setup lang="ts">
-import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue'
+import {
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+} from '@ionic/vue'
 import { ChartData, ChartDataset } from 'chart.js'
+import { chevronDownCircleSharp } from 'ionicons/icons'
 import { random } from 'lodash'
 import { computed } from 'vue'
 
@@ -86,8 +95,15 @@ const chartExpensesData = computed(
           fill="clear"
           shape="round"
           style="width: 100%"
+          :style="{
+            fontSize: '1.2rem',
+          }"
         >
-          <span>Janeiro</span>
+          <span :style="{ marginLeft: '1.5rem' }">Janeiro</span>
+          <IonIcon
+            slot="end"
+            :icon="chevronDownCircleSharp"
+          />
         </IonButton>
       </div>
 
