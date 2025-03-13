@@ -96,7 +96,10 @@ const closeSlidingItems = async () => {
     ref="list"
     lines="full"
   >
-    <TransitionGroup name="fade">
+    <TransitionGroup
+      key="sales-list"
+      name="fade"
+    >
       <IonItemSliding
         v-for="sale in sales"
         :key="sale.id"
@@ -108,17 +111,16 @@ const closeSlidingItems = async () => {
           @delete="onDelete"
         />
       </IonItemSliding>
-
-      <IonAlert
-        :is-open="deleteAlert.isOpen"
-        header="Tem certeza?"
-        :message="deleteAlertMessage"
-        :buttons="[
-          { text: 'Cancelar', role: 'cancel' },
-          { text: 'Sim, excluir', role: 'delete' },
-        ]"
-        @did-dismiss="onDeleteAlertDismiss"
-      />
     </TransitionGroup>
+    <IonAlert
+      :is-open="deleteAlert.isOpen"
+      header="Tem certeza?"
+      :message="deleteAlertMessage"
+      :buttons="[
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Sim, excluir', role: 'delete' },
+      ]"
+      @did-dismiss="onDeleteAlertDismiss"
+    />
   </IonList>
 </template>

@@ -25,10 +25,10 @@ const TABS: TabsItem[] = [
     tab: 'home',
   },
   {
-    label: 'Balanço Mensal',
-    href: '/tabs/balanco-mensal',
+    label: 'Balanço',
+    href: '/tabs/balanco',
     icon: calendar,
-    tab: 'monthly-balance',
+    tab: 'balance',
   },
   {
     label: 'Opções',

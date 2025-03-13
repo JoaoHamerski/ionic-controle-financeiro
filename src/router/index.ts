@@ -21,8 +21,8 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/home/HomePage.vue'),
       },
       {
-        path: 'balanco-mensal',
-        component: () => import('@/views/monthly-balance/MonthlyBalancePage.vue'),
+        path: 'balanco',
+        component: () => import('@/views/balance/BalancePage.vue'),
       },
       {
         path: 'opcoes',

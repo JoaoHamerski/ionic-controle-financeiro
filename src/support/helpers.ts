@@ -22,3 +22,6 @@ export const titleCase = (value: string, except: string[] = ['de', 'da', 'dos', 
     .split(' ')
     .map((word) => (except.includes(word) ? word : upperFirst(word)))
     .join(' ')
+
+export const getCssVar = (value: string) =>
+  getComputedStyle(document.documentElement).getPropertyValue(value)
