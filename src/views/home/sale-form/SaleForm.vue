@@ -27,8 +27,8 @@ import { useDatabaseStore } from '@/stores/database-store'
 import { parseCurrencyBRL } from '@/support/helpers'
 import { currencyBrlMask, positiveIntMask } from '@/support/masks'
 
-import SelectCustomerModal from '../_partials/SelectCustomerModal.vue'
-import SelectProductModal from '../_partials/SelectProductModal.vue'
+import CustomerTypeHead from '../customer-form/CustomerTypeHead.vue'
+import SaleTypeHead from './SaleTypeHead.vue'
 
 type SaleFormFields = {
   price: string
@@ -254,13 +254,13 @@ const insert = async () => {
       </IonFab>
     </IonFooter>
 
-    <SelectCustomerModal
+    <CustomerTypeHead
       :is-open="isSelectCustomerModalOpen"
       @customer-selected="onCustomerSelected"
       @did-dismiss="isSelectCustomerModalOpen = false"
     />
 
-    <SelectProductModal
+    <SaleTypeHead
       :is-open="isSelectProductModalOpen"
       @product-selected="onProductSelected"
       @did-dismiss="isSelectProductModalOpen = false"

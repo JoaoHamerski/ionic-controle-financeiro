@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 import AppTypeaheadModal from '@/components/AppTypeaheadModal.vue'
 import { Customer } from '@/database/models'
-import { dbStatement, dbSelect } from '@/services/db-service'
+import { dbSelect, dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 
 const { knex } = useDatabaseStore()

@@ -22,7 +22,7 @@ import { useDatabaseStore } from '@/stores/database-store'
 import { stripNonDigits } from '@/support/helpers'
 import { phoneMask } from '@/support/masks'
 
-import FormHeaderRows from '../_partials/FormHeaderRows.vue'
+import CustomerFormHeader from './CustomerFormHeader.vue'
 
 const emit = defineEmits(['submitted'])
 const { knex } = useDatabaseStore()
@@ -66,7 +66,7 @@ const submit = async () => {
   >
     <IonContent>
       <IonGrid class="ion-margin-bottom">
-        <FormHeaderRows
+        <CustomerFormHeader
           text="Cadastre um novo cliente"
           :icon="peopleCircle"
         />

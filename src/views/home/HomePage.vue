@@ -17,9 +17,9 @@ import { useDatabaseStore } from '@/stores/database-store'
 import { prefixColumns } from '@/support/helpers'
 
 import HomeFabButton from './_partials/HomeFabButton.vue'
-import CreateCustomerModal from './customer/CreateCustomerModal.vue'
-import CreateSaleModal from './sale/CreateSaleModal.vue'
-import SalesList from './sales-list-item/SalesList.vue'
+import CustomerCreateModal from './customer-form/CustomerCreateModal.vue'
+import SaleCreateModal from './sale-form/SaleCreateModal.vue'
+import SalesList from './sales-list/SalesList.vue'
 
 type Segment = 'all' | 'sales' | 'expenses'
 
@@ -131,13 +131,13 @@ const onSegmentChange = async (selectedSegment: Segment) => {
       />
     </IonContent>
 
-    <CreateSaleModal
+    <SaleCreateModal
       :is-open="isCreateSaleModalOpen"
       @submitted="fetch"
       @did-dismiss="isCreateSaleModalOpen = false"
     />
 
-    <CreateCustomerModal
+    <CustomerCreateModal
       :is-open="isCreateCustomerModalOpen"
       @did-dismiss="isCreateCustomerModalOpen = false"
     />
