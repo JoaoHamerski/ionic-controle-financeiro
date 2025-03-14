@@ -1,22 +1,32 @@
 <script setup lang="ts">
-import {
-  IonButton,
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-} from '@ionic/vue'
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue'
 import { ChartData, ChartDataset } from 'chart.js'
-import { chevronDownCircleSharp } from 'ionicons/icons'
 import { random } from 'lodash'
+import { DateTime } from 'luxon'
 import { computed } from 'vue'
+import { ref } from 'vue'
 
 import { getCssVar } from '@/support/helpers'
 
 import BalanceChart from './_partials/BalanceChart.vue'
+import BalanceMonthButton from './_partials/BalanceMonthButton.vue'
+import BalanceMonthPickerModal from './_partials/BalanceMonthPickerModal.vue'
 import BalanceTimeSegments from './_partials/BalanceTimeSegments.vue'
+
+export type BalanceMonthDate = {
+  name: string
+  number: number
+  year: number
+}
+
+const currentMonth = DateTime.now()
+
+const isPickerModalOpen = ref(false)
+const selectedMonth = ref<BalanceMonthDate>({
+  name: currentMonth.monthLong,
+  number: currentMonth.month,
+  year: currentMonth.year,
+})
 
 const chartDatasetShared = computed(
   () =>
@@ -72,40 +82,23 @@ const chartExpensesData = computed(
 <template>
   <IonPage>
     <IonHeader>
-      <IonToolbar>
+      <IonToolbar color="primary">
         <IonTitle> Balanço Mensal </IonTitle>
       </IonToolbar>
     </IonHeader>
     <IonContent>
       <BalanceTimeSegments />
 
-      <div
-        class="ion-margin-top ion-margin-horizontal"
-        :style="{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: '.5rem',
-          fontSize: '1.2rem',
-          fontWeight: 600,
-        }"
-      >
-        <IonButton
-          strong
-          fill="clear"
-          shape="round"
-          style="width: 100%"
-          :style="{
-            fontSize: '1.2rem',
-          }"
-        >
-          <span :style="{ marginLeft: '1.5rem' }">Janeiro</span>
-          <IonIcon
-            slot="end"
-            :icon="chevronDownCircleSharp"
-          />
-        </IonButton>
-      </div>
+      <BalanceMonthPickerModal
+        v-model="isPickerModalOpen"
+        :month="selectedMonth"
+        @did-dismiss="isPickerModalOpen = false"
+      />
+
+      <BalanceMonthButton
+        :month-date="selectedMonth"
+        @click="isPickerModalOpen = true"
+      />
 
       <div
         class="ion-margin"

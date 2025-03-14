@@ -72,7 +72,7 @@ const onSegmentChange = async (selectedSegment: Segment) => {
 <template>
   <IonPage>
     <IonHeader>
-      <IonToolbar>
+      <IonToolbar color="primary">
         <IonSegment
           value="all"
           color="light"
