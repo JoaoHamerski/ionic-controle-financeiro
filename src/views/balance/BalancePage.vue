@@ -22,6 +22,7 @@ export type BalanceMonthDate = {
 const currentMonth = DateTime.now()
 
 const isPickerModalOpen = ref(false)
+
 const selectedMonth = ref<BalanceMonthDate>({
   name: currentMonth.monthLong,
   number: currentMonth.month,
@@ -92,6 +93,7 @@ const chartExpensesData = computed(
       <BalanceMonthPickerModal
         v-model="isPickerModalOpen"
         :month="selectedMonth"
+        @month-selected="selectedMonth = $event"
         @did-dismiss="isPickerModalOpen = false"
       />
 

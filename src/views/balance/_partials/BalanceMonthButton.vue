@@ -24,7 +24,6 @@ defineProps<{
     }"
   >
     <IonButton
-      strong
       fill="clear"
       shape="round"
       style="width: 100%"

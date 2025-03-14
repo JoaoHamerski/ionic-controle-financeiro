@@ -12,13 +12,21 @@ import {
 import { range, upperFirst } from 'lodash'
 import { DateTime } from 'luxon'
 import { computed } from 'vue'
+import { ref } from 'vue'
 
 import { BalanceMonthDate } from '../BalancePage.vue'
 
-const isOpen = defineModel<boolean>()
+const props = defineProps<{
+  month: BalanceMonthDate
+}>()
 
-const selectedMonth = defineModel<BalanceMonthDate>('month')
-const currentValue = 1
+const isOpen = defineModel<boolean>()
+const emit = defineEmits(['month-selected'])
+
+const modal = ref()
+
+const selectedMonthNumber = ref<number>(props.month.number)
+
 const months = computed<BalanceMonthDate[]>(() =>
   range(0, 12).map((_, index) => {
     const monthDate = DateTime.now().plus({ month: -index })
@@ -31,13 +39,25 @@ const months = computed<BalanceMonthDate[]>(() =>
   }),
 )
 
-const onPickerChange = (event) => {
-  console.log(event)
+const onPickerChange = (event: CustomEvent) => {
+  selectedMonthNumber.value = event.detail.value
+}
+
+const onCancelClick = () => {
+  modal.value.$el.dismiss()
+}
+
+const onConcludeClick = () => {
+  const month = months.value.find(({ number }) => number === selectedMonthNumber.value)
+
+  modal.value.$el.dismiss()
+  emit('month-selected', month)
 }
 </script>
 
 <template>
   <IonModal
+    ref="modal"
     :is-open="isOpen"
     :initial-breakpoint="1"
     :breakpoints="[0, 1]"
@@ -45,21 +65,24 @@ const onPickerChange = (event) => {
     <IonContent>
       <IonToolbar color="light">
         <IonButtons slot="start">
-          <IonButton>Cancelar</IonButton>
+          <IonButton @click="onCancelClick">Cancelar</IonButton>
         </IonButtons>
         <IonButtons slot="end">
-          <IonButton>Concluído</IonButton>
+          <IonButton @click="onConcludeClick">Concluído</IonButton>
         </IonButtons>
       </IonToolbar>
 
-      <IonPicker @ion-change="onPickerChange">
-        <IonPickerColumn :value="currentValue">
+      <IonPicker>
+        <IonPickerColumn
+          :value="selectedMonthNumber"
+          @ion-change="onPickerChange"
+        >
           <IonPickerColumnOption
-            v-for="month in months"
-            :key="month.number"
-            :value="month.number"
+            v-for="_month in months"
+            :key="_month.number"
+            :value="_month.number"
           >
-            {{ upperFirst(month.name) }} / {{ month.year }}
+            {{ upperFirst(_month.name) }} / {{ _month.year }}
           </IonPickerColumnOption>
         </IonPickerColumn>
       </IonPicker>
