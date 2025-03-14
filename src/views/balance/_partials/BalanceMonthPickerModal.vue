@@ -14,29 +14,19 @@ import { DateTime } from 'luxon'
 import { computed } from 'vue'
 import { ref } from 'vue'
 
-import { BalanceMonthDate } from '../BalancePage.vue'
-
 const props = defineProps<{
-  month: BalanceMonthDate
+  selectedDate: DateTime
 }>()
 
 const isOpen = defineModel<boolean>()
-const emit = defineEmits(['month-selected'])
+const emit = defineEmits(['month-date-selected'])
 
 const modal = ref()
 
-const selectedMonthNumber = ref<number>(props.month.number)
+const selectedMonthNumber = ref<number>(props.selectedDate.month)
 
-const months = computed<BalanceMonthDate[]>(() =>
-  range(0, 12).map((_, index) => {
-    const monthDate = DateTime.now().plus({ month: -index })
-
-    return {
-      name: monthDate.monthLong,
-      number: monthDate.month,
-      year: monthDate.year,
-    }
-  }),
+const monthDates = computed<DateTime[]>(() =>
+  range(0, 12).map((_, index) => DateTime.now().plus({ month: -index })),
 )
 
 const onPickerChange = (event: CustomEvent) => {
@@ -48,10 +38,10 @@ const onCancelClick = () => {
 }
 
 const onConcludeClick = () => {
-  const month = months.value.find(({ number }) => number === selectedMonthNumber.value)
+  const monthDate = monthDates.value.find(({ month }) => month === selectedMonthNumber.value)
 
   modal.value.$el.dismiss()
-  emit('month-selected', month)
+  emit('month-date-selected', monthDate)
 }
 </script>
 
@@ -68,7 +58,7 @@ const onConcludeClick = () => {
           <IonButton @click="onCancelClick">Cancelar</IonButton>
         </IonButtons>
         <IonButtons slot="end">
-          <IonButton @click="onConcludeClick">Concluído</IonButton>
+          <IonButton @click="onConcludeClick">Concluir</IonButton>
         </IonButtons>
       </IonToolbar>
 
@@ -78,11 +68,11 @@ const onConcludeClick = () => {
           @ion-change="onPickerChange"
         >
           <IonPickerColumnOption
-            v-for="_month in months"
-            :key="_month.number"
-            :value="_month.number"
+            v-for="monthDate in monthDates"
+            :key="monthDate.month"
+            :value="monthDate.month"
           >
-            {{ upperFirst(_month.name) }} / {{ _month.year }}
+            {{ upperFirst(monthDate.monthLong!) }} / {{ monthDate.year }}
           </IonPickerColumnOption>
         </IonPickerColumn>
       </IonPicker>

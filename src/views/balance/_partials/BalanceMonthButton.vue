@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { IonButton, IonIcon } from '@ionic/vue'
 import { chevronDownCircleSharp } from 'ionicons/icons'
-
-import { BalanceMonthDate } from '../BalancePage.vue'
+import { DateTime } from 'luxon'
 
 const emit = defineEmits(['click'])
 
 defineProps<{
-  monthDate: BalanceMonthDate
+  monthDate: DateTime
 }>()
 </script>
 
@@ -32,7 +31,9 @@ defineProps<{
       }"
       @click="emit('click')"
     >
-      <span :style="{ marginLeft: '1.5rem' }"> {{ monthDate.name }} / {{ monthDate.year }} </span>
+      <span :style="{ marginLeft: '1.5rem' }">
+        {{ monthDate.monthLong }} / {{ monthDate.year }}
+      </span>
       <IonIcon
         slot="end"
         :icon="chevronDownCircleSharp"

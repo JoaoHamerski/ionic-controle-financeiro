@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue'
-import { ChartData, ChartDataset } from 'chart.js'
-import { random } from 'lodash'
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, onIonViewDidEnter } from '@ionic/vue'
+import { ChartData } from 'chart.js'
+import { get, groupBy, range, sumBy } from 'lodash'
 import { DateTime } from 'luxon'
 import { computed } from 'vue'
 import { ref } from 'vue'
 
-import { getCssVar } from '@/support/helpers'
+import { dbSelect } from '@/services/db-service'
+import { useDatabaseStore } from '@/stores/database-store'
 
 import BalanceChart from './_partials/BalanceChart.vue'
 import BalanceMonthButton from './_partials/BalanceMonthButton.vue'
 import BalanceMonthPickerModal from './_partials/BalanceMonthPickerModal.vue'
 import BalanceTimeSegments from './_partials/BalanceTimeSegments.vue'
+import { CHART_EXPENSES_DATASET, CHART_SALES_DATASET, CHART_SHARED_DATASET } from './chart-config'
 
 export type BalanceMonthDate = {
   name: string
@@ -19,41 +21,23 @@ export type BalanceMonthDate = {
   year: number
 }
 
-const currentMonth = DateTime.now()
+const { knex } = useDatabaseStore()
 
+const selectedMonthDate = ref(DateTime.now())
 const isPickerModalOpen = ref(false)
 
-const selectedMonth = ref<BalanceMonthDate>({
-  name: currentMonth.monthLong,
-  number: currentMonth.month,
-  year: currentMonth.year,
-})
-
-const chartDatasetShared = computed(
-  () =>
-    ({
-      borderWidth: 2,
-      animation: false,
-      pointHitRadius: 10,
-      pointRadius: 2,
-    }) as ChartDataset,
-)
+const salesData = ref<number[]>([])
+const expensesData = ref<number[]>([])
 
 const chartSalesData = computed(
   () =>
     ({
-      labels: Array(31)
-        .fill(1)
-        .map((_, index) => index + 1),
+      labels: range(1, selectedMonthDate.value.daysInMonth + 1),
       datasets: [
         {
-          ...chartDatasetShared.value,
-          label: 'Entradas',
-          data: Array(31)
-            .fill(1)
-            .map(() => random(1, 50)),
-          backgroundColor: getCssVar('--ion-color-success-shade'),
-          borderColor: `rgba(${getCssVar('--ion-color-success-rgb')}, .5)`,
+          ...CHART_SHARED_DATASET,
+          ...CHART_SALES_DATASET,
+          data: salesData.value,
         },
       ],
     }) as ChartData,
@@ -62,22 +46,70 @@ const chartSalesData = computed(
 const chartExpensesData = computed(
   () =>
     ({
-      labels: Array(31)
-        .fill(1)
-        .map((_, index) => index + 1),
+      labels: range(1, selectedMonthDate.value.daysInMonth + 1),
       datasets: [
         {
-          ...chartDatasetShared.value,
-          label: 'Saídas',
-          data: Array(31)
-            .fill(1)
-            .map(() => random(1, 50)),
-          backgroundColor: getCssVar('--ion-color-danger-shade'),
-          borderColor: `rgba(${getCssVar('--ion-color-danger-rgb')}, .5)`,
+          ...CHART_SHARED_DATASET,
+          ...CHART_EXPENSES_DATASET,
+          data: expensesData.value,
         },
       ],
     }) as ChartData,
 )
+
+const groupTotalByDay = (entries: any[]) => {
+  const _selectedMonthDate = selectedMonthDate.value
+  const entriesByDate = groupBy(entries, 'date')
+
+  return range(1, _selectedMonthDate.daysInMonth + 1).map((day) => {
+    const date = _selectedMonthDate.set({ day })
+    const dateEntries = get(entriesByDate, date.toISODate(), [])
+
+    return Math.abs(sumBy(dateEntries, 'total'))
+  })
+}
+
+const getEntriesBuilder = (startDate: DateTime, endDate: DateTime) =>
+  knex
+    .select('*')
+    .from('sales')
+    .where('date', '>=', startDate.toISODate())
+    .where('date', '<=', endDate.toISODate())
+
+const fetchSales = async (startDate: DateTime, endDate: DateTime) => {
+  const salesBuilder = getEntriesBuilder(startDate, endDate)
+
+  salesBuilder.where('total', '>', 0)
+
+  const data = await dbSelect(salesBuilder)
+  salesData.value = groupTotalByDay(data)
+}
+
+const fetchExpenses = async (startDate: DateTime, endDate: DateTime) => {
+  const expensesBuilder = getEntriesBuilder(startDate, endDate)
+
+  expensesBuilder.where('total', '<', 0)
+
+  const data = await dbSelect(expensesBuilder)
+  expensesData.value = groupTotalByDay(data)
+}
+
+const fetch = () => {
+  const startDate = selectedMonthDate.value.startOf('month')
+  const endDate = selectedMonthDate.value.endOf('month')
+
+  fetchSales(startDate, endDate)
+  fetchExpenses(startDate, endDate)
+}
+
+const onMonthDateSelected = (monthDate: DateTime) => {
+  selectedMonthDate.value = monthDate
+  fetch()
+}
+
+onIonViewDidEnter(() => {
+  fetch()
+})
 </script>
 
 <template>
@@ -92,13 +124,13 @@ const chartExpensesData = computed(
 
       <BalanceMonthPickerModal
         v-model="isPickerModalOpen"
-        :month="selectedMonth"
-        @month-selected="selectedMonth = $event"
+        :selected-date="selectedMonthDate"
+        @month-date-selected="onMonthDateSelected"
         @did-dismiss="isPickerModalOpen = false"
       />
 
       <BalanceMonthButton
-        :month-date="selectedMonth"
+        :month-date="selectedMonthDate"
         @click="isPickerModalOpen = true"
       />
 

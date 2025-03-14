@@ -1,8 +1,9 @@
 import { SQLiteDBConnection } from '@capacitor-community/sqlite'
 import { fakerPT_BR as faker } from '@faker-js/faker'
 import { Knex } from 'knex'
+import { DateTime } from 'luxon'
 
-import { dbStatement, dbSelect } from '@/services/db-service'
+import { dbSelect, dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 
 import { Customer, Sale } from './models'
@@ -71,8 +72,14 @@ const seedSales = async (knex: Knex) => {
     const price = +faker.number.float({ min: 10, max: 50 }).toFixed(1)
     const quantity = faker.number.int({ min: 1, max: 5 })
     const total = +(price * quantity).toFixed(1)
-    const created_at = faker.date.between({ from: '2025-01-01', to: '2025-03-02' })
     const isSale = faker.datatype.boolean({ probability: 0.8 })
+
+    const now = DateTime.now()
+    const created_at = faker.date.between({
+      from: now.plus({ months: -4 }).toISODate(),
+      to: now.toISODate(),
+    })
+
     data.push({
       id: i,
       customer_id: isSale ? faker.helpers.arrayElement(customers || []) : null,
@@ -81,7 +88,7 @@ const seedSales = async (knex: Knex) => {
       quantity,
       total: isSale ? total : -total,
       is_paid: faker.datatype.boolean({ probability: 0.8 }),
-      date: created_at.toISOString(),
+      date: created_at.toISOString().split('T')[0],
       created_at: created_at.toISOString(),
     })
   }
