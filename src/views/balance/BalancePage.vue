@@ -1,74 +1,64 @@
 <script setup lang="ts">
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, onIonViewDidEnter } from '@ionic/vue'
-import { ChartData } from 'chart.js'
-import { get, groupBy, range, sum, sumBy } from 'lodash'
+import { get, groupBy, range, sumBy } from 'lodash'
 import { DateTime } from 'luxon'
-import { computed } from 'vue'
 import { ref } from 'vue'
+import { computed } from 'vue'
 
 import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
-import { formatCurrencyBRL } from '@/support/helpers'
 
 import BalanceChart from './_partials/BalanceChart.vue'
 import BalanceMonthButton from './_partials/BalanceMonthButton.vue'
 import BalanceMonthPickerModal from './_partials/BalanceMonthPickerModal.vue'
-import BalanceTimeSegments from './_partials/BalanceTimeSegments.vue'
-import { CHART_EXPENSES_DATASET, CHART_SALES_DATASET, CHART_SHARED_DATASET } from './chart-config'
 
-export type BalanceMonthDate = {
-  name: string
-  number: number
-  year: number
-}
+export type SelectedPeriodType = DateTime | 'last-week' | 'current-week'
 
 const { knex } = useDatabaseStore()
 
-const selectedMonthDate = ref(DateTime.now())
+const selectedPeriod = ref<SelectedPeriodType>(DateTime.now())
 const isPickerModalOpen = ref(false)
 
 const salesData = ref<number[]>([])
 const expensesData = ref<number[]>([])
+const paymentsData = ref<number[]>([])
 
-const totalSales = computed(() => sum(salesData.value))
-const totalExpenses = computed(() => sum(expensesData.value))
-
-const chartSalesData = computed(
-  () =>
-    ({
-      labels: range(1, selectedMonthDate.value.daysInMonth + 1),
-      datasets: [
-        {
-          ...CHART_SHARED_DATASET,
-          ...CHART_SALES_DATASET,
-          data: salesData.value,
-        },
-      ],
-    }) as ChartData,
-)
-
-const chartExpensesData = computed(
-  () =>
-    ({
-      labels: range(1, selectedMonthDate.value.daysInMonth + 1),
-      datasets: [
-        {
-          ...CHART_SHARED_DATASET,
-          ...CHART_EXPENSES_DATASET,
-          data: expensesData.value,
-        },
-      ],
-    }) as ChartData,
-)
+onIonViewDidEnter(async () => {
+  fetch()
+})
 
 const fetch = () => {
-  const startDate = selectedMonthDate.value.startOf('month')
-  const endDate = selectedMonthDate.value.endOf('month')
+  const [startDate, endDate] = getDateInterval()
+
+  console.log(startDate.toISODate(), endDate.toISODate())
 
   fetchSales(startDate, endDate)
   fetchExpenses(startDate, endDate)
+  fetchPayments(startDate, endDate)
 }
 
+const getDateInterval = () => {
+  const localSelectedPeriod = selectedPeriod.value
+  const now = DateTime.now()
+
+  if (localSelectedPeriod === 'current-week') {
+    return [
+      now.startOf('week', { useLocaleWeeks: true }),
+      now.endOf('week', { useLocaleWeeks: true }),
+    ]
+  }
+
+  if (localSelectedPeriod === 'last-week') {
+    const lastWeek = now.minus({ week: 1 })
+
+    return [
+      lastWeek.startOf('week', { useLocaleWeeks: true }),
+      lastWeek.endOf('week', { useLocaleWeeks: true }),
+    ]
+  }
+
+  return [localSelectedPeriod.startOf('month'), localSelectedPeriod.endOf('month')]
+}
 const fetchSales = async (startDate: DateTime, endDate: DateTime) => {
   const salesBuilder = getEntriesBuilder(startDate, endDate)
 
@@ -87,6 +77,18 @@ const fetchExpenses = async (startDate: DateTime, endDate: DateTime) => {
   expensesData.value = groupTotalByDay(data)
 }
 
+const fetchPayments = async (startDate: DateTime, endDate: DateTime) => {
+  const paymentsBuilder = knex
+    .select('*')
+    .from('sales')
+    .where('paid_at', '>=', startDate.toISODate())
+    .where('paid_at', '<=', endDate.toISODate())
+
+  const data = await dbSelect(paymentsBuilder)
+
+  paymentsData.value = groupTotalByDay(data, true)
+}
+
 const getEntriesBuilder = (startDate: DateTime, endDate: DateTime) =>
   knex
     .select('*')
@@ -94,64 +96,93 @@ const getEntriesBuilder = (startDate: DateTime, endDate: DateTime) =>
     .where('date', '>=', startDate.toISODate())
     .where('date', '<=', endDate.toISODate())
 
-const groupTotalByDay = (entries: any[]) => {
-  const _selectedMonthDate = selectedMonthDate.value
-  const entriesByDate = groupBy(entries, 'date')
+const getStartDate = (): DateTime => {
+  if (selectedPeriod.value === 'current-week') {
+    return DateTime.now().startOf('week', { useLocaleWeeks: true })
+  }
 
-  return range(1, _selectedMonthDate.daysInMonth + 1).map((day) => {
-    const date = _selectedMonthDate.set({ day })
-    const dateEntries = get(entriesByDate, date.toISODate(), [])
+  if (selectedPeriod.value === 'last-week') {
+    return DateTime.now().plus({ week: -1 }).startOf('week', { useLocaleWeeks: true })
+  }
+
+  return selectedPeriod.value.startOf('month')
+}
+
+const totalDays = computed(() => {
+  if (selectedPeriod.value === 'current-week' || selectedPeriod.value === 'last-week') {
+    return 7
+  }
+
+  return selectedPeriod.value.daysInMonth!
+})
+
+const groupTotalByDay = (entries: any[], isPayment: boolean = false) => {
+  const entriesByDate = !isPayment
+    ? groupBy(entries, 'date')
+    : groupBy(entries, (entry) => entry.paid_at.split('T')[0])
+
+  const startDate = getStartDate()
+
+  return range(0, totalDays.value).map((index) => {
+    const date = startDate.plus({ day: index })
+    const dateEntries = get(entriesByDate, date.toISODate()!, [])
 
     return Math.abs(sumBy(dateEntries, 'total'))
   })
 }
 
-const onMonthDateSelected = (monthDate: DateTime) => {
-  selectedMonthDate.value = monthDate
+const onPeriodSelected = (monthDate: DateTime) => {
+  selectedPeriod.value = monthDate
   fetch()
 }
-
-onIonViewDidEnter(() => {
-  fetch()
-})
 </script>
 
 <template>
   <IonPage>
     <IonHeader>
       <IonToolbar color="primary">
-        <IonTitle> Balanço Mensal </IonTitle>
+        <IonTitle> Balanço </IonTitle>
       </IonToolbar>
     </IonHeader>
     <IonContent>
-      <BalanceTimeSegments />
-
       <BalanceMonthPickerModal
         v-model="isPickerModalOpen"
-        :selected-date="selectedMonthDate"
-        @month-date-selected="onMonthDateSelected"
+        :selected-date="selectedPeriod"
+        @period-selected="onPeriodSelected"
         @did-dismiss="isPickerModalOpen = false"
       />
 
       <BalanceMonthButton
-        :month-date="selectedMonthDate"
+        :selected-period="selectedPeriod"
         @click="isPickerModalOpen = true"
       />
 
       <div
         class="ion-margin"
-        :style="{ display: 'flex', flexDirection: 'column', gap: '1rem' }"
+        :style="{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }"
       >
         <BalanceChart
           v-if="salesData.length"
-          :title="`ENTRADAS (${formatCurrencyBRL(totalSales)})`"
-          :data="chartSalesData"
+          title="ENTRADAS"
+          :data="salesData"
+          type="sales"
+          :selected-period="selectedPeriod"
+        />
+
+        <BalanceChart
+          v-if="paymentsData.length"
+          title="PAGAMENTOS"
+          :data="paymentsData"
+          type="payments"
+          :selected-period="selectedPeriod"
         />
 
         <BalanceChart
           v-if="expensesData.length"
-          :title="`SAÍDAS (${formatCurrencyBRL(totalExpenses)})`"
-          :data="chartExpensesData"
+          title="SAÍDAS"
+          :data="expensesData"
+          type="expenses"
+          :selected-period="selectedPeriod"
         />
       </div>
     </IonContent>

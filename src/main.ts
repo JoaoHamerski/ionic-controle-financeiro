@@ -1,5 +1,6 @@
 import '@/support/plugins'
 import '@/bootstrap/styles'
+import '@/support/datetime'
 
 import { SplashScreen } from '@capacitor/splash-screen'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'

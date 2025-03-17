@@ -5,7 +5,7 @@ import { ref } from 'vue'
 import { computed } from 'vue'
 import { onMounted } from 'vue'
 
-import { dbStatement } from '@/services/db-service'
+import { dbSelect, dbSelectById, dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { titleCase } from '@/support/helpers'
 
@@ -75,10 +75,14 @@ const deleteSale = async (sale: any) => {
 
 const paySale = async (sale: any) => {
   const builder = knex.table('sales').where('id', '=', sale.id).update({
-    paid_at: DateTime.now().toISODate(),
+    paid_at: DateTime.now().toISO(),
   })
 
   await dbStatement(builder)
+  setTimeout(async () => {
+    const data = await dbSelectById('sales', sale.id)
+    console.log(data)
+  }, 1000)
 }
 
 const onPay = async ({ sale }: { sale: any }) => {

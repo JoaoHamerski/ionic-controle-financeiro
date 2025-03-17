@@ -65,9 +65,7 @@ const fetch = async () => {
 const onSegmentChange = async (selectedSegment: Segment) => {
   segment.value = selectedSegment
 
-  await fetch()
-
-  console.log(items.value)
+  fetch()
 }
 </script>
 
@@ -98,7 +96,7 @@ const onSegmentChange = async (selectedSegment: Segment) => {
               :icon="basketSharp"
               color="white"
             />
-            <IonLabel :style="{ color: 'var(--ion-color-light)' }">Vendas</IonLabel>
+            <IonLabel :style="{ color: 'var(--ion-color-light)' }">Entradas</IonLabel>
           </IonSegmentButton>
 
           <IonSegmentButton
@@ -109,7 +107,7 @@ const onSegmentChange = async (selectedSegment: Segment) => {
               :icon="funnelSharp"
               color="white"
             />
-            <IonLabel :style="{ color: 'var(--ion-color-light)' }">Despesas</IonLabel>
+            <IonLabel :style="{ color: 'var(--ion-color-light)' }">Saídas</IonLabel>
           </IonSegmentButton>
         </IonSegment>
       </IonToolbar>

@@ -9,28 +9,28 @@ import {
   IonPickerColumnOption,
   IonToolbar,
 } from '@ionic/vue'
-import { range, upperFirst } from 'lodash'
+import { isNumber, range, upperFirst } from 'lodash'
 import { DateTime } from 'luxon'
 import { computed } from 'vue'
 import { ref } from 'vue'
 
 const props = defineProps<{
-  selectedDate: DateTime
+  selectedDate: DateTime | 'last-week' | 'current-week'
 }>()
 
 const isOpen = defineModel<boolean>()
-const emit = defineEmits(['month-date-selected'])
+const emit = defineEmits(['period-selected'])
 
 const modal = ref()
 
-const selectedMonthNumber = ref<number>(props.selectedDate.month)
+const selectedPeriod = ref<number | string>((props.selectedDate as DateTime).month)
 
 const monthDates = computed<DateTime[]>(() =>
   range(0, 12).map((_, index) => DateTime.now().plus({ month: -index })),
 )
 
 const onPickerChange = (event: CustomEvent) => {
-  selectedMonthNumber.value = event.detail.value
+  selectedPeriod.value = event.detail.value
 }
 
 const onCancelClick = () => {
@@ -38,10 +38,17 @@ const onCancelClick = () => {
 }
 
 const onConcludeClick = () => {
-  const monthDate = monthDates.value.find(({ month }) => month === selectedMonthNumber.value)
-
   modal.value.$el.dismiss()
-  emit('month-date-selected', monthDate)
+
+  if (isNumber(selectedPeriod.value)) {
+    const monthDate = monthDates.value.find(({ month }) => month === selectedPeriod.value)
+    emit('period-selected', monthDate)
+    return
+  }
+
+  if (['current-week', 'last-week'].includes(selectedPeriod.value)) {
+    emit('period-selected', selectedPeriod.value)
+  }
 }
 </script>
 
@@ -62,11 +69,15 @@ const onConcludeClick = () => {
         </IonButtons>
       </IonToolbar>
 
-      <IonPicker>
+      <IonPicker class="ion-margin">
         <IonPickerColumn
-          :value="selectedMonthNumber"
+          :value="selectedPeriod"
           @ion-change="onPickerChange"
         >
+          <IonPickerColumnOption value="current-week">Semana atual</IonPickerColumnOption>
+          <IonPickerColumnOption value="last-week">Semana passada</IonPickerColumnOption>
+          <IonPickerColumnOption disabled>--</IonPickerColumnOption>
+
           <IonPickerColumnOption
             v-for="monthDate in monthDates"
             :key="monthDate.month"

@@ -1,13 +1,26 @@
 <script setup lang="ts">
 import { IonButton, IonIcon } from '@ionic/vue'
 import { chevronDownCircleSharp } from 'ionicons/icons'
-import { DateTime } from 'luxon'
+
+import { SelectedPeriodType } from '../BalancePage.vue'
 
 const emit = defineEmits(['click'])
 
-defineProps<{
-  monthDate: DateTime
+const props = defineProps<{
+  selectedPeriod: SelectedPeriodType
 }>()
+
+const getSelectedPeriodLabel = () => {
+  if (props.selectedPeriod === 'last-week') {
+    return 'Semana passada'
+  }
+
+  if (props.selectedPeriod === 'current-week') {
+    return 'Semana atual'
+  }
+
+  throw new Error(`value ${JSON.stringify(props.selectedPeriod)} is invalid`)
+}
 </script>
 
 <template>
@@ -31,8 +44,14 @@ defineProps<{
       }"
       @click="emit('click')"
     >
-      <span :style="{ marginLeft: '1.5rem' }">
-        {{ monthDate.monthLong }} / {{ monthDate.year }}
+      <span
+        v-if="typeof selectedPeriod === 'object'"
+        :style="{ marginLeft: '1.5rem' }"
+      >
+        {{ selectedPeriod.monthLong }} / {{ selectedPeriod.year }}
+      </span>
+      <span v-else>
+        {{ getSelectedPeriodLabel() }}
       </span>
       <IonIcon
         slot="end"
