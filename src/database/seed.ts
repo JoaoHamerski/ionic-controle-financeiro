@@ -80,6 +80,11 @@ const seedSales = async (knex: Knex) => {
       to: now.toISODate(),
     })
 
+    const paid_at = faker.date.between({
+      from: created_at.toISOString(),
+      to: now.toISODate(),
+    })
+
     data.push({
       id: i,
       customer_id: isSale ? faker.helpers.arrayElement(customers || []) : null,
@@ -87,7 +92,7 @@ const seedSales = async (knex: Knex) => {
       price,
       quantity,
       total: isSale ? total : -total,
-      is_paid: faker.datatype.boolean({ probability: 0.8 }),
+      paid_at: faker.datatype.boolean({ probability: 0.7 }) ? paid_at.toISOString() : null,
       date: created_at.toISOString().split('T')[0],
       created_at: created_at.toISOString(),
     })

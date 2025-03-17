@@ -110,7 +110,7 @@ const insert = async () => {
     product_id: form.data.product!.id,
     price,
     quantity,
-    is_paid: form.data.is_paid,
+    paid_at: form.data.is_paid ? DateTime.now().toISODate() : null,
     date: form.data.date,
     total: form.data.type === 'sale' ? total : -total,
   }

@@ -25,7 +25,7 @@ defineProps<{
           <SalesListItemDate :date="sale.sale_date" />
           <SalesListItemPaid
             v-if="sale.sale_total > 0"
-            :is-paid="!!sale.sale_is_paid"
+            :paid-at="!!sale.sale_paid_at"
           />
         </div>
         <SalesListItemProduct :sale="sale" />

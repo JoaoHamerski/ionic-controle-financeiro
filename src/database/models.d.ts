@@ -18,7 +18,7 @@ export type Sale = {
   price: number
   quantity: number
   total: number
-  is_paid: boolean
+  paid_at: string | null
   date: string
   created_at: string
 }

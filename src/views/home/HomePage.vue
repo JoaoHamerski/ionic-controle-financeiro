@@ -65,7 +65,9 @@ const fetch = async () => {
 const onSegmentChange = async (selectedSegment: Segment) => {
   segment.value = selectedSegment
 
-  fetch()
+  await fetch()
+
+  console.log(items.value)
 }
 </script>
 

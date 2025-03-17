@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { IonAlert, IonItemSliding, IonList, ItemSlidingCustomEvent } from '@ionic/vue'
+import { DateTime } from 'luxon'
 import { ref } from 'vue'
 import { computed } from 'vue'
+import { onMounted } from 'vue'
 
 import { dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
@@ -73,7 +75,7 @@ const deleteSale = async (sale: any) => {
 
 const paySale = async (sale: any) => {
   const builder = knex.table('sales').where('id', '=', sale.id).update({
-    is_paid: 1,
+    paid_at: DateTime.now().toISODate(),
   })
 
   await dbStatement(builder)

@@ -3,7 +3,7 @@ import { IonIcon } from '@ionic/vue'
 import { checkmarkCircleSharp, timeSharp } from 'ionicons/icons'
 
 defineProps<{
-  isPaid: boolean
+  paidAt: boolean
 }>()
 </script>
 
@@ -13,14 +13,14 @@ defineProps<{
     mode="out-in"
   >
     <div
-      :key="isPaid ? 'paid' : 'not-paid'"
+      :key="paidAt ? 'paid' : 'not-paid'"
       :style="{
         fontSize: '.8rem',
         color: 'var(--ion-color-medium)',
         marginTop: '.2rem',
       }"
     >
-      <template v-if="isPaid">
+      <template v-if="paidAt">
         <IonIcon :icon="checkmarkCircleSharp" />
         Pago
       </template>
