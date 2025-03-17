@@ -9,7 +9,7 @@ import {
   IonSegmentButton,
   IonToolbar,
 } from '@ionic/vue'
-import { basketSharp, funnelSharp, listOutline } from 'ionicons/icons'
+import { listOutline, trendingDown, trendingUp } from 'ionicons/icons'
 import { onMounted, ref } from 'vue'
 
 import { dbSelect } from '@/services/db-service'
@@ -93,7 +93,7 @@ const onSegmentChange = async (selectedSegment: Segment) => {
             @click="onSegmentChange('sales')"
           >
             <IonIcon
-              :icon="basketSharp"
+              :icon="trendingUp"
               color="white"
             />
             <IonLabel :style="{ color: 'var(--ion-color-light)' }">Entradas</IonLabel>
@@ -104,7 +104,7 @@ const onSegmentChange = async (selectedSegment: Segment) => {
             @click="onSegmentChange('expenses')"
           >
             <IonIcon
-              :icon="funnelSharp"
+              :icon="trendingDown"
               color="white"
             />
             <IonLabel :style="{ color: 'var(--ion-color-light)' }">Saídas</IonLabel>
