@@ -5,8 +5,7 @@ import { getCssVar } from '@/support/helpers'
 export const CHART_SHARED_DATASET: Partial<ChartDataset> = {
   borderWidth: 2,
   pointHitRadius: 10,
-  pointRadius: 2,
-  animation: false,
+  pointRadius: 3,
 }
 
 export const CHART_SALES_DATASET: Partial<ChartDataset> = {

@@ -2,6 +2,8 @@
 import { CategoryScale, Chart, LinearScale, LineElement, PointElement, Tooltip } from 'chart.js'
 import { Line } from 'vue-chartjs'
 
+import { formatCurrencyBRL } from '@/support/helpers'
+
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip)
 
 defineProps<{
@@ -18,6 +20,18 @@ defineProps<{
     >
       {{ title }}
     </div>
-    <Line :data="data" />
+    <Line
+      :data="data"
+      :options="{
+        plugins: {
+          tooltip: {
+            callbacks: {
+              title: (item) => `Dia ${item[0].label}`,
+              label: (item) => formatCurrencyBRL(item.raw as string),
+            },
+          },
+        },
+      }"
+    />
   </div>
 </template>

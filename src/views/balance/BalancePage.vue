@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, onIonViewDidEnter } from '@ionic/vue'
 import { ChartData } from 'chart.js'
-import { get, groupBy, range, sumBy } from 'lodash'
+import { get, groupBy, range, sum, sumBy } from 'lodash'
 import { DateTime } from 'luxon'
 import { computed } from 'vue'
 import { ref } from 'vue'
 
 import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
+import { formatCurrencyBRL } from '@/support/helpers'
 
 import BalanceChart from './_partials/BalanceChart.vue'
 import BalanceMonthButton from './_partials/BalanceMonthButton.vue'
@@ -28,6 +29,9 @@ const isPickerModalOpen = ref(false)
 
 const salesData = ref<number[]>([])
 const expensesData = ref<number[]>([])
+
+const totalSales = computed(() => sum(salesData.value))
+const totalExpenses = computed(() => sum(expensesData.value))
 
 const chartSalesData = computed(
   () =>
@@ -57,24 +61,13 @@ const chartExpensesData = computed(
     }) as ChartData,
 )
 
-const groupTotalByDay = (entries: any[]) => {
-  const _selectedMonthDate = selectedMonthDate.value
-  const entriesByDate = groupBy(entries, 'date')
+const fetch = () => {
+  const startDate = selectedMonthDate.value.startOf('month')
+  const endDate = selectedMonthDate.value.endOf('month')
 
-  return range(1, _selectedMonthDate.daysInMonth + 1).map((day) => {
-    const date = _selectedMonthDate.set({ day })
-    const dateEntries = get(entriesByDate, date.toISODate(), [])
-
-    return Math.abs(sumBy(dateEntries, 'total'))
-  })
+  fetchSales(startDate, endDate)
+  fetchExpenses(startDate, endDate)
 }
-
-const getEntriesBuilder = (startDate: DateTime, endDate: DateTime) =>
-  knex
-    .select('*')
-    .from('sales')
-    .where('date', '>=', startDate.toISODate())
-    .where('date', '<=', endDate.toISODate())
 
 const fetchSales = async (startDate: DateTime, endDate: DateTime) => {
   const salesBuilder = getEntriesBuilder(startDate, endDate)
@@ -94,12 +87,23 @@ const fetchExpenses = async (startDate: DateTime, endDate: DateTime) => {
   expensesData.value = groupTotalByDay(data)
 }
 
-const fetch = () => {
-  const startDate = selectedMonthDate.value.startOf('month')
-  const endDate = selectedMonthDate.value.endOf('month')
+const getEntriesBuilder = (startDate: DateTime, endDate: DateTime) =>
+  knex
+    .select('*')
+    .from('sales')
+    .where('date', '>=', startDate.toISODate())
+    .where('date', '<=', endDate.toISODate())
 
-  fetchSales(startDate, endDate)
-  fetchExpenses(startDate, endDate)
+const groupTotalByDay = (entries: any[]) => {
+  const _selectedMonthDate = selectedMonthDate.value
+  const entriesByDate = groupBy(entries, 'date')
+
+  return range(1, _selectedMonthDate.daysInMonth + 1).map((day) => {
+    const date = _selectedMonthDate.set({ day })
+    const dateEntries = get(entriesByDate, date.toISODate(), [])
+
+    return Math.abs(sumBy(dateEntries, 'total'))
+  })
 }
 
 const onMonthDateSelected = (monthDate: DateTime) => {
@@ -139,12 +143,14 @@ onIonViewDidEnter(() => {
         :style="{ display: 'flex', flexDirection: 'column', gap: '1rem' }"
       >
         <BalanceChart
-          title="ENTRADAS"
+          v-if="salesData.length"
+          :title="`ENTRADAS (${formatCurrencyBRL(totalSales)})`"
           :data="chartSalesData"
         />
 
         <BalanceChart
-          title="SAÍDAS"
+          v-if="expensesData.length"
+          :title="`SAÍDAS (${formatCurrencyBRL(totalExpenses)})`"
           :data="chartExpensesData"
         />
       </div>
