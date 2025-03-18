@@ -8,7 +8,7 @@ import { dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { titleCase } from '@/support/helpers'
 
-import { EntryRecord } from '../HomePage.vue'
+import { EntryRecordHome } from '../HomePage.vue'
 import EntriesListAfter from './EntriesListAfter.vue'
 import EntriesListItem from './EntriesListItem.vue'
 import EntriesListItemDragOptions from './EntriesListItemDragOptions.vue'
@@ -24,7 +24,7 @@ const list = ref()
 
 const deleteAlert = ref<{
   isOpen: boolean
-  entry: EntryRecord | null
+  entry: EntryRecordHome | null
 }>({
   isOpen: false,
   entry: null,

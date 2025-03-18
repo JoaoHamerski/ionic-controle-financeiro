@@ -7,7 +7,7 @@ import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { prefixColumns } from '@/support/helpers'
 import type { Prefix } from '@/types/helpers'
-import { Customer, Entry, Product } from '@/types/models'
+import type { Customer, Entry, Product } from '@/types/models'
 
 import HomeFabButton from './_partials/HomeFabButton.vue'
 import HomeSegments from './_partials/HomeSegments.vue'
@@ -16,7 +16,8 @@ import EntriesCreateModal from './entries-form/EntriesCreateModal.vue'
 import EntriesList from './entries-list/EntriesList.vue'
 
 type Segment = 'all' | 'sales' | 'expenses'
-export type EntryRecord = Prefix<Customer, 'customer'> &
+
+export type EntryRecordHome = Prefix<Customer, 'customer'> &
   Prefix<Product, 'product'> &
   Prefix<Entry, 'entry'>
 
@@ -27,7 +28,7 @@ const segment = ref<Segment>('all')
 const isCreateSaleModalOpen = ref<boolean>(false)
 const isCreateCustomerModalOpen = ref<boolean>(false)
 
-const entries = ref<EntryRecord[]>([])
+const entries = ref<EntryRecordHome[]>([])
 const totalRecords = ref<number>(0)
 
 onIonViewDidEnter(async () => {
