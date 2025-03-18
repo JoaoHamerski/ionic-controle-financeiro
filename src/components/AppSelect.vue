@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IonNote, IonSelect } from '@ionic/vue'
+import { IonSelect } from '@ionic/vue'
 
 defineProps<{
   error?: string
@@ -18,12 +18,4 @@ defineProps<{
   >
     <slot />
   </IonSelect>
-
-  <IonNote
-    v-if="error"
-    color="danger"
-    style="font-size: 0.75rem; margin-left: 0.75rem"
-  >
-    {{ error }}
-  </IonNote>
 </template>
