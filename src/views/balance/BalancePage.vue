@@ -147,7 +147,7 @@ const onPeriodSelected = (monthDate: DateTime) => {
     <IonContent>
       <BalanceMonthPickerModal
         v-model="isPickerModalOpen"
-        :selected-date="selectedPeriod"
+        :selected-period="selectedPeriod"
         @period-selected="onPeriodSelected"
         @did-dismiss="isPickerModalOpen = false"
       />

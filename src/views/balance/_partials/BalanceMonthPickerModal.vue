@@ -15,7 +15,7 @@ import { computed } from 'vue'
 import { ref } from 'vue'
 
 const props = defineProps<{
-  selectedDate: DateTime | 'last-week' | 'current-week'
+  selectedPeriod: DateTime | 'last-week' | 'current-week'
 }>()
 
 const isOpen = defineModel<boolean>()
@@ -23,7 +23,7 @@ const emit = defineEmits(['period-selected'])
 
 const modal = ref()
 
-const selectedPeriod = ref<number | string>((props.selectedDate as DateTime).month)
+const selectedPeriod = ref<number | string>((props.selectedPeriod as DateTime).month)
 
 const monthDates = computed<DateTime[]>(() =>
   range(0, 12).map((_, index) => DateTime.now().plus({ month: -index })),
