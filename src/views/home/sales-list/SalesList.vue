@@ -1,24 +1,32 @@
 <script setup lang="ts">
-import { IonAlert, IonItemSliding, IonList, ItemSlidingCustomEvent } from '@ionic/vue'
+import {
+  IonAlert,
+  IonItem,
+  IonItemSliding,
+  IonLabel,
+  IonList,
+  ItemSlidingCustomEvent,
+} from '@ionic/vue'
 import { DateTime } from 'luxon'
 import { ref } from 'vue'
 import { computed } from 'vue'
-import { onMounted } from 'vue'
 
-import { dbSelect, dbSelectById, dbStatement } from '@/services/db-service'
+import { dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { titleCase } from '@/support/helpers'
 
 import SalesListItem from './SalesListItem.vue'
 import SalesListItemDragOptions from './SalesListItemDragOptions.vue'
 
-const emit = defineEmits(['refetch'])
+const emit = defineEmits(['refetch', 'load-more'])
 
 defineProps<{
   sales: any[]
+  totalRecords: number
 }>()
 
 const list = ref()
+
 const deleteAlert = ref({
   isOpen: false,
   sale: null,
@@ -79,10 +87,6 @@ const paySale = async (sale: any) => {
   })
 
   await dbStatement(builder)
-  setTimeout(async () => {
-    const data = await dbSelectById('sales', sale.id)
-    console.log(data)
-  }, 1000)
 }
 
 const onPay = async ({ sale }: { sale: any }) => {
@@ -102,10 +106,7 @@ const closeSlidingItems = async () => {
     ref="list"
     lines="full"
   >
-    <TransitionGroup
-      key="sales-list"
-      name="fade"
-    >
+    <div key="sales-list">
       <IonItemSliding
         v-for="sale in sales"
         :key="sale.id"
@@ -117,7 +118,33 @@ const closeSlidingItems = async () => {
           @delete="onDelete"
         />
       </IonItemSliding>
-    </TransitionGroup>
+
+      <template v-if="sales.length >= 20">
+        <IonItem
+          v-if="sales.length < totalRecords"
+          button
+          :style="{
+            textAlign: 'center',
+            fontSize: '.8rem',
+            fontWeight: 500,
+          }"
+          @click="$emit('load-more')"
+        >
+          <IonLabel :style="{ color: 'var(--ion-color-primary)' }">CARREGAR MAIS</IonLabel>
+        </IonItem>
+        <IonItem
+          v-else
+          :style="{
+            textAlign: 'center',
+            fontSize: '.8rem',
+            fontWeight: 500,
+          }"
+        >
+          <IonLabel :style="{ color: 'var(--ion-color-medium-tint)' }">Fim dos resultados</IonLabel>
+        </IonItem>
+      </template>
+    </div>
+
     <IonAlert
       :is-open="deleteAlert.isOpen"
       header="Tem certeza?"

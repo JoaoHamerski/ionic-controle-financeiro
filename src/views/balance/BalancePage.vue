@@ -16,7 +16,7 @@ export type SelectedPeriodType = DateTime | 'last-week' | 'current-week'
 
 const { knex } = useDatabaseStore()
 
-const selectedPeriod = ref<SelectedPeriodType>(DateTime.now())
+const selectedPeriod = ref<SelectedPeriodType>('current-week')
 const isPickerModalOpen = ref(false)
 
 const salesData = ref<number[]>([])

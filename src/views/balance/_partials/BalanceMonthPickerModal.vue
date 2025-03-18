@@ -23,7 +23,7 @@ const emit = defineEmits(['period-selected'])
 
 const modal = ref()
 
-const selectedPeriod = ref<number | string>((props.selectedPeriod as DateTime).month)
+const selectedPeriod = ref<number | string>('current-week')
 
 const monthDates = computed<DateTime[]>(() =>
   range(0, 12).map((_, index) => DateTime.now().plus({ month: -index })),
