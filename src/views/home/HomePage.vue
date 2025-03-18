@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { IonContent, IonHeader, IonPage, IonToolbar, onIonViewDidEnter } from '@ionic/vue'
+import { Knex } from 'knex'
 import { ref } from 'vue'
 
 import { dbSelect } from '@/services/db-service'
@@ -19,21 +20,21 @@ const { knex } = useDatabaseStore()
 const isCreateSaleModalOpen = ref<boolean>(false)
 const isCreateCustomerModalOpen = ref<boolean>(false)
 
-const items = ref<any[]>([])
+const sales = ref<any[]>([])
 const totalRecords = ref<number>(0)
-const offset = ref<number>(0)
 const segment = ref<Segment>('all')
 
 onIonViewDidEnter(async () => {
-  await fetch()
-  await calculateTotalRecords()
+  await fetch(true)
 })
 
-const fetch = async (reset: boolean = false) => {
-  if (reset) {
-    offset.value = 0
-  }
+const onSegmentChange = async (selectedSegment: Segment) => {
+  segment.value = selectedSegment
 
+  await fetch(true)
+}
+
+const fetch = async (reset: boolean = false) => {
   const builder = knex
     .select([
       'sales.id as id',
@@ -47,46 +48,34 @@ const fetch = async (reset: boolean = false) => {
     .orderBy('sales.date', 'desc')
     .orderBy('sales.created_at', 'desc')
     .limit(20)
-    .offset(offset.value)
+    .offset(!reset ? sales.value.length : 0)
 
-  if (segment.value === 'sales') {
-    builder.where('total', '>', 0)
-  }
+  if (segment.value !== 'all') {
+    const operator = segment.value === 'sales' ? '>' : '<'
 
-  if (segment.value === 'expenses') {
-    builder.where('total', '<', 0)
+    builder.where('total', operator, 0)
   }
 
   if (reset) {
-    items.value = await dbSelect(builder)
+    sales.value = await dbSelect(builder)
+    totalRecords.value = await calculateTotalRecords(builder)
+
     return
   }
 
-  items.value.push(...(await dbSelect(builder)))
+  sales.value.push(...(await dbSelect(builder)))
 }
 
-const calculateTotalRecords = async () => {
-  const builder = knex.count('* as total').from('sales')
-
-  if (segment.value === 'sales') {
-    builder.where('total', '>', 0)
-  }
-
-  if (segment.value === 'expenses') {
-    builder.where('total', '<', 0)
-  }
+const calculateTotalRecords = async (builder: Knex.QueryBuilder) => {
+  builder.count('* as total')
 
   const data = await dbSelect(builder)
 
-  totalRecords.value = data.length ? data[0].total : 0
-  console.log(totalRecords.value)
-}
+  if (data.length) {
+    return data[0].total
+  }
 
-const onSegmentChange = async (selectedSegment: Segment) => {
-  segment.value = selectedSegment
-
-  await fetch(true)
-  await calculateTotalRecords()
+  return 0
 }
 </script>
 
@@ -105,7 +94,7 @@ const onSegmentChange = async (selectedSegment: Segment) => {
       >
         <SalesList
           :key="segment"
-          :sales="items"
+          :sales="sales"
           :total-records="totalRecords"
           @refetch="fetch(true)"
           @load-more="fetch"
