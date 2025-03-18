@@ -1,16 +1,5 @@
 <script setup lang="ts">
-import {
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonLabel,
-  IonPage,
-  IonSegment,
-  IonSegmentButton,
-  IonToolbar,
-  onIonViewDidEnter,
-} from '@ionic/vue'
-import { listOutline, trendingDown, trendingUp } from 'ionicons/icons'
+import { IonContent, IonHeader, IonPage, IonToolbar, onIonViewDidEnter } from '@ionic/vue'
 import { ref } from 'vue'
 
 import { dbSelect } from '@/services/db-service'
@@ -18,6 +7,7 @@ import { useDatabaseStore } from '@/stores/database-store'
 import { prefixColumns } from '@/support/helpers'
 
 import HomeFabButton from './_partials/HomeFabButton.vue'
+import HomeSegments from './_partials/HomeSegments.vue'
 import CustomerCreateModal from './customer-form/CustomerCreateModal.vue'
 import SaleCreateModal from './sale-form/SaleCreateModal.vue'
 import SalesList from './sales-list/SalesList.vue'
@@ -104,43 +94,7 @@ const onSegmentChange = async (selectedSegment: Segment) => {
   <IonPage>
     <IonHeader>
       <IonToolbar color="primary">
-        <IonSegment
-          value="all"
-          color="light"
-        >
-          <IonSegmentButton
-            value="all"
-            @click="onSegmentChange('all')"
-          >
-            <IonIcon
-              :icon="listOutline"
-              color="white"
-            />
-            <IonLabel :style="{ color: 'var(--ion-color-light)' }">Tudo</IonLabel>
-          </IonSegmentButton>
-
-          <IonSegmentButton
-            value="sales"
-            @click="onSegmentChange('sales')"
-          >
-            <IonIcon
-              :icon="trendingUp"
-              color="white"
-            />
-            <IonLabel :style="{ color: 'var(--ion-color-light)' }">Entradas</IonLabel>
-          </IonSegmentButton>
-
-          <IonSegmentButton
-            value="expenses"
-            @click="onSegmentChange('expenses')"
-          >
-            <IonIcon
-              :icon="trendingDown"
-              color="white"
-            />
-            <IonLabel :style="{ color: 'var(--ion-color-light)' }">Saídas</IonLabel>
-          </IonSegmentButton>
-        </IonSegment>
+        <HomeSegments @segment-changed="onSegmentChange" />
       </IonToolbar>
     </IonHeader>
 
