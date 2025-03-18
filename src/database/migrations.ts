@@ -13,11 +13,11 @@ export default [
         name TEXT COLLATE NOCASE,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP    
     );`,
-      `CREATE TABLE IF NOT EXISTS sales (
+      `CREATE TABLE IF NOT EXISTS entries (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         customer_id INTEGER,
         product_id INTEGER,
-        price DECIMAL(10, 2),
+        value DECIMAL(10, 2),
         quantity MEDIUM INTEGER,
         total DECIMAL(10, 2),
         paid_at DATETIME,

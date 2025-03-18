@@ -11,7 +11,7 @@ import {
 import { arrowBackOutline } from 'ionicons/icons'
 import { ref } from 'vue'
 
-import SaleForm from './SaleForm.vue'
+import EntriesForm from './EntriesForm.vue'
 
 const emit = defineEmits(['submitted'])
 const modal = ref()
@@ -39,7 +39,7 @@ const onFormSubmit = () => {
     </IonHeader>
 
     <IonContent class="ion-padding">
-      <SaleForm @submitted="onFormSubmit" />
+      <EntriesForm @submitted="onFormSubmit" />
     </IonContent>
   </IonModal>
 </template>

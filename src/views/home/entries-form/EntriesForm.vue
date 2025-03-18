@@ -28,24 +28,24 @@ import { parseCurrencyBRL } from '@/support/helpers'
 import { currencyBrlMask, positiveIntMask } from '@/support/masks'
 
 import CustomerTypeHead from '../customer-form/CustomerTypeHead.vue'
-import SaleTypeHead from './SaleTypeHead.vue'
+import EntriesTypeHead from './EntriesTypeHead.vue'
 
-type SaleFormFields = {
+type EntryFormFields = {
   price: string
   quantity: number
   customer: Customer | null
   product: Product | null
   is_paid: boolean
   date: string
-  type: 'sale' | 'expense'
+  type: 'inflow' | 'outflow'
 }
 
 const { knex } = useDatabaseStore()
 
 const emit = defineEmits(['submitted'])
 
-const form = useForm<SaleFormFields, keyof SaleFormFields>({
-  type: 'sale',
+const form = useForm<EntryFormFields, keyof EntryFormFields>({
+  type: 'inflow',
   price: '',
   quantity: 1,
   customer: null,
@@ -58,7 +58,7 @@ const isSelectCustomerModalOpen = ref(false)
 const isSelectProductModalOpen = ref(false)
 
 const rules = computed(() => {
-  const localRules: Partial<Record<keyof SaleFormFields, object>> = {
+  const localRules: Partial<Record<keyof EntryFormFields, object>> = {
     type: { required: helpers.withMessage('Por favor, selecione o tipo', required) },
     price: { required: helpers.withMessage('Por favor, informe um preço', required) },
     quantity: { minValue: helpers.withMessage('Mín. 1', minValue(1)) },
@@ -66,7 +66,7 @@ const rules = computed(() => {
     date: { required: helpers.withMessage('Por favor, informe uma data', required) },
   }
 
-  if (form.data.type === 'sale') {
+  if (form.data.type === 'inflow') {
     localRules.customer = {
       required: helpers.withMessage('Por favor, selecione um cliente', required),
     }
@@ -112,16 +112,15 @@ const insert = async () => {
     quantity,
     paid_at: form.data.is_paid ? DateTime.now().toISODate() : null,
     date: form.data.date,
-    total: form.data.type === 'sale' ? total : -total,
+    total: form.data.type === 'inflow' ? total : -total,
   }
 
-  dbStatement(knex.insert(data).into('sales'))
+  dbStatement(knex.insert(data).into('entries'))
 }
 </script>
 
 <template>
   <form
-    action=""
     style="height: 100%"
     @submit.prevent="submit"
     @focus.capture="form.clearErrorOnFocus"
@@ -173,7 +172,7 @@ const insert = async () => {
           </IonCol>
         </IonRow>
         <IonRow
-          v-if="form.data.type === 'sale'"
+          v-if="form.data.type === 'inflow'"
           class="ion-margin-bottom"
         >
           <IonCol>
@@ -226,7 +225,7 @@ const insert = async () => {
           </IonCol>
         </IonRow>
 
-        <IonRow v-if="form.data.type === 'sale'">
+        <IonRow v-if="form.data.type === 'inflow'">
           <IonCol>
             <IonCheckbox
               v-model="form.data.is_paid"
@@ -260,7 +259,7 @@ const insert = async () => {
       @did-dismiss="isSelectCustomerModalOpen = false"
     />
 
-    <SaleTypeHead
+    <EntriesTypeHead
       :is-open="isSelectProductModalOpen"
       @product-selected="onProductSelected"
       @did-dismiss="isSelectProductModalOpen = false"

@@ -6,7 +6,7 @@ import { DateTime } from 'luxon'
 import { dbSelect, dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 
-import { Customer, Sale } from './models'
+import { Customer, Entry } from './models'
 
 export const seedDatabase = async () => {
   const { database, knex } = useDatabaseStore()
@@ -14,7 +14,7 @@ export const seedDatabase = async () => {
   await truncateAllTables(database)
   await seedCustomers(knex)
   await seedProducts(knex)
-  await seedSales(knex)
+  await seedEntries(knex)
 }
 
 const truncateAllTables = async (database: SQLiteDBConnection) => {
@@ -61,18 +61,18 @@ const seedProducts = async (knex: Knex) => {
   await dbStatement(sql)
 }
 
-const seedSales = async (knex: Knex) => {
+const seedEntries = async (knex: Knex) => {
   const QUANTITY = faker.number.int({ min: 100, max: 200 })
 
   const customers = (await dbSelect(knex.select('id').from('customers')))?.map(({ id }) => id)
   const products = (await dbSelect(knex.select('id').from('products')))?.map(({ id }) => id)
-  const data: Sale[] = []
+  const data: Entry[] = []
 
   for (let i = 1; i < QUANTITY; i++) {
-    const price = +faker.number.float({ min: 10, max: 50 }).toFixed(1)
+    const value = +faker.number.float({ min: 10, max: 50 }).toFixed(1)
     const quantity = faker.number.int({ min: 1, max: 5 })
-    const total = +(price * quantity).toFixed(1)
-    const isSale = faker.datatype.boolean({ probability: 0.8 })
+    const total = +(value * quantity).toFixed(1)
+    const isInflow = faker.datatype.boolean({ probability: 0.8 })
 
     const now = DateTime.now()
     const created_at = faker.date.between({
@@ -87,16 +87,16 @@ const seedSales = async (knex: Knex) => {
 
     data.push({
       id: i,
-      customer_id: isSale ? faker.helpers.arrayElement(customers || []) : null,
+      customer_id: isInflow ? faker.helpers.arrayElement(customers || []) : null,
       product_id: faker.helpers.arrayElement(products || []),
-      price,
+      value,
       quantity,
-      total: isSale ? total : -total,
+      total: isInflow ? total : -total,
       paid_at: faker.datatype.boolean({ probability: 0.7 }) ? paid_at.toISOString() : null,
       date: created_at.toISOString().split('T')[0],
       created_at: created_at.toISOString(),
     })
   }
 
-  await dbStatement(knex.insert(data).into('sales'))
+  await dbStatement(knex.insert(data).into('entries'))
 }

@@ -10,8 +10,8 @@ import { prefixColumns } from '@/support/helpers'
 import HomeFabButton from './_partials/HomeFabButton.vue'
 import HomeSegments from './_partials/HomeSegments.vue'
 import CustomerCreateModal from './customer-form/CustomerCreateModal.vue'
-import SaleCreateModal from './sale-form/SaleCreateModal.vue'
-import SalesList from './sales-list/SalesList.vue'
+import EntriesCreateModal from './entries-form/EntriesCreateModal.vue'
+import EntriesList from './entries-list/EntriesList.vue'
 
 type Segment = 'all' | 'sales' | 'expenses'
 
@@ -20,7 +20,7 @@ const { knex } = useDatabaseStore()
 const isCreateSaleModalOpen = ref<boolean>(false)
 const isCreateCustomerModalOpen = ref<boolean>(false)
 
-const sales = ref<any[]>([])
+const entries = ref<any[]>([])
 const totalRecords = ref<number>(0)
 const segment = ref<Segment>('all')
 
@@ -37,18 +37,18 @@ const onSegmentChange = async (selectedSegment: Segment) => {
 const fetch = async (reset: boolean = false) => {
   const builder = knex
     .select([
-      'sales.id as id',
+      'entries.id as id',
       ...(await prefixColumns('*', 'customers', 'customer')),
       ...(await prefixColumns('*', 'products', 'product')),
-      ...(await prefixColumns('*', 'sales', 'sale')),
+      ...(await prefixColumns('*', 'entries', 'entry')),
     ])
-    .from('sales')
-    .leftJoin('customers', 'sales.customer_id', '=', 'customers.id')
-    .join('products', 'sales.product_id', '=', 'products.id')
-    .orderBy('sales.date', 'desc')
-    .orderBy('sales.created_at', 'desc')
+    .from('entries')
+    .leftJoin('customers', 'entries.customer_id', '=', 'customers.id')
+    .join('products', 'entries.product_id', '=', 'products.id')
+    .orderBy('entries.date', 'desc')
+    .orderBy('entries.created_at', 'desc')
     .limit(20)
-    .offset(!reset ? sales.value.length : 0)
+    .offset(!reset ? entries.value.length : 0)
 
   if (segment.value !== 'all') {
     const operator = segment.value === 'sales' ? '>' : '<'
@@ -57,13 +57,13 @@ const fetch = async (reset: boolean = false) => {
   }
 
   if (reset) {
-    sales.value = await dbSelect(builder)
+    entries.value = await dbSelect(builder)
     totalRecords.value = await calculateTotalRecords(builder)
 
     return
   }
 
-  sales.value.push(...(await dbSelect(builder)))
+  entries.value.push(...(await dbSelect(builder)))
 }
 
 const calculateTotalRecords = async (builder: Knex.QueryBuilder) => {
@@ -92,9 +92,9 @@ const calculateTotalRecords = async (builder: Knex.QueryBuilder) => {
         name="fade"
         mode="out-in"
       >
-        <SalesList
+        <EntriesList
           :key="segment"
-          :sales="sales"
+          :entries="entries"
           :total-records="totalRecords"
           @refetch="fetch(true)"
           @load-more="fetch"
@@ -107,7 +107,7 @@ const calculateTotalRecords = async (builder: Knex.QueryBuilder) => {
       />
     </IonContent>
 
-    <SaleCreateModal
+    <EntriesCreateModal
       :is-open="isCreateSaleModalOpen"
       @submitted="fetch"
       @did-dismiss="isCreateSaleModalOpen = false"

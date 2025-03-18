@@ -11,11 +11,11 @@ export type Product = {
   created_at: string
 }
 
-export type Sale = {
+export type Entry = {
   id: number
   customer_id: number
   product_id: number
-  price: number
+  value: number
   quantity: number
   total: number
   paid_at: string | null
