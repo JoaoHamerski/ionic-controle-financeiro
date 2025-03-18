@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 
 import AppTypeaheadModal from '@/components/AppTypeaheadModal.vue'
-import { Product } from '@/database/models'
+import { Product } from '@/types/models'
 import { dbSelect, dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 

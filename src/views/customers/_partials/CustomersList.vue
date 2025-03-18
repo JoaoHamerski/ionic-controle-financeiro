@@ -2,7 +2,7 @@
 import { IonButton, IonIcon, IonItem, IonLabel, IonList } from '@ionic/vue'
 import { createOutline, logoWhatsapp } from 'ionicons/icons'
 
-import { Customer } from '@/database/models'
+import { Customer } from '@/types/models'
 import { titleCase } from '@/support/helpers'
 
 defineProps<{

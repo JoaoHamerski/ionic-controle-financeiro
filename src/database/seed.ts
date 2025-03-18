@@ -6,7 +6,7 @@ import { DateTime } from 'luxon'
 import { dbSelect, dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 
-import { Customer, Entry } from './models'
+import { Customer, Entry } from '../types/models'
 
 export const seedDatabase = async () => {
   const { database, knex } = useDatabaseStore()

@@ -17,12 +17,13 @@ type Segment = 'all' | 'sales' | 'expenses'
 
 const { knex } = useDatabaseStore()
 
+const segment = ref<Segment>('all')
+
 const isCreateSaleModalOpen = ref<boolean>(false)
 const isCreateCustomerModalOpen = ref<boolean>(false)
 
 const entries = ref<any[]>([])
 const totalRecords = ref<number>(0)
-const segment = ref<Segment>('all')
 
 onIonViewDidEnter(async () => {
   await fetch(true)

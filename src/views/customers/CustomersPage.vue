@@ -9,7 +9,7 @@ import {
 } from '@ionic/vue'
 import { ref } from 'vue'
 
-import { Customer } from '@/database/models'
+import { Customer } from '@/types/models'
 import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 
