@@ -19,8 +19,8 @@ const { knex } = useDatabaseStore()
 const selectedPeriod = ref<SelectedPeriodType>('current-week')
 const isPickerModalOpen = ref(false)
 
-const salesData = ref<number[]>([])
-const expensesData = ref<number[]>([])
+const inflowsData = ref<number[]>([])
+const outflowsData = ref<number[]>([])
 const paymentsData = ref<number[]>([])
 
 onIonViewDidEnter(async () => {
@@ -30,10 +30,8 @@ onIonViewDidEnter(async () => {
 const fetch = () => {
   const [startDate, endDate] = getDateInterval()
 
-  console.log(startDate.toISODate(), endDate.toISODate())
-
-  fetchSales(startDate, endDate)
-  fetchExpenses(startDate, endDate)
+  fetchInflows(startDate, endDate)
+  fetchOutflows(startDate, endDate)
   fetchPayments(startDate, endDate)
 }
 
@@ -59,28 +57,28 @@ const getDateInterval = () => {
 
   return [localSelectedPeriod.startOf('month'), localSelectedPeriod.endOf('month')]
 }
-const fetchSales = async (startDate: DateTime, endDate: DateTime) => {
-  const salesBuilder = getEntriesBuilder(startDate, endDate)
+const fetchInflows = async (startDate: DateTime, endDate: DateTime) => {
+  const inflowsBuilder = getEntriesBuilder(startDate, endDate)
 
-  salesBuilder.where('total', '>', 0)
+  inflowsBuilder.where('total', '>', 0)
 
-  const data = await dbSelect(salesBuilder)
-  salesData.value = groupTotalByDay(data)
+  const data = await dbSelect(inflowsBuilder)
+  inflowsData.value = groupTotalByDay(data)
 }
 
-const fetchExpenses = async (startDate: DateTime, endDate: DateTime) => {
-  const expensesBuilder = getEntriesBuilder(startDate, endDate)
+const fetchOutflows = async (startDate: DateTime, endDate: DateTime) => {
+  const outflowsBuilder = getEntriesBuilder(startDate, endDate)
 
-  expensesBuilder.where('total', '<', 0)
+  outflowsBuilder.where('total', '<', 0)
 
-  const data = await dbSelect(expensesBuilder)
-  expensesData.value = groupTotalByDay(data)
+  const data = await dbSelect(outflowsBuilder)
+  outflowsData.value = groupTotalByDay(data)
 }
 
 const fetchPayments = async (startDate: DateTime, endDate: DateTime) => {
   const paymentsBuilder = knex
     .select('*')
-    .from('sales')
+    .from('entries')
     .where('paid_at', '>=', startDate.toISODate())
     .where('paid_at', '<=', endDate.toISODate())
 
@@ -92,7 +90,7 @@ const fetchPayments = async (startDate: DateTime, endDate: DateTime) => {
 const getEntriesBuilder = (startDate: DateTime, endDate: DateTime) =>
   knex
     .select('*')
-    .from('sales')
+    .from('entries')
     .where('date', '>=', startDate.toISODate())
     .where('date', '<=', endDate.toISODate())
 
@@ -161,29 +159,35 @@ const onPeriodSelected = (monthDate: DateTime) => {
         class="ion-margin"
         :style="{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }"
       >
-        <BalanceChart
-          v-if="salesData.length"
-          title="ENTRADAS"
-          :data="salesData"
-          type="sales"
-          :selected-period="selectedPeriod"
-        />
+        <Transition name="fade">
+          <BalanceChart
+            v-if="inflowsData.length"
+            title="ENTRADAS"
+            :data="inflowsData"
+            type="inflows"
+            :selected-period="selectedPeriod"
+          />
+        </Transition>
 
-        <BalanceChart
-          v-if="paymentsData.length"
-          title="PAGAMENTOS"
-          :data="paymentsData"
-          type="payments"
-          :selected-period="selectedPeriod"
-        />
+        <Transition name="fade">
+          <BalanceChart
+            v-if="paymentsData.length"
+            title="PAGAMENTOS"
+            :data="paymentsData"
+            type="payments"
+            :selected-period="selectedPeriod"
+          />
+        </Transition>
 
-        <BalanceChart
-          v-if="expensesData.length"
-          title="SAÍDAS"
-          :data="expensesData"
-          type="expenses"
-          :selected-period="selectedPeriod"
-        />
+        <Transition name="fade">
+          <BalanceChart
+            v-if="outflowsData.length"
+            title="SAÍDAS"
+            :data="outflowsData"
+            type="outflows"
+            :selected-period="selectedPeriod"
+          />
+        </Transition>
       </div>
     </IonContent>
   </IonPage>

@@ -2,8 +2,8 @@
 import { IonButton, IonIcon, IonItem, IonLabel, IonList } from '@ionic/vue'
 import { createOutline, logoWhatsapp } from 'ionicons/icons'
 
-import { Customer } from '@/types/models'
 import { titleCase } from '@/support/helpers'
+import { Customer } from '@/types/models'
 
 defineProps<{
   customers: Customer[]
@@ -23,7 +23,7 @@ defineProps<{
         v-if="customer.phone"
         fill="clear"
         color="success"
-        size="lg"
+        size="large"
         shape="round"
         :href="`https://wa.me/55${customer.phone}`"
         target="_blank"
@@ -35,7 +35,7 @@ defineProps<{
       </IonButton>
       <IonButton
         fill="clear"
-        size="lg"
+        size="large"
         shape="round"
       >
         <IonIcon

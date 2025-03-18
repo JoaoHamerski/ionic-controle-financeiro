@@ -2,7 +2,7 @@ import { ChartDataset } from 'chart.js'
 
 import { getCssVar } from '@/support/helpers'
 
-export const CHART_SALES_DATASET: Partial<ChartDataset> = {
+export const CHART_INFLOWS_DATASET: Partial<ChartDataset> = {
   label: 'Entradas',
   backgroundColor: getCssVar('--ion-color-success-shade'),
   borderColor: `rgba(${getCssVar('--ion-color-success-rgb')}, .5)`,
@@ -14,7 +14,7 @@ export const CHART_PAYMENTS_DATASET: Partial<ChartDataset> = {
   borderColor: `rgba(${getCssVar('--ion-color-primary-rgb')}, .5)`,
 }
 
-export const CHART_EXPENSES_DATASET: Partial<ChartDataset> = {
+export const CHART_OUTFLOWS_DATASET: Partial<ChartDataset> = {
   label: 'Saídas',
   backgroundColor: getCssVar('--ion-color-danger-shade'),
   borderColor: `rgba(${getCssVar('--ion-color-danger-rgb')}, .5)`,

@@ -1,12 +1,5 @@
 <script setup lang="ts">
-import {
-  IonAlert,
-  IonItem,
-  IonItemSliding,
-  IonLabel,
-  IonList,
-  ItemSlidingCustomEvent,
-} from '@ionic/vue'
+import { IonAlert, IonItemSliding, IonList, ItemSlidingCustomEvent } from '@ionic/vue'
 import { DateTime } from 'luxon'
 import { ref } from 'vue'
 import { computed } from 'vue'
@@ -15,6 +8,8 @@ import { dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { titleCase } from '@/support/helpers'
 
+import { EntryRecord } from '../HomePage.vue'
+import EntriesListAfter from './EntriesListAfter.vue'
 import EntriesListItem from './EntriesListItem.vue'
 import EntriesListItemDragOptions from './EntriesListItemDragOptions.vue'
 
@@ -27,7 +22,10 @@ defineProps<{
 
 const list = ref()
 
-const deleteAlert = ref({
+const deleteAlert = ref<{
+  isOpen: boolean
+  entry: EntryRecord | null
+}>({
   isOpen: false,
   entry: null,
 })
@@ -106,7 +104,10 @@ const closeSlidingItems = async () => {
     ref="list"
     lines="full"
   >
-    <div key="sales-list">
+    <TransitionGroup
+      key="sales-list"
+      name="fade"
+    >
       <IonItemSliding
         v-for="entry in entries"
         :key="entry.id"
@@ -118,32 +119,13 @@ const closeSlidingItems = async () => {
           @delete="onDelete"
         />
       </IonItemSliding>
+    </TransitionGroup>
 
-      <template v-if="entries.length >= 20">
-        <IonItem
-          v-if="entries.length < totalRecords"
-          button
-          :style="{
-            textAlign: 'center',
-            fontSize: '.8rem',
-            fontWeight: 500,
-          }"
-          @click="$emit('load-more')"
-        >
-          <IonLabel :style="{ color: 'var(--ion-color-primary)' }">CARREGAR MAIS</IonLabel>
-        </IonItem>
-        <IonItem
-          v-else
-          :style="{
-            textAlign: 'center',
-            fontSize: '.8rem',
-            fontWeight: 500,
-          }"
-        >
-          <IonLabel :style="{ color: 'var(--ion-color-medium-tint)' }">Fim dos resultados</IonLabel>
-        </IonItem>
-      </template>
-    </div>
+    <EntriesListAfter
+      v-if="entries.length >= 20"
+      :has-more="entries.length < totalRecords"
+      @load-more="$emit('load-more')"
+    />
 
     <IonAlert
       :is-open="deleteAlert.isOpen"

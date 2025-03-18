@@ -3,10 +3,12 @@ import {
   CategoryScale,
   Chart,
   ChartData,
+  ChartOptions,
   LinearScale,
   LineElement,
   PointElement,
   Tooltip,
+  TooltipItem,
 } from 'chart.js'
 import { range, sum } from 'lodash'
 import { DateTime, WeekdayNumbers } from 'luxon'
@@ -17,14 +19,14 @@ import { formatCurrencyBRL } from '@/support/helpers'
 
 import { SelectedPeriodType } from '../BalancePage.vue'
 import {
-  CHART_EXPENSES_DATASET,
+  CHART_INFLOWS_DATASET,
+  CHART_OUTFLOWS_DATASET,
   CHART_PAYMENTS_DATASET,
-  CHART_SALES_DATASET,
 } from '../chart-config'
 
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip)
 
-type ChartType = 'sales' | 'expenses' | 'payments'
+type ChartType = 'inflows' | 'outflows' | 'payments'
 
 const props = defineProps<{
   type: ChartType
@@ -32,14 +34,6 @@ const props = defineProps<{
   data: number[]
   selectedPeriod: SelectedPeriodType
 }>()
-
-const totalDays = computed(() => {
-  if (props.selectedPeriod === 'current-week' || props.selectedPeriod == 'last-week') {
-    return 7
-  }
-
-  return props.selectedPeriod.daysInMonth!
-})
 
 const chartLabels = computed(() => {
   if (props.selectedPeriod === 'current-week' || props.selectedPeriod === 'last-week') {
@@ -51,6 +45,14 @@ const chartLabels = computed(() => {
   }
 
   return range(1, totalDays.value + 1)
+})
+
+const totalDays = computed(() => {
+  if (props.selectedPeriod === 'current-week' || props.selectedPeriod == 'last-week') {
+    return 7
+  }
+
+  return props.selectedPeriod.daysInMonth!
 })
 
 const chartData = computed(
@@ -66,26 +68,52 @@ const chartData = computed(
           data: props.data,
         },
       ],
-    }) as ChartData,
+    }) as ChartData<'line'>,
 )
 
 const total = computed(() => sum(props.data))
 
 const getChartTypeConfig = (type: ChartType) => {
-  if (type === 'sales') {
-    return CHART_SALES_DATASET
+  if (type === 'inflows') {
+    return CHART_INFLOWS_DATASET
   }
 
-  if (type === 'expenses') {
-    return CHART_EXPENSES_DATASET
+  if (type === 'outflows') {
+    return CHART_OUTFLOWS_DATASET
   }
 
   return CHART_PAYMENTS_DATASET
 }
+
+const chartOptions = computed(() => {
+  const titleCallback =
+    typeof props.selectedPeriod === 'object'
+      ? (items: TooltipItem<'line'>[]) => `Dia ${items[0].label}`
+      : (items: TooltipItem<'line'>[]) => items[0].label
+
+  const labelCallback = (item: TooltipItem<'line'>) => formatCurrencyBRL(item.raw as string)
+
+  return {
+    maintainAspectRatio: true,
+    plugins: {
+      tooltip: {
+        callbacks: {
+          title: titleCallback,
+          label: labelCallback,
+        },
+      },
+    },
+    scales: {
+      y: {
+        min: 0,
+      },
+    },
+  } as ChartOptions<'line'>
+})
 </script>
 
 <template>
-  <div style="max-height: 22dvh">
+  <div :style="{ maxHeight: '22dvh' }">
     <div
       class="ion-text-center"
       :style="{ fontWeight: 500, fontSize: '.8rem' }"
@@ -94,23 +122,7 @@ const getChartTypeConfig = (type: ChartType) => {
     </div>
     <Line
       :data="chartData"
-      :options="{
-        maintainAspectRatio: false,
-        plugins: {
-          tooltip: {
-            callbacks: {
-              title: (item) =>
-                typeof selectedPeriod === 'object' ? `Dia ${item[0].label}` : item[0].label,
-              label: (item) => formatCurrencyBRL(item.raw as string),
-            },
-          },
-        },
-        scales: {
-          y: {
-            min: 0,
-          },
-        },
-      }"
+      :options="chartOptions"
     />
   </div>
 </template>
