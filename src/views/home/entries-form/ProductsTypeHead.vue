@@ -2,9 +2,9 @@
 import { ref } from 'vue'
 
 import AppTypeaheadModal from '@/components/AppTypeaheadModal.vue'
-import { Product } from '@/types/models'
 import { dbSelect, dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
+import { Product } from '@/types/models'
 
 const { knex } = useDatabaseStore()
 
@@ -15,8 +15,8 @@ const onSearch = (search?: string) => {
   fetch(search)
 }
 
-const onModalWillPresent = () => {
-  fetch()
+const onModalWillPresent = async () => {
+  await fetch()
 }
 
 const fetch = async (search?: string) => {
@@ -58,7 +58,7 @@ const selectProduct = (product: Product) => {
     }"
     @select="selectProduct"
     @create="createProduct"
-    @ion-modal-will-present="onModalWillPresent"
+    @will-present="onModalWillPresent"
     @update:search="onSearch"
   />
 </template>

@@ -94,7 +94,7 @@ const submit = async () => {
               name="phoneRaw"
               type="text"
               inputmode="numeric"
-              label="Celular"
+              label="Celular (opcional)"
               placeholder="Digite o celular..."
               autocomplete="phone"
               clear-input

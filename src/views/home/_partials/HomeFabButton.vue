@@ -2,7 +2,7 @@
 import { IonFab, IonFabButton, IonFabList, IonIcon } from '@ionic/vue'
 import { add, cart, peopleCircle } from 'ionicons/icons'
 
-defineEmits(['sale-click', 'customer-click'])
+defineEmits(['entry-click', 'customer-click'])
 </script>
 
 <template>
@@ -18,8 +18,8 @@ defineEmits(['sale-click', 'customer-click'])
     <IonFabList side="top">
       <IonFabButton
         color="light"
-        data-label="Nova venda"
-        @click="$emit('sale-click')"
+        data-label="Nova entrada"
+        @click="$emit('entry-click')"
       >
         <IonIcon :icon="cart" />
       </IonFabButton>

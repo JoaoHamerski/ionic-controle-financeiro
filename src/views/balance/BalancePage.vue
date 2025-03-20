@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, onIonViewDidEnter } from '@ionic/vue'
+import {
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  onIonViewDidEnter,
+} from '@ionic/vue'
+import { calendar } from 'ionicons/icons'
 import { get, groupBy, range, sumBy } from 'lodash'
 import { DateTime } from 'luxon'
 import { ref } from 'vue'
@@ -139,7 +148,12 @@ const onPeriodSelected = (monthDate: DateTime) => {
   <IonPage>
     <IonHeader>
       <IonToolbar color="primary">
-        <IonTitle> Balanço </IonTitle>
+        <IonTitle>
+          <div :style="{ display: 'flex', gap: '0.5rem' }">
+            <IonIcon :icon="calendar" />
+            Balanço
+          </div>
+        </IonTitle>
       </IonToolbar>
     </IonHeader>
     <IonContent>

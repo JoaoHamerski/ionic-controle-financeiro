@@ -17,7 +17,7 @@ import EntriesList from './entries-list/EntriesList.vue'
 
 type Segment = 'all' | 'sales' | 'expenses'
 
-export type EntryRecordHome = Prefix<Customer, 'customer'> &
+export type EntryRecordHome = { id: string } & Prefix<Customer, 'customer'> &
   Prefix<Product, 'product'> &
   Prefix<Entry, 'entry'>
 
@@ -25,7 +25,7 @@ const { knex } = useDatabaseStore()
 
 const segment = ref<Segment>('all')
 
-const isCreateSaleModalOpen = ref<boolean>(false)
+const isCreateEntryModalOpen = ref<boolean>(false)
 const isCreateCustomerModalOpen = ref<boolean>(false)
 
 const entries = ref<EntryRecordHome[]>([])
@@ -109,15 +109,15 @@ const calculateTotalRecords = async (builder: Knex.QueryBuilder) => {
       </Transition>
 
       <HomeFabButton
-        @sale-click="isCreateSaleModalOpen = true"
+        @entry-click="isCreateEntryModalOpen = true"
         @customer-click="isCreateCustomerModalOpen = true"
       />
     </IonContent>
 
     <EntriesCreateModal
-      :is-open="isCreateSaleModalOpen"
-      @submitted="fetch"
-      @did-dismiss="isCreateSaleModalOpen = false"
+      :is-open="isCreateEntryModalOpen"
+      @submitted="fetch(true)"
+      @did-dismiss="isCreateEntryModalOpen = false"
     />
 
     <CustomerCreateModal

@@ -21,17 +21,17 @@ import { computed } from 'vue'
 import AppInput from '@/components/AppInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import { useForm } from '@/composables/use-form'
-import { Customer, Product } from '@/types/models'
 import { dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { parseCurrencyBRL } from '@/support/helpers'
 import { currencyBrlMask, positiveIntMask } from '@/support/masks'
+import { Customer, Product } from '@/types/models'
 
 import CustomerTypeHead from '../customer-form/CustomerTypeHead.vue'
-import EntriesTypeHead from './EntriesTypeHead.vue'
+import ProductsTypeHead from './ProductsTypeHead.vue'
 
 type EntryFormFields = {
-  price: string
+  value: string
   quantity: number
   customer: Customer | null
   product: Product | null
@@ -46,7 +46,7 @@ const emit = defineEmits(['submitted'])
 
 const form = useForm<EntryFormFields, keyof EntryFormFields>({
   type: 'inflow',
-  price: '',
+  value: '',
   quantity: 1,
   customer: null,
   product: null,
@@ -60,7 +60,7 @@ const isSelectProductModalOpen = ref(false)
 const rules = computed(() => {
   const localRules: Partial<Record<keyof EntryFormFields, object>> = {
     type: { required: helpers.withMessage('Por favor, selecione o tipo', required) },
-    price: { required: helpers.withMessage('Por favor, informe um preço', required) },
+    value: { required: helpers.withMessage('Por favor, informe um preço', required) },
     quantity: { minValue: helpers.withMessage('Mín. 1', minValue(1)) },
     product: { required: helpers.withMessage('Por favor, selecione um produto', required) },
     date: { required: helpers.withMessage('Por favor, informe uma data', required) },
@@ -101,21 +101,21 @@ const submit = async () => {
 }
 
 const insert = async () => {
-  const price = +parseCurrencyBRL(form.data.price)
+  const value = +parseCurrencyBRL(form.data.value)
   const quantity = form.data.quantity
-  const total = (price * quantity).toFixed(2)
+  const total = (value * quantity).toFixed(2)
 
   const data = {
     customer_id: form.data.customer?.id || null,
     product_id: form.data.product!.id,
-    price,
+    value,
     quantity,
     paid_at: form.data.is_paid ? DateTime.now().toISODate() : null,
     date: form.data.date,
     total: form.data.type === 'inflow' ? total : -total,
   }
 
-  dbStatement(knex.insert(data).into('entries'))
+  await dbStatement(knex.insert(data).into('entries'))
 }
 </script>
 
@@ -141,8 +141,8 @@ const insert = async () => {
               :error="form.errors.type"
               @ion-change="onTypeChange"
             >
-              <IonSelectOption value="sale">Venda</IonSelectOption>
-              <IonSelectOption value="expense">Despesa</IonSelectOption>
+              <IonSelectOption value="inflow">Entrada</IonSelectOption>
+              <IonSelectOption value="outflow">Saída</IonSelectOption>
             </AppSelect>
           </IonCol>
         </IonRow>
@@ -150,10 +150,10 @@ const insert = async () => {
         <IonRow class="ion-margin-bottom">
           <IonCol size="9">
             <AppInput
-              v-model="form.data.price"
+              v-model="form.data.value"
               v-maskito="currencyBrlMask"
               name="price"
-              :error="form.errors.price"
+              :error="form.errors.value"
               placeholder="R$ "
               label="Valor"
               inputmode="numeric"
@@ -225,7 +225,10 @@ const insert = async () => {
           </IonCol>
         </IonRow>
 
-        <IonRow v-if="form.data.type === 'inflow'">
+        <IonRow
+          v-if="form.data.type === 'inflow'"
+          :style="{ textAlign: 'end' }"
+        >
           <IonCol>
             <IonCheckbox
               v-model="form.data.is_paid"
@@ -259,7 +262,7 @@ const insert = async () => {
       @did-dismiss="isSelectCustomerModalOpen = false"
     />
 
-    <EntriesTypeHead
+    <ProductsTypeHead
       :is-open="isSelectProductModalOpen"
       @product-selected="onProductSelected"
       @did-dismiss="isSelectProductModalOpen = false"

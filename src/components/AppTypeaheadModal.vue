@@ -48,10 +48,13 @@ const onModalDidDismiss = () => {
 <template>
   <IonModal
     ref="modal"
-    @ion-modal-did-dismiss="onModalDidDismiss"
+    @did-dismiss="onModalDidDismiss"
   >
     <IonHeader>
-      <IonToolbar class="ion-horizontal-padding">
+      <IonToolbar
+        class="ion-horizontal-padding"
+        color="primary"
+      >
         <IonButtons slot="start">
           <IonButton @click="modal.$el.dismiss()">
             <IonIcon

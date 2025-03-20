@@ -118,7 +118,7 @@ const chartOptions = computed(() => {
       class="ion-text-center"
       :style="{ fontWeight: 500, fontSize: '.8rem' }"
     >
-      {{ title }} ({{ formatCurrencyBRL(total) }})
+      {{ title }} <b :style="{ fontWeight: 800 }">({{ formatCurrencyBRL(total) }})</b>
     </div>
     <Line
       :data="chartData"

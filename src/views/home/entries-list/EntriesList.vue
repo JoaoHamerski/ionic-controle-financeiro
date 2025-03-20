@@ -6,7 +6,7 @@ import { computed } from 'vue'
 
 import { dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
-import { titleCase } from '@/support/helpers'
+import { formatCurrencyBRL, titleCase } from '@/support/helpers'
 
 import { EntryRecordHome } from '../HomePage.vue'
 import EntriesListAfter from './EntriesListAfter.vue'
@@ -33,31 +33,33 @@ const deleteAlert = ref<{
 const { knex } = useDatabaseStore()
 
 const deleteAlertMessage = computed(() => {
-  if (!deleteAlert.value.entry) {
+  const entryToDelete = deleteAlert.value.entry
+
+  if (!entryToDelete) {
     return 'Excluir'
   }
 
-  if (deleteAlert.value.entry.entry_total > 0) {
-    return `Excluir o pagamento de ${titleCase(deleteAlert.value.entry.customer_name)}`
+  if (entryToDelete.entry_total > 0) {
+    return `Excluir a entrada de ${formatCurrencyBRL(entryToDelete.entry_total)} de ${titleCase(entryToDelete.customer_name)}`
   }
 
-  if (deleteAlert.value.entry.entry_total < 0) {
-    return `Excluir despesa`
+  if (entryToDelete.entry_total < 0) {
+    return `Excluir saída de ${formatCurrencyBRL(Math.abs(entryToDelete.entry_total))}`
   }
 
   return 'Excluir'
 })
 
-const onDelete = ({ sale }: { sale: any }) => {
+const onDelete = ({ entry }: { entry: any }) => {
   deleteAlert.value = {
     isOpen: true,
-    entry: sale,
+    entry,
   }
 }
 
 const onDeleteAlertDismiss = async (event: ItemSlidingCustomEvent) => {
   if (event.detail.role === 'delete') {
-    deleteSale(deleteAlert.value.entry)
+    deleteEntry(deleteAlert.value.entry)
 
     emit('refetch')
   }
@@ -70,7 +72,7 @@ const onDeleteAlertDismiss = async (event: ItemSlidingCustomEvent) => {
   await closeSlidingItems()
 }
 
-const deleteSale = async (entry: any) => {
+const deleteEntry = async (entry: any) => {
   const builder = knex.table('entries').where('id', '=', entry.id).delete()
 
   await dbStatement(builder)
@@ -79,7 +81,7 @@ const deleteSale = async (entry: any) => {
   emit('refetch')
 }
 
-const paySale = async (entry: any) => {
+const payEntry = async (entry: any) => {
   const builder = knex.table('entries').where('id', '=', entry.id).update({
     paid_at: DateTime.now().toISO(),
   })
@@ -87,8 +89,8 @@ const paySale = async (entry: any) => {
   await dbStatement(builder)
 }
 
-const onPay = async ({ sale }: { sale: any }) => {
-  await paySale(sale)
+const onPay = async ({ entry }: { entry: any }) => {
+  await payEntry(entry)
   await closeSlidingItems()
 
   emit('refetch')
@@ -114,7 +116,7 @@ const closeSlidingItems = async () => {
       >
         <EntriesListItem :entry="entry" />
         <EntriesListItemDragOptions
-          :sale="entry"
+          :entry="entry"
           @pay="onPay"
           @delete="onDelete"
         />

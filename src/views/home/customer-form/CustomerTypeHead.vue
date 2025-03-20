@@ -2,9 +2,9 @@
 import { ref } from 'vue'
 
 import AppTypeaheadModal from '@/components/AppTypeaheadModal.vue'
-import { Customer } from '@/types/models'
 import { dbSelect, dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
+import { Customer } from '@/types/models'
 
 const { knex } = useDatabaseStore()
 
@@ -59,7 +59,7 @@ const selectCustomer = (customer: Customer) => {
     }"
     @select="selectCustomer"
     @create="createCustomer"
-    @ion-modal-will-present="onModalWillPresent"
+    @will-present="onModalWillPresent"
     @update:search="onSearch"
   />
 </template>

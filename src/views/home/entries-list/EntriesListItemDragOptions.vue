@@ -5,24 +5,24 @@ import { checkmarkCircleSharp, trashSharp } from 'ionicons/icons'
 const emit = defineEmits(['pay', 'delete'])
 
 defineProps<{
-  sale: any
+  entry: any
 }>()
 
-const onDeleteClick = (sale: any) => {
-  emit('delete', { sale })
+const onDeleteClick = (entry: any) => {
+  emit('delete', { entry })
 }
 
-const onPayClick = async (sale: any) => {
-  emit('pay', { sale })
+const onPayClick = async (entry: any) => {
+  emit('pay', { entry })
 }
 </script>
 
 <template>
   <IonItemOptions side="end">
     <IonItemOption
-      v-if="sale.sale_total > 0 && !sale.sale_paid_at"
+      v-if="entry.entry_total > 0 && !entry.entry_paid_at"
       color="success"
-      @click="onPayClick(sale)"
+      @click="onPayClick(entry)"
     >
       <IonIcon
         slot="top"
@@ -34,7 +34,7 @@ const onPayClick = async (sale: any) => {
     <IonItemOption
       id="delete-alert"
       color="danger"
-      @click="onDeleteClick(sale)"
+      @click="onDeleteClick(entry)"
     >
       <IonIcon
         slot="top"
