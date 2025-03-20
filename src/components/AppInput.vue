@@ -15,5 +15,7 @@ defineProps<{
     :error-text="error"
     fill="outline"
     label-placement="floating"
-  />
+  >
+    <slot />
+  </IonInput>
 </template>

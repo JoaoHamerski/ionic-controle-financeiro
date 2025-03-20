@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {
+  IonButton,
   IonCheckbox,
   IonCol,
   IonContent,
@@ -13,7 +14,7 @@ import {
 } from '@ionic/vue'
 import { maskito as vMaskito } from '@maskito/vue'
 import { helpers, minValue, required } from '@vuelidate/validators'
-import { checkmark } from 'ionicons/icons'
+import { add, checkmark, removeOutline } from 'ionicons/icons'
 import { DateTime } from 'luxon'
 import { ref } from 'vue'
 import { computed } from 'vue'
@@ -23,7 +24,7 @@ import AppSelect from '@/components/AppSelect.vue'
 import { useForm } from '@/composables/use-form'
 import { dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
-import { parseCurrencyBRL } from '@/support/helpers'
+import { formatCurrencyBRL, parseCurrencyBRL } from '@/support/helpers'
 import { currencyBrlMask, positiveIntMask } from '@/support/masks'
 import { Customer, Product } from '@/types/models'
 
@@ -74,6 +75,31 @@ const rules = computed(() => {
 
   return localRules
 })
+
+const valueHelperText = computed(() => {
+  if (form.data.quantity > 1 && form.data.value) {
+    const total = form.data.quantity * +parseCurrencyBRL(form.data.value)
+    return `Total: ${formatCurrencyBRL(Math.abs(total).toFixed(2))}`
+  }
+
+  return undefined
+})
+
+const increaseQuantity = () => {
+  if (form.data.quantity >= 100) {
+    return
+  }
+
+  form.data.quantity++
+}
+
+const decreaseQuantity = () => {
+  if (form.data.quantity <= 1) {
+    return
+  }
+
+  form.data.quantity--
+}
 
 const onCustomerSelected = ({ customer }: { customer: Customer }) => {
   isSelectCustomerModalOpen.value = false
@@ -141,14 +167,14 @@ const insert = async () => {
               :error="form.errors.type"
               @ion-change="onTypeChange"
             >
-              <IonSelectOption value="inflow">Entrada</IonSelectOption>
-              <IonSelectOption value="outflow">Saída</IonSelectOption>
+              <IonSelectOption value="inflow">Venda</IonSelectOption>
+              <IonSelectOption value="outflow">Despesa</IonSelectOption>
             </AppSelect>
           </IonCol>
         </IonRow>
 
         <IonRow class="ion-margin-bottom">
-          <IonCol size="9">
+          <IonCol size="6">
             <AppInput
               v-model="form.data.value"
               v-maskito="currencyBrlMask"
@@ -156,6 +182,7 @@ const insert = async () => {
               :error="form.errors.value"
               placeholder="R$ "
               label="Valor"
+              :helper-text="valueHelperText"
               inputmode="numeric"
             />
           </IonCol>
@@ -168,9 +195,34 @@ const insert = async () => {
               label="Qtd."
               type="text"
               inputmode="numeric"
-            />
+              style="text-align: center"
+            >
+              <IonButton
+                slot="start"
+                fill="clear"
+                :disabled="form.data.quantity <= 1"
+                @click="decreaseQuantity"
+              >
+                <IonIcon
+                  slot="icon-only"
+                  :icon="removeOutline"
+                />
+              </IonButton>
+              <IonButton
+                slot="end"
+                fill="clear"
+                :disabled="form.data.quantity >= 100"
+                @click="increaseQuantity"
+              >
+                <IonIcon
+                  slot="icon-only"
+                  :icon="add"
+                />
+              </IonButton>
+            </AppInput>
           </IonCol>
         </IonRow>
+
         <IonRow
           v-if="form.data.type === 'inflow'"
           class="ion-margin-bottom"
