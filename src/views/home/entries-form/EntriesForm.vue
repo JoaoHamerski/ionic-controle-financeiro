@@ -57,6 +57,7 @@ const form = useForm<EntryFormFields, keyof EntryFormFields>({
 
 const isSelectCustomerModalOpen = ref(false)
 const isSelectProductModalOpen = ref(false)
+const isTimedOut = ref(false)
 
 const rules = computed(() => {
   const localRules: Partial<Record<keyof EntryFormFields, object>> = {
@@ -141,7 +142,12 @@ const insert = async () => {
     total: form.data.type === 'inflow' ? total : -total,
   }
 
+  isTimedOut.value = true
   await dbStatement(knex.insert(data).into('entries'))
+
+  setTimeout(() => {
+    isTimedOut.value = false
+  }, 1000)
 }
 </script>
 
@@ -301,6 +307,7 @@ const insert = async () => {
       >
         <IonFabButton
           type="submit"
+          :disabled="isTimedOut"
           @click="submit"
         >
           <IonIcon :icon="checkmark" />

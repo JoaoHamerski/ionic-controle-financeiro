@@ -80,7 +80,7 @@ const onModalDidDismiss = () => {
 
       <IonList lines="full">
         <IonItem
-          v-if="!items.length"
+          v-if="!items.length && search"
           button
           @click="onCreate"
         >
@@ -116,6 +116,7 @@ const onModalDidDismiss = () => {
     </IonContent>
   </IonModal>
 </template>
+
 <style scoped>
 ion-toolbar ion-button {
   --padding-top: 15px;

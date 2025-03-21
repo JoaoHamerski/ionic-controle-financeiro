@@ -9,6 +9,7 @@ import { prefixColumns } from '@/support/helpers'
 import type { Prefix } from '@/types/helpers'
 import type { Customer, Entry, Product } from '@/types/models'
 
+import HomeEmpty from './_partials/HomeEmpty.vue'
 import HomeFabButton from './_partials/HomeFabButton.vue'
 import HomeSegments from './_partials/HomeSegments.vue'
 import CustomerCreateModal from './customer-form/CustomerCreateModal.vue'
@@ -100,12 +101,14 @@ const calculateTotalRecords = async (builder: Knex.QueryBuilder) => {
         mode="out-in"
       >
         <EntriesList
+          v-if="entries.length"
           :key="segment"
           :entries="entries"
           :total-records="totalRecords"
           @refetch="fetch(true)"
           @load-more="fetch"
         />
+        <HomeEmpty v-else />
       </Transition>
 
       <HomeFabButton
