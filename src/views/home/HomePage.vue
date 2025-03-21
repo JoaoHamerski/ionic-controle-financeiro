@@ -12,7 +12,6 @@ import type { Customer, Entry, Product } from '@/types/models'
 import HomeEmpty from './_partials/HomeEmpty.vue'
 import HomeFabButton from './_partials/HomeFabButton.vue'
 import HomeSegments from './_partials/HomeSegments.vue'
-import CustomerCreateModal from './customer-form/CustomerCreateModal.vue'
 import EntriesCreateModal from './entries-form/EntriesCreateModal.vue'
 import EntriesList from './entries-list/EntriesList.vue'
 
@@ -27,7 +26,6 @@ const { knex } = useDatabaseStore()
 const segment = ref<Segment>('all')
 
 const isCreateEntryModalOpen = ref<boolean>(false)
-const isCreateCustomerModalOpen = ref<boolean>(false)
 
 const entries = ref<EntryRecordHome[]>([])
 const totalRecords = ref<number>(0)
@@ -111,21 +109,13 @@ const calculateTotalRecords = async (builder: Knex.QueryBuilder) => {
         <HomeEmpty v-else />
       </Transition>
 
-      <HomeFabButton
-        @entry-click="isCreateEntryModalOpen = true"
-        @customer-click="isCreateCustomerModalOpen = true"
-      />
+      <HomeFabButton @entry-click="isCreateEntryModalOpen = true" />
     </IonContent>
 
     <EntriesCreateModal
       :is-open="isCreateEntryModalOpen"
       @submitted="fetch(true)"
       @did-dismiss="isCreateEntryModalOpen = false"
-    />
-
-    <CustomerCreateModal
-      :is-open="isCreateCustomerModalOpen"
-      @did-dismiss="isCreateCustomerModalOpen = false"
     />
   </IonPage>
 </template>

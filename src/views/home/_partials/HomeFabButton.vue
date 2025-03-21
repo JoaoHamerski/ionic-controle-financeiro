@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { IonFab, IonFabButton, IonFabList, IonIcon } from '@ionic/vue'
-import { add, cart, peopleCircle } from 'ionicons/icons'
+import { IonFab, IonFabButton, IonIcon } from '@ionic/vue'
+import { add } from 'ionicons/icons'
 
 defineEmits(['entry-click', 'customer-click'])
 </script>
@@ -11,26 +11,12 @@ defineEmits(['entry-click', 'customer-click'])
     vertical="bottom"
     horizontal="end"
   >
-    <IonFabButton color="success">
+    <IonFabButton
+      color="success"
+      @click="$emit('entry-click')"
+    >
       <IonIcon :icon="add" />
     </IonFabButton>
-
-    <IonFabList side="top">
-      <IonFabButton
-        color="light"
-        data-label="Nova entrada"
-        @click="$emit('entry-click')"
-      >
-        <IonIcon :icon="cart" />
-      </IonFabButton>
-      <IonFabButton
-        color="light"
-        data-label="Novo cliente"
-        @click="$emit('customer-click')"
-      >
-        <IonIcon :icon="peopleCircle" />
-      </IonFabButton>
-    </IonFabList>
   </IonFab>
 </template>
 

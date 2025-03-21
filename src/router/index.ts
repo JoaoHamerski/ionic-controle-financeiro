@@ -28,6 +28,18 @@ const routes: Array<RouteRecordRaw> = [
         path: 'opcoes',
         component: () => import('@/views/options/OptionsPage.vue'),
       },
+      {
+        path: 'opcoes/clientes',
+        component: () => import('@/views/options/customers/CustomersPage.vue'),
+      },
+      {
+        path: 'opcoes/produtos',
+        component: () => import('@/views/options/products/ProductsPage.vue'),
+      },
+      {
+        path: 'opcoes/backup',
+        component: () => import('@/views/options/backup/BackupPage.vue'),
+      },
     ],
   },
 ]

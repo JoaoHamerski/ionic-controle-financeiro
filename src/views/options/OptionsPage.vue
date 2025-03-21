@@ -1,18 +1,61 @@
 <script setup lang="ts">
-import { IonHeader } from '@ionic/vue'
-import { IonLabel } from '@ionic/vue'
-import { IonToolbar } from '@ionic/vue'
-import { IonContent } from '@ionic/vue'
-import { IonPage } from '@ionic/vue'
+import { IonContent, IonIcon, IonItem, IonLabel, IonList, IonPage } from '@ionic/vue'
+import { cloud, grid, peopleCircle } from 'ionicons/icons'
+
+import OptionsHeader from './_partials/OptionsHeader.vue'
+
+type OptionItem = {
+  label: string
+  description?: string
+  icon: string
+  url?: string
+}
+
+const ITEMS: OptionItem[] = [
+  {
+    label: 'Clientes',
+    icon: peopleCircle,
+    description: 'Gerencie sua lista de clientes',
+    url: '/tabs/opcoes/clientes',
+  },
+  {
+    label: 'Produtos',
+    icon: grid,
+    description: 'Gerencie sua lista de produtos',
+    url: '/tabs/opcoes/produtos',
+  },
+  {
+    label: 'Backup dos dados',
+    icon: cloud,
+    description: 'Salve ou recupere seus dados',
+    url: '/tabs/opcoes/backup',
+  },
+]
 </script>
 
 <template>
   <IonPage>
-    <IonHeader>
-      <IonToolbar>
-        <IonLabel>Opções</IonLabel>
-      </IonToolbar>
-    </IonHeader>
-    <IonContent>Opções</IonContent>
+    <OptionsHeader title="Opções" />
+
+    <IonContent>
+      <IonList lines="full">
+        <IonItem
+          v-for="item in ITEMS"
+          :key="item.label"
+          button
+          detail
+          :router-link="item.url"
+        >
+          <IonIcon
+            slot="start"
+            :icon="item.icon"
+          />
+          <IonLabel>
+            <h2>{{ item.label }}</h2>
+            <p v-if="item.description">{{ item.description }}</p>
+          </IonLabel>
+        </IonItem>
+      </IonList>
+    </IonContent>
   </IonPage>
 </template>
