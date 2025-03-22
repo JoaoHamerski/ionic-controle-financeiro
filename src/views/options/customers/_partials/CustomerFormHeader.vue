@@ -17,7 +17,7 @@ defineProps<{
         :style="{ fontSize: '10rem' }"
         class="highlight-icon"
         :icon="icon"
-        color="success"
+        color="primary"
       />
     </IonCol>
   </IonRow>

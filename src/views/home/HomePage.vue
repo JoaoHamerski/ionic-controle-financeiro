@@ -29,6 +29,7 @@ const isCreateEntryModalOpen = ref<boolean>(false)
 
 const entries = ref<EntryRecordHome[]>([])
 const totalRecords = ref<number>(0)
+const isFetched = ref<boolean>(false)
 
 onIonViewDidEnter(async () => {
   await fetch(true)
@@ -66,6 +67,7 @@ const fetch = async (reset: boolean = false) => {
     entries.value = await dbSelect(builder)
     totalRecords.value = await calculateTotalRecords(builder)
 
+    isFetched.value = true
     return
   }
 
@@ -106,7 +108,7 @@ const calculateTotalRecords = async (builder: Knex.QueryBuilder) => {
           @refetch="fetch(true)"
           @load-more="fetch"
         />
-        <HomeEmpty v-else />
+        <HomeEmpty v-else-if="!entries.length && isFetched" />
       </Transition>
 
       <HomeFabButton @entry-click="isCreateEntryModalOpen = true" />

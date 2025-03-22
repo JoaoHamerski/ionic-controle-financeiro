@@ -28,8 +28,8 @@ import { formatCurrencyBRL, parseCurrencyBRL } from '@/support/helpers'
 import { currencyBrlMask, positiveIntMask } from '@/support/masks'
 import { Customer, Product } from '@/types/models'
 
-import CustomerTypeHead from '../customer-form/CustomerTypeHead.vue'
-import ProductsTypeHead from './ProductsTypeHead.vue'
+import TypeHeadCustomers from './TypeHeadCustomers.vue'
+import TypeHeadProducts from './TypeHeadProducts.vue'
 
 type EntryFormFields = {
   value: string
@@ -315,13 +315,13 @@ const insert = async () => {
       </IonFab>
     </IonFooter>
 
-    <CustomerTypeHead
+    <TypeHeadCustomers
       :is-open="isSelectCustomerModalOpen"
       @customer-selected="onCustomerSelected"
       @did-dismiss="isSelectCustomerModalOpen = false"
     />
 
-    <ProductsTypeHead
+    <TypeHeadProducts
       :is-open="isSelectProductModalOpen"
       @product-selected="onProductSelected"
       @did-dismiss="isSelectProductModalOpen = false"

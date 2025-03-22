@@ -33,15 +33,23 @@ const outflowsData = ref<number[]>([])
 const paymentsData = ref<number[]>([])
 
 onIonViewDidEnter(async () => {
-  fetch()
+  await fetch()
 })
 
-const fetch = () => {
+const totalDays = computed(() => {
+  if (selectedPeriod.value === 'current-week' || selectedPeriod.value === 'last-week') {
+    return 7
+  }
+
+  return selectedPeriod.value.daysInMonth!
+})
+
+const fetch = async () => {
   const [startDate, endDate] = getDateInterval()
 
-  fetchInflows(startDate, endDate)
-  fetchOutflows(startDate, endDate)
-  fetchPayments(startDate, endDate)
+  await fetchInflows(startDate, endDate)
+  await fetchOutflows(startDate, endDate)
+  await fetchPayments(startDate, endDate)
 }
 
 const getDateInterval = () => {
@@ -66,6 +74,7 @@ const getDateInterval = () => {
 
   return [localSelectedPeriod.startOf('month'), localSelectedPeriod.endOf('month')]
 }
+
 const fetchInflows = async (startDate: DateTime, endDate: DateTime) => {
   const inflowsBuilder = getEntriesBuilder(startDate, endDate)
 
@@ -88,8 +97,8 @@ const fetchPayments = async (startDate: DateTime, endDate: DateTime) => {
   const paymentsBuilder = knex
     .select('*')
     .from('entries')
-    .where('paid_at', '>=', startDate.toISODate())
-    .where('paid_at', '<=', endDate.toISODate())
+    .where('paid_at', '>=', startDate.toISO())
+    .where('paid_at', '<=', endDate.toISO())
 
   const data = await dbSelect(paymentsBuilder)
 
@@ -115,14 +124,6 @@ const getStartDate = (): DateTime => {
   return selectedPeriod.value.startOf('month')
 }
 
-const totalDays = computed(() => {
-  if (selectedPeriod.value === 'current-week' || selectedPeriod.value === 'last-week') {
-    return 7
-  }
-
-  return selectedPeriod.value.daysInMonth!
-})
-
 const groupTotalByDay = (entries: any[], isPayment: boolean = false) => {
   const entriesByDate = !isPayment
     ? groupBy(entries, 'date')
@@ -138,9 +139,9 @@ const groupTotalByDay = (entries: any[], isPayment: boolean = false) => {
   })
 }
 
-const onPeriodSelected = (monthDate: DateTime) => {
+const onPeriodSelected = async (monthDate: DateTime) => {
   selectedPeriod.value = monthDate
-  fetch()
+  await fetch()
 }
 </script>
 

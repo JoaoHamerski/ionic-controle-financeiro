@@ -9,6 +9,7 @@ import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 
 import App from './App.vue'
+import { seedDatabase } from './database/seed'
 import router from './router'
 import { useDatabaseStore } from './stores/database-store'
 
@@ -23,7 +24,7 @@ router.isReady().then(async () => {
   const { initDatabase } = useDatabaseStore()
 
   await initDatabase()
-  // await seedDatabase()
+  await seedDatabase()
 
   await SplashScreen.hide()
 

@@ -12,9 +12,9 @@ export const seedDatabase = async () => {
   const { database, knex } = useDatabaseStore()
 
   await truncateAllTables(database)
-  // await seedCustomers(knex)
-  // await seedProducts(knex)
-  // await seedEntries(knex)
+  await seedCustomers(knex)
+  await seedProducts(knex)
+  await seedEntries(knex)
 }
 
 const truncateAllTables = async (database: SQLiteDBConnection) => {
