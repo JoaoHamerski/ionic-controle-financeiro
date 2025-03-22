@@ -7,6 +7,8 @@ import type { Customer } from '@/types/models'
 import CustomerEditModal from './CustomerEditModal.vue'
 import CustomerListItem from './CustomerListItem.vue'
 
+const emit = defineEmits(['submitted'])
+
 defineProps<{
   customers: Customer[]
 }>()
@@ -24,11 +26,16 @@ const onEdit = ({ customer }: { customer: Customer }) => {
   editCustomerModal.value.customer = customer
 }
 
-const onEditModalDismiss = () => {
+const resetModal = () => {
   editCustomerModal.value = {
     isOpen: false,
     customer: undefined,
   }
+}
+
+const onSubmitted = () => {
+  resetModal()
+  emit('submitted')
 }
 </script>
 
@@ -44,7 +51,8 @@ const onEditModalDismiss = () => {
     <CustomerEditModal
       :is-open="editCustomerModal.isOpen"
       :customer="editCustomerModal.customer"
-      @did-dismiss="onEditModalDismiss"
+      @did-dismiss="resetModal"
+      @submitted="onSubmitted"
     />
   </IonList>
 </template>

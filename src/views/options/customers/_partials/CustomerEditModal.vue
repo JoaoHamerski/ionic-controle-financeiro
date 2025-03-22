@@ -15,11 +15,13 @@ import { Customer } from '@/types/models'
 
 import CustomerForm from './CustomerForm.vue'
 
-const modal = useTemplateRef('modal')
+defineEmits(['submitted'])
 
 defineProps<{
   customer?: Customer
 }>()
+
+const modal = useTemplateRef('modal')
 </script>
 
 <template>
@@ -43,6 +45,7 @@ defineProps<{
       <CustomerForm
         v-if="customer"
         :customer="customer"
+        @submitted="$emit('submitted')"
       />
     </IonContent>
   </IonModal>

@@ -18,27 +18,27 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'inicio',
-        component: () => import('@/views/home/HomePage.vue'),
+        component: import('@/views/home/HomePage.vue'),
       },
       {
         path: 'balanco',
-        component: () => import('@/views/balance/BalancePage.vue'),
+        component: import('@/views/balance/BalancePage.vue'),
       },
       {
         path: 'opcoes',
-        component: () => import('@/views/options/OptionsPage.vue'),
+        component: import('@/views/options/OptionsPage.vue'),
       },
       {
         path: 'opcoes/clientes',
-        component: () => import('@/views/options/customers/CustomersPage.vue'),
+        component: import('@/views/options/customers/CustomersPage.vue'),
       },
       {
         path: 'opcoes/produtos',
-        component: () => import('@/views/options/products/ProductsPage.vue'),
+        component: import('@/views/options/products/ProductsPage.vue'),
       },
       {
         path: 'opcoes/backup',
-        component: () => import('@/views/options/backup/BackupPage.vue'),
+        component: import('@/views/options/backup/BackupPage.vue'),
       },
     ],
   },

@@ -30,7 +30,10 @@ const fetch = async () => {
       has-back-button
     />
     <IonContent>
-      <CustomersList :customers="customers" />
+      <CustomersList
+        :customers="customers"
+        @submitted="fetch"
+      />
     </IonContent>
   </IonPage>
 </template>

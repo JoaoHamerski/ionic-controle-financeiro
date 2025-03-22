@@ -9,7 +9,7 @@ import {
   onIonViewDidEnter,
 } from '@ionic/vue'
 import { calendar } from 'ionicons/icons'
-import { get, groupBy, range, sumBy } from 'lodash'
+import { get, groupBy, range, round, sumBy } from 'lodash'
 import { DateTime } from 'luxon'
 import { ref } from 'vue'
 import { computed } from 'vue'
@@ -135,7 +135,7 @@ const groupTotalByDay = (entries: any[], isPayment: boolean = false) => {
     const date = startDate.plus({ day: index })
     const dateEntries = get(entriesByDate, date.toISODate()!, [])
 
-    return Math.abs(sumBy(dateEntries, 'total'))
+    return round(Math.abs(sumBy(dateEntries, 'total')), 2)
   })
 }
 
