@@ -28,7 +28,7 @@ defineProps<{
             :paid-at="!!entry.entry_paid_at"
           />
         </div>
-        <EntriesListItemProduct :sale="entry" />
+        <EntriesListItemProduct :entry="entry" />
       </div>
     </IonLabel>
   </IonItem>

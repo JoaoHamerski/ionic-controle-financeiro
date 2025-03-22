@@ -11,7 +11,7 @@ defineProps<{
 <template>
   <IonHeader>
     <IonToolbar color="primary">
-      <IonButtons>
+      <IonButtons v-if="hasBackButton">
         <IonBackButton />
       </IonButtons>
       <IonTitle :slot="hasBackButton ? 'end' : 'start'">

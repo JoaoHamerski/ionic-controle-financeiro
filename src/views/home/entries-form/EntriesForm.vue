@@ -61,16 +61,16 @@ const isTimedOut = ref(false)
 
 const rules = computed(() => {
   const localRules: Partial<Record<keyof EntryFormFields, object>> = {
-    type: { required: helpers.withMessage('Por favor, selecione o tipo', required) },
-    value: { required: helpers.withMessage('Por favor, informe um preço', required) },
+    type: { required: helpers.withMessage('Selecione o tipo', required) },
+    value: { required: helpers.withMessage('Informe um preço', required) },
     quantity: { minValue: helpers.withMessage('Mín. 1', minValue(1)) },
-    product: { required: helpers.withMessage('Por favor, selecione um produto', required) },
-    date: { required: helpers.withMessage('Por favor, informe uma data', required) },
+    product: { required: helpers.withMessage('Selecione um produto', required) },
+    date: { required: helpers.withMessage('Informe uma data', required) },
   }
 
   if (form.data.type === 'inflow') {
     localRules.customer = {
-      required: helpers.withMessage('Por favor, selecione um cliente', required),
+      required: helpers.withMessage('Selecione um cliente', required),
     }
   }
 
@@ -184,7 +184,7 @@ const insert = async () => {
             <AppInput
               v-model="form.data.value"
               v-maskito="currencyBrlMask"
-              name="price"
+              name="value"
               :error="form.errors.value"
               placeholder="R$ "
               label="Valor"

@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { formatCurrencyBRL } from '@/support/helpers'
 
+import { EntryRecordHome } from '../HomePage.vue'
+
 defineProps<{
-  sale: any
+  entry: EntryRecordHome
 }>()
 </script>
 
@@ -21,13 +23,13 @@ defineProps<{
         fontWeight: 500,
       }"
     >
-      {{ sale.product_name }}
+      {{ entry.product_name }}
     </h2>
     <span
-      v-if="sale.sale_quantity > 1"
+      v-if="entry.entry_quantity > 1"
       :style="{ fontSize: '.7rem', color: 'var(--ion-color-medium)' }"
     >
-      ({{ sale.sale_quantity }} x {{ formatCurrencyBRL(sale.sale_price) }})
+      ({{ entry.entry_quantity }} x {{ formatCurrencyBRL(entry.entry_value) }})
     </span>
   </div>
 </template>
