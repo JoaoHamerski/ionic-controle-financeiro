@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IonContent, IonPage, onIonViewDidEnter } from '@ionic/vue'
+import { IonContent, IonPage, onIonViewWillEnter } from '@ionic/vue'
 import { ref } from 'vue'
 
 import { dbSelect } from '@/services/db-service'
@@ -12,7 +12,7 @@ import ProductsList from './_partials/ProductsList.vue'
 const { knex } = useDatabaseStore()
 const products = ref<Product[]>([])
 
-onIonViewDidEnter(async () => {
+onIonViewWillEnter(async () => {
   await fetch()
 })
 
@@ -30,7 +30,10 @@ const fetch = async () => {
       has-back-button
     />
     <IonContent>
-      <ProductsList :products="products" />
+      <ProductsList
+        :products="products"
+        @submitted="fetch"
+      />
     </IonContent>
   </IonPage>
 </template>

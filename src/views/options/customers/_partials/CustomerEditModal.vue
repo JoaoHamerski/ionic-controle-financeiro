@@ -43,7 +43,6 @@ const modal = useTemplateRef('modal')
     </IonHeader>
     <IonContent class="ion-padding">
       <CustomerForm
-        v-if="customer"
         :customer="customer"
         @submitted="$emit('submitted')"
       />
