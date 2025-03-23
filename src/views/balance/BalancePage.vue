@@ -21,11 +21,11 @@ import BalanceChart from './_partials/BalanceChart.vue'
 import BalanceMonthButton from './_partials/BalanceMonthButton.vue'
 import BalanceMonthPickerModal from './_partials/BalanceMonthPickerModal.vue'
 
-export type SelectedPeriodType = DateTime | 'last-week' | 'current-week'
+export type SelectedPeriodType = DateTime | 'last-7-days' | 'last-14-days'
 
 const { knex } = useDatabaseStore()
 
-const selectedPeriod = ref<SelectedPeriodType>('current-week')
+const selectedPeriod = ref<SelectedPeriodType>('last-7-days')
 const isPickerModalOpen = ref(false)
 
 const inflowsData = ref<number[]>([])
@@ -37,8 +37,12 @@ onIonViewDidEnter(async () => {
 })
 
 const totalDays = computed(() => {
-  if (selectedPeriod.value === 'current-week' || selectedPeriod.value === 'last-week') {
+  if (selectedPeriod.value === 'last-7-days') {
     return 7
+  }
+
+  if (selectedPeriod.value === 'last-14-days') {
+    return 14
   }
 
   return selectedPeriod.value.daysInMonth!
@@ -47,6 +51,7 @@ const totalDays = computed(() => {
 const fetch = async () => {
   const [startDate, endDate] = getDateInterval()
 
+  console.log(startDate.toISO(), endDate.toISO())
   await fetchInflows(startDate, endDate)
   await fetchOutflows(startDate, endDate)
   await fetchPayments(startDate, endDate)
@@ -56,20 +61,12 @@ const getDateInterval = () => {
   const localSelectedPeriod = selectedPeriod.value
   const now = DateTime.now()
 
-  if (localSelectedPeriod === 'current-week') {
-    return [
-      now.startOf('week', { useLocaleWeeks: true }),
-      now.endOf('week', { useLocaleWeeks: true }),
-    ]
+  if (localSelectedPeriod === 'last-7-days') {
+    return [now.minus({ days: 7 }), now]
   }
 
-  if (localSelectedPeriod === 'last-week') {
-    const lastWeek = now.minus({ week: 1 })
-
-    return [
-      lastWeek.startOf('week', { useLocaleWeeks: true }),
-      lastWeek.endOf('week', { useLocaleWeeks: true }),
-    ]
+  if (localSelectedPeriod === 'last-14-days') {
+    return [now.minus({ days: 14 }), now]
   }
 
   return [localSelectedPeriod.startOf('month'), localSelectedPeriod.endOf('month')]
@@ -113,12 +110,12 @@ const getEntriesBuilder = (startDate: DateTime, endDate: DateTime) =>
     .where('date', '<=', endDate.toISODate())
 
 const getStartDate = (): DateTime => {
-  if (selectedPeriod.value === 'current-week') {
-    return DateTime.now().startOf('week', { useLocaleWeeks: true })
+  if (selectedPeriod.value === 'last-7-days') {
+    return DateTime.now().minus({ days: 7 })
   }
 
-  if (selectedPeriod.value === 'last-week') {
-    return DateTime.now().plus({ week: -1 }).startOf('week', { useLocaleWeeks: true })
+  if (selectedPeriod.value === 'last-14-days') {
+    return DateTime.now().minus({ days: 14 })
   }
 
   return selectedPeriod.value.startOf('month')
@@ -157,6 +154,7 @@ const onPeriodSelected = async (monthDate: DateTime) => {
         </IonTitle>
       </IonToolbar>
     </IonHeader>
+
     <IonContent>
       <BalanceMonthPickerModal
         v-model="isPickerModalOpen"
@@ -180,6 +178,7 @@ const onPeriodSelected = async (monthDate: DateTime) => {
             title="ENTRADAS"
             :data="inflowsData"
             type="inflows"
+            :total-days="totalDays"
             :selected-period="selectedPeriod"
           />
         </Transition>
@@ -190,6 +189,7 @@ const onPeriodSelected = async (monthDate: DateTime) => {
             title="PAGAMENTOS"
             :data="paymentsData"
             type="payments"
+            :total-days="totalDays"
             :selected-period="selectedPeriod"
           />
         </Transition>
@@ -200,6 +200,7 @@ const onPeriodSelected = async (monthDate: DateTime) => {
             title="SAÍDAS"
             :data="outflowsData"
             type="outflows"
+            :total-days="totalDays"
             :selected-period="selectedPeriod"
           />
         </Transition>

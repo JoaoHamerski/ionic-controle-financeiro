@@ -14,16 +14,14 @@ import { DateTime } from 'luxon'
 import { computed } from 'vue'
 import { ref } from 'vue'
 
-const props = defineProps<{
-  selectedPeriod: DateTime | 'last-week' | 'current-week'
-}>()
+import { PERIODS } from './balance-periods'
 
 const isOpen = defineModel<boolean>()
 const emit = defineEmits(['period-selected'])
 
 const modal = ref()
 
-const selectedPeriod = ref<number | string>('current-week')
+const selectedPeriod = ref<number | string>('last-7-days')
 
 const monthDates = computed<DateTime[]>(() =>
   range(0, 12).map((_, index) => DateTime.now().plus({ month: -index })),
@@ -46,7 +44,7 @@ const onConcludeClick = () => {
     return
   }
 
-  if (['current-week', 'last-week'].includes(selectedPeriod.value)) {
+  if (['last-7-days', 'last-14-days'].includes(selectedPeriod.value)) {
     emit('period-selected', selectedPeriod.value)
   }
 }
@@ -74,8 +72,12 @@ const onConcludeClick = () => {
           :value="selectedPeriod"
           @ion-change="onPickerChange"
         >
-          <IonPickerColumnOption value="current-week">Semana atual</IonPickerColumnOption>
-          <IonPickerColumnOption value="last-week">Semana passada</IonPickerColumnOption>
+          <IonPickerColumnOption value="last-7-days">
+            {{ PERIODS['last-7-days'] }}
+          </IonPickerColumnOption>
+          <IonPickerColumnOption value="last-14-days">
+            {{ PERIODS['last-14-days'] }}
+          </IonPickerColumnOption>
           <IonPickerColumnOption disabled>--</IonPickerColumnOption>
 
           <IonPickerColumnOption

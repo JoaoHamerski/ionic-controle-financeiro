@@ -32,27 +32,20 @@ const props = defineProps<{
   type: ChartType
   title: string
   data: number[]
+  totalDays: number
   selectedPeriod: SelectedPeriodType
 }>()
 
 const chartLabels = computed(() => {
-  if (props.selectedPeriod === 'current-week' || props.selectedPeriod === 'last-week') {
-    return range(1, 8).map((index) =>
+  if (typeof props.selectedPeriod === 'string') {
+    return range(1, props.selectedPeriod === 'last-7-days' ? 8 : 15).map((index) =>
       DateTime.now()
         .set({ weekday: (index - 1) as WeekdayNumbers })
         .toFormat('EEE'),
     )
   }
 
-  return range(1, totalDays.value + 1)
-})
-
-const totalDays = computed(() => {
-  if (props.selectedPeriod === 'current-week' || props.selectedPeriod == 'last-week') {
-    return 7
-  }
-
-  return props.selectedPeriod.daysInMonth!
+  return range(1, props.totalDays + 1)
 })
 
 const chartData = computed(
