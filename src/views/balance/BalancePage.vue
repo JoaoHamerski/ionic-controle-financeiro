@@ -17,11 +17,12 @@ import { computed } from 'vue'
 import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 
+import { PERIODS } from './_partials/balance-periods'
 import BalanceChart from './_partials/BalanceChart.vue'
 import BalanceMonthButton from './_partials/BalanceMonthButton.vue'
 import BalanceMonthPickerModal from './_partials/BalanceMonthPickerModal.vue'
 
-export type SelectedPeriodType = DateTime | 'last-7-days' | 'last-14-days'
+export type SelectedPeriodType = DateTime | keyof typeof PERIODS
 
 const { knex } = useDatabaseStore()
 
@@ -37,12 +38,10 @@ onIonViewDidEnter(async () => {
 })
 
 const totalDays = computed(() => {
-  if (selectedPeriod.value === 'last-7-days') {
-    return 7
-  }
+  if (typeof selectedPeriod.value === 'string') {
+    const intervals = PERIODS[selectedPeriod.value].interval()
 
-  if (selectedPeriod.value === 'last-14-days') {
-    return 14
+    return round(intervals[1].diff(intervals[0], 'days').days)
   }
 
   return selectedPeriod.value.daysInMonth!
@@ -51,7 +50,6 @@ const totalDays = computed(() => {
 const fetch = async () => {
   const [startDate, endDate] = getDateInterval()
 
-  console.log(startDate.toISO(), endDate.toISO())
   await fetchInflows(startDate, endDate)
   await fetchOutflows(startDate, endDate)
   await fetchPayments(startDate, endDate)
@@ -59,14 +57,9 @@ const fetch = async () => {
 
 const getDateInterval = () => {
   const localSelectedPeriod = selectedPeriod.value
-  const now = DateTime.now()
 
-  if (localSelectedPeriod === 'last-7-days') {
-    return [now.minus({ days: 7 }), now]
-  }
-
-  if (localSelectedPeriod === 'last-14-days') {
-    return [now.minus({ days: 14 }), now]
+  if (typeof localSelectedPeriod === 'string') {
+    return PERIODS[localSelectedPeriod].interval()
   }
 
   return [localSelectedPeriod.startOf('month'), localSelectedPeriod.endOf('month')]
@@ -110,12 +103,8 @@ const getEntriesBuilder = (startDate: DateTime, endDate: DateTime) =>
     .where('date', '<=', endDate.toISODate())
 
 const getStartDate = (): DateTime => {
-  if (selectedPeriod.value === 'last-7-days') {
-    return DateTime.now().minus({ days: 7 })
-  }
-
-  if (selectedPeriod.value === 'last-14-days') {
-    return DateTime.now().minus({ days: 14 })
+  if (typeof selectedPeriod.value === 'string') {
+    return PERIODS[selectedPeriod.value].interval()[0]
   }
 
   return selectedPeriod.value.startOf('month')

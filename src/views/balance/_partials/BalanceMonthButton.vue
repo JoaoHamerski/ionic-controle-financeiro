@@ -18,7 +18,7 @@ const getSelectedPeriodLabel = () => {
     return `${period.monthLong} / ${period.year}`
   }
 
-  return PERIODS[period]
+  return PERIODS[period].label
 }
 </script>
 

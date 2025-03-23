@@ -11,7 +11,7 @@ import {
   TooltipItem,
 } from 'chart.js'
 import { range, sum } from 'lodash'
-import { DateTime, WeekdayNumbers } from 'luxon'
+import { DateTime } from 'luxon'
 import { computed } from 'vue'
 import { Line } from 'vue-chartjs'
 
@@ -38,11 +38,11 @@ const props = defineProps<{
 
 const chartLabels = computed(() => {
   if (typeof props.selectedPeriod === 'string') {
-    return range(1, props.selectedPeriod === 'last-7-days' ? 8 : 15).map((index) =>
-      DateTime.now()
-        .set({ weekday: (index - 1) as WeekdayNumbers })
-        .toFormat('EEE'),
-    )
+    const dateTime = DateTime.now()
+
+    return range(0, props.totalDays)
+      .map((index) => dateTime.minus({ days: index }).toFormat('EEE'))
+      .reverse()
   }
 
   return range(1, props.totalDays + 1)

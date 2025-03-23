@@ -73,10 +73,10 @@ const onConcludeClick = () => {
           @ion-change="onPickerChange"
         >
           <IonPickerColumnOption value="last-7-days">
-            {{ PERIODS['last-7-days'] }}
+            {{ PERIODS['last-7-days'].label }}
           </IonPickerColumnOption>
           <IonPickerColumnOption value="last-14-days">
-            {{ PERIODS['last-14-days'] }}
+            {{ PERIODS['last-14-days'].label }}
           </IonPickerColumnOption>
           <IonPickerColumnOption disabled>--</IonPickerColumnOption>
 
