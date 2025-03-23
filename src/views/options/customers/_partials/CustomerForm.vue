@@ -133,6 +133,7 @@ const update = async ({ name, phone }: FormRecordData) => {
               type="text"
               inputmode="numeric"
               label="Celular (opcional)"
+              helper-text="Informe para ter a opção de abrir no WhatsApp"
               placeholder="Digite o celular..."
               autocomplete="phone"
               clear-input

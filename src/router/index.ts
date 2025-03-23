@@ -1,6 +1,12 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router'
 import { RouteRecordRaw } from 'vue-router'
 
+import BalancePage from '@/views/balance/BalancePage.vue'
+import HomePage from '@/views/home/HomePage.vue'
+import BackupPage from '@/views/options/backup/BackupPage.vue'
+import CustomersPage from '@/views/options/customers/CustomersPage.vue'
+import OptionsPage from '@/views/options/OptionsPage.vue'
+import ProductsPage from '@/views/options/products/ProductsPage.vue'
 import TabsPage from '@/views/TabsPage.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -18,27 +24,27 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: 'inicio',
-        component: import('@/views/home/HomePage.vue'),
+        component: HomePage,
       },
       {
         path: 'balanco',
-        component: import('@/views/balance/BalancePage.vue'),
+        component: BalancePage,
       },
       {
         path: 'opcoes',
-        component: import('@/views/options/OptionsPage.vue'),
+        component: OptionsPage,
       },
       {
         path: 'opcoes/clientes',
-        component: import('@/views/options/customers/CustomersPage.vue'),
+        component: CustomersPage,
       },
       {
         path: 'opcoes/produtos',
-        component: import('@/views/options/products/ProductsPage.vue'),
+        component: ProductsPage,
       },
       {
         path: 'opcoes/backup',
-        component: import('@/views/options/backup/BackupPage.vue'),
+        component: BackupPage,
       },
     ],
   },

@@ -12,8 +12,8 @@ import CustomersList from './_partials/CustomersList.vue'
 const { knex } = useDatabaseStore()
 const customers = ref<Customer[]>([])
 
-onIonViewWillEnter(() => {
-  fetch()
+onIonViewWillEnter(async () => {
+  await fetch()
 })
 
 const fetch = async () => {
