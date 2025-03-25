@@ -21,10 +21,10 @@ const pinia = createPinia()
 const app = createApp(App).use(IonicVue).use(router).use(pinia).use(autoAnimatePlugin)
 
 router.isReady().then(async () => {
-  // const { initDatabase } = useDatabaseStore()
+  const { initDatabase } = useDatabaseStore()
 
-  // await initDatabase()
-  // await seedDatabase()
+  await initDatabase()
+  await seedDatabase()
 
   await SplashScreen.hide()
 

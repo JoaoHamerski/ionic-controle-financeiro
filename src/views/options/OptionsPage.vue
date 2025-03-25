@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { IonContent, IonIcon, IonItem, IonLabel, IonList, IonPage } from '@ionic/vue'
-import { cloud, grid, peopleCircle } from 'ionicons/icons'
+import { grid, peopleCircle, save } from 'ionicons/icons'
 
 import OptionsHeader from './_partials/OptionsHeader.vue'
 
@@ -26,7 +26,7 @@ const ITEMS: OptionItem[] = [
   },
   {
     label: 'Backup dos dados',
-    icon: cloud,
+    icon: save,
     description: 'Salve ou recupere seus dados',
     url: '/tabs/opcoes/backup',
   },
