@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { IonContent, IonPage } from '@ionic/vue'
+import { IonButton, IonContent, IonPage } from '@ionic/vue'
 
 import OptionsHeader from '../_partials/OptionsHeader.vue'
+
+const onClick = async () => {
+  alert('ola')
+}
 </script>
 
 <template>
@@ -10,6 +14,8 @@ import OptionsHeader from '../_partials/OptionsHeader.vue'
       title="Backup"
       has-back-button
     />
-    <IonContent> Backup </IonContent>
+    <IonContent>
+      <IonButton @click="onClick">Write</IonButton>
+    </IonContent>
   </IonPage>
 </template>

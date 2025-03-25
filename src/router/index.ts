@@ -12,7 +12,7 @@ import TabsPage from '@/views/TabsPage.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/tabs/inicio',
+    redirect: '/tabs/opcoes/backup',
   },
   {
     path: '/tabs/',
