@@ -20,7 +20,10 @@ const closeModal = () => {
 </script>
 
 <template>
-  <IonModal ref="modal">
+  <IonModal
+    ref="modal"
+    class="modal-dialog"
+  >
     <div class="ion-margin">
       <div class="ion-margin-bottom ion-margin-top">
         <ProductForm
@@ -54,25 +57,3 @@ const closeModal = () => {
     </div>
   </IonModal>
 </template>
-
-<style scoped>
-ion-modal {
-  --width: fit-content;
-  --min-width: 250px;
-  --max-width: 90%;
-  --border-radius: 6px;
-  --height: fit-content;
-  --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
-}
-
-ion-modal ion-icon {
-  margin-right: 6px;
-
-  width: 48px;
-  height: 48px;
-
-  padding: 4px 0;
-
-  color: #aaaaaa;
-}
-</style>
