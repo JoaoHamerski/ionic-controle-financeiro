@@ -26,7 +26,7 @@ import { saveSharp } from 'ionicons/icons'
         class="ion-text-center"
         style="color: var(--ion-color-medium)"
       >
-        O arquivo de dados ficarão somente no seu aparelho, armazene-os em um local seguro, como na
+        O arquivo de dados ficará somente no seu aparelho, armazene-o em um local seguro, como na
         nuvem (Google Drive, Dropbox e etc...)
       </p>
     </IonCol>
