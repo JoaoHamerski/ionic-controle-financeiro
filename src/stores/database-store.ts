@@ -53,5 +53,5 @@ export const useDatabaseStore = defineStore('database', () => {
     return pragmaUserVersion?.values ? pragmaUserVersion.values[0]?.user_version : 0
   }
 
-  return { database, initDatabase, knex }
+  return { database, initDatabase, knex, connection, migrateDatabase, initConnection }
 })

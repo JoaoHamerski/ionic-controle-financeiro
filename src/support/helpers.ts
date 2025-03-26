@@ -25,3 +25,15 @@ export const titleCase = (value: string, except: string[] = ['de', 'da', 'dos', 
 
 export const getCssVar = (value: string) =>
   getComputedStyle(document.documentElement).getPropertyValue(value)
+
+export const decodeBase64 = (base64: string) => {
+  const binaryString = atob(base64)
+
+  const bytes = new Uint8Array(binaryString.length)
+
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i)
+  }
+
+  return new TextDecoder('utf-8').decode(bytes)
+}

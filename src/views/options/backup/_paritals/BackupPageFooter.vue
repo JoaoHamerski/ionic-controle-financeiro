@@ -24,6 +24,7 @@ defineEmits(['save', 'recover'])
         shape="round"
         fill="outline"
         style="width: 100%"
+        @click="$emit('recover')"
       >
         Recuperar
       </IonButton>
