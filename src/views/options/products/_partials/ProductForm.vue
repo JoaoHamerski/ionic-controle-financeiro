@@ -10,7 +10,7 @@ import { Product } from '@/types/models'
 
 const { knex } = useDatabaseStore()
 
-const emit = defineEmits(['submitted'])
+const emit = defineEmits(['submit'])
 
 const props = defineProps<{
   product?: Product
@@ -47,7 +47,7 @@ const submit = async () => {
 
   await dbStatement(builder)
 
-  emit('submitted')
+  emit('submit')
 }
 </script>
 

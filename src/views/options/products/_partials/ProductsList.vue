@@ -7,7 +7,7 @@ import { Product } from '@/types/models'
 import ProductEditModal from './ProductEditModal.vue'
 import ProductsListItem from './ProductsListItem.vue'
 
-defineEmits(['submitted'])
+defineEmits(['submit'])
 
 defineProps<{
   products: Product[]
@@ -50,6 +50,6 @@ const resetModal = () => {
     :is-open="editProductModal.isOpen"
     :product="editProductModal.product"
     @did-dismiss="resetModal"
-    @submitted="$emit('submitted')"
+    @submitted="$emit('submit')"
   />
 </template>

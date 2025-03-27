@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { Preferences } from '@capacitor/preferences'
 import { IonButton, IonModal } from '@ionic/vue'
 import { helpers, required } from '@vuelidate/validators'
 import { kebabCase } from 'lodash'
-import { computed } from 'vue'
-import { useTemplateRef } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 
 import AppInput from '@/components/AppInput.vue'
+import { useBackup } from '@/composables/use-backup'
 import { useForm } from '@/composables/use-form'
 
-const emit = defineEmits(['submitted'])
+const emit = defineEmits(['submit'])
+const modal = useTemplateRef('modal')
+
+const { getBackupFilename } = useBackup()
 
 const form = useForm(
   {
@@ -20,21 +22,19 @@ const form = useForm(
   },
 )
 
-const modal = useTemplateRef('modal')
-const computedFilename = computed(() => kebabCase(form.data.filename) + '.json')
+const filename = computed(() => kebabCase(form.data.filename) + '.json')
+const filepath = computed(() => (form.data.filename ? `Documents/${filename.value}` : ''))
 
-const onFilenameSubmit = async () => {
+const onFileNameSubmit = async () => {
   if (!(await form.validate())) {
     return
   }
 
-  emit('submitted', { filename: computedFilename.value })
+  emit('submit', { filename: filename.value })
 }
 
 const onModalWillPresent = async () => {
-  const filename = (await Preferences.get({ key: 'backup-filename' })).value
-
-  form.data.filename = filename?.replaceAll('.json', '') || ''
+  form.data.filename = (await getBackupFilename()).replaceAll('.json', '')
 }
 </script>
 
@@ -61,7 +61,7 @@ const onModalWillPresent = async () => {
 
       <form
         id="filename-form"
-        @submit.prevent="onFilenameSubmit"
+        @submit.prevent="onFileNameSubmit"
         @focus.capture="form.clearErrorOnFocus"
       >
         <AppInput
@@ -70,7 +70,7 @@ const onModalWillPresent = async () => {
           :error="form.errors.filename"
           label="Nome do arquivo"
           placeholder="Digite o nome..."
-          :helper-text="form.data.filename ? `Documents/${computedFilename}` : ''"
+          :helper-text="filepath"
         />
       </form>
 

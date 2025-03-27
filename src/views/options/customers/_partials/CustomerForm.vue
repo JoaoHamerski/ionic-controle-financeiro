@@ -28,7 +28,7 @@ import CustomerFormHeader from './CustomerFormHeader.vue'
 
 type FormRecordData = Pick<typeof form.data, 'name' | 'phone'>
 
-const emit = defineEmits(['submitted'])
+const emit = defineEmits(['submit'])
 
 const props = defineProps<{
   customer?: Customer
@@ -83,7 +83,7 @@ const submit = async () => {
     await update({ name, phone })
   }
 
-  emit('submitted')
+  emit('submit')
 }
 
 const create = async ({ name, phone }: FormRecordData) => {

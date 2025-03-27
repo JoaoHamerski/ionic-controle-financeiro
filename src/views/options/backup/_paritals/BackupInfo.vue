@@ -3,24 +3,24 @@ import { Directory } from '@capacitor/filesystem'
 import { IonCol, IonList, IonRow } from '@ionic/vue'
 import humanizeDuration from 'humanize-duration'
 import { upperFirst } from 'lodash'
-import { DateTime } from 'luxon'
 import { computed } from 'vue'
 import { ref } from 'vue'
 import { onMounted } from 'vue'
 import { onBeforeUnmount } from 'vue'
 
+import { BackupFileInfo } from '../BackupPage.vue'
 import BackupInfoItem from './BackupInfoItem.vue'
 
 const props = defineProps<{
-  lastBackupAt: DateTime
-  fileName: string | null
+  backupFileInfo: BackupFileInfo
 }>()
 
 const intervalId = ref<NodeJS.Timeout>()
+const lastBackupAtToHumans = ref<string | null>(null)
 
 onMounted(() => {
   const humanDuration = () =>
-    humanizeDuration(props.lastBackupAt.diffNow().toMillis(), {
+    humanizeDuration(props.backupFileInfo.lastModified.diffNow().toMillis(), {
       language: 'pt',
       units: ['w', 'd', 'h', 'm'],
       round: true,
@@ -37,10 +37,8 @@ onBeforeUnmount(() => {
   clearInterval(intervalId.value)
 })
 
-const lastBackupAtToHumans = ref<string | null>(null)
-
 const filePath = computed(
-  () => `${upperFirst(Directory.Documents.toLowerCase())}/${props.fileName}`,
+  () => `${upperFirst(Directory.Documents.toLowerCase())}/${props.backupFileInfo.filename}`,
 )
 </script>
 

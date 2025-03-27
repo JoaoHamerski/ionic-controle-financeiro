@@ -13,13 +13,13 @@ import { ref } from 'vue'
 
 import EntriesForm from './EntriesForm.vue'
 
-const emit = defineEmits(['submitted'])
+const emit = defineEmits(['submit'])
 const modal = ref()
 
 const onFormSubmit = () => {
   modal.value.$el.dismiss()
 
-  emit('submitted')
+  emit('submit')
 }
 </script>
 

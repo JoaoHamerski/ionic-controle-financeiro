@@ -15,7 +15,7 @@ import { Customer } from '@/types/models'
 
 import CustomerForm from './CustomerForm.vue'
 
-defineEmits(['submitted'])
+defineEmits(['submit'])
 
 defineProps<{
   customer?: Customer
@@ -44,7 +44,7 @@ const modal = useTemplateRef('modal')
     <IonContent class="ion-padding">
       <CustomerForm
         :customer="customer"
-        @submitted="$emit('submitted')"
+        @submitted="$emit('submit')"
       />
     </IonContent>
   </IonModal>

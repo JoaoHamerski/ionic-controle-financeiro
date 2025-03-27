@@ -8,7 +8,7 @@ import ProductForm from './ProductForm.vue'
 
 const modal = useTemplateRef('modal')
 
-defineEmits(['submitted'])
+defineEmits(['submit'])
 
 defineProps<{
   product?: Product
@@ -32,7 +32,7 @@ const closeModal = () => {
           @submitted="
             () => {
               closeModal()
-              $emit('submitted')
+              $emit('submit')
             }
           "
         />

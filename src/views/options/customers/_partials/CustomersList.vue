@@ -7,7 +7,7 @@ import type { Customer } from '@/types/models'
 import CustomerEditModal from './CustomerEditModal.vue'
 import CustomerListItem from './CustomerListItem.vue'
 
-const emit = defineEmits(['submitted'])
+const emit = defineEmits(['submit'])
 
 defineProps<{
   customers: Customer[]
@@ -35,7 +35,7 @@ const resetModal = () => {
 
 const onSubmitted = () => {
   resetModal()
-  emit('submitted')
+  emit('submit')
 }
 </script>
 
