@@ -24,6 +24,7 @@ const {
   saveBackupFile,
   getBackupFileInfo,
   getBackupFilename,
+  setBackupFilename,
   importBackupFromFile,
 } = useBackup()
 
@@ -33,6 +34,10 @@ const isBackupFileModalOpen = ref<boolean>(false)
 
 onIonViewWillEnter(async () => {
   await fetchBackupInfo()
+
+  if (!backupFileInfo.value) {
+    await setBackupFilename('')
+  }
 })
 
 const fetchBackupInfo = async () => {
