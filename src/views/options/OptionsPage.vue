@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { IonContent, IonIcon, IonItem, IonLabel, IonList, IonPage } from '@ionic/vue'
-import { grid, peopleCircle, save } from 'ionicons/icons'
+import { grid, peopleCircle, save, sync } from 'ionicons/icons'
 
 import OptionsHeader from './_partials/OptionsHeader.vue'
 
@@ -29,6 +29,12 @@ const ITEMS: OptionItem[] = [
     icon: save,
     description: 'Salve ou recupere seus dados',
     url: '/tabs/opcoes/backup',
+  },
+  {
+    label: 'Verificar atualizações',
+    icon: sync,
+    // description: '',
+    url: '/tabs/opcoes/atualizacoes',
   },
 ]
 </script>

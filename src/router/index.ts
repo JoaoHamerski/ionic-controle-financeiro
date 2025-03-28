@@ -7,6 +7,7 @@ import BackupPage from '@/views/options/backup/BackupPage.vue'
 import CustomersPage from '@/views/options/customers/CustomersPage.vue'
 import OptionsPage from '@/views/options/OptionsPage.vue'
 import ProductsPage from '@/views/options/products/ProductsPage.vue'
+import UpdatesPage from '@/views/options/updates/UpdatesPage.vue'
 import TabsPage from '@/views/TabsPage.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -45,6 +46,10 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'opcoes/backup',
         component: BackupPage,
+      },
+      {
+        path: 'opcoes/atualizacoes',
+        component: UpdatesPage,
       },
     ],
   },
