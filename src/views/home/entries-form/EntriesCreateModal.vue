@@ -39,7 +39,7 @@ const onFormSubmit = () => {
     </IonHeader>
 
     <IonContent class="ion-padding">
-      <EntriesForm @submitted="onFormSubmit" />
+      <EntriesForm @submit="onFormSubmit" />
     </IonContent>
   </IonModal>
 </template>

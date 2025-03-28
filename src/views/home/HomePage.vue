@@ -116,7 +116,7 @@ const calculateTotalRecords = async (builder: Knex.QueryBuilder) => {
 
     <EntriesCreateModal
       :is-open="isCreateEntryModalOpen"
-      @submitted="fetch(true)"
+      @submit="fetch(true)"
       @did-dismiss="isCreateEntryModalOpen = false"
     />
   </IonPage>
