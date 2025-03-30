@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { IonCol, IonIcon, IonRow } from '@ionic/vue'
-import { saveSharp } from 'ionicons/icons'
+
+defineProps<{
+  icon: string
+  title: string
+  description: string
+}>()
 </script>
 
 <template>
@@ -8,7 +13,7 @@ import { saveSharp } from 'ionicons/icons'
     <IonCol class="ion-text-center">
       <IonIcon
         color="primary"
-        :icon="saveSharp"
+        :icon="icon"
         style="font-size: 5rem"
       />
     </IonCol>
@@ -16,7 +21,7 @@ import { saveSharp } from 'ionicons/icons'
 
   <IonRow>
     <IonCol>
-      <h3 class="ion-text-center">Salve ou recupere seus dados</h3>
+      <h3 class="ion-text-center">{{ title }}</h3>
     </IonCol>
   </IonRow>
 
@@ -26,8 +31,7 @@ import { saveSharp } from 'ionicons/icons'
         class="ion-text-center"
         style="color: var(--ion-color-medium)"
       >
-        O arquivo de dados ficará somente no seu aparelho, armazene-o em um local seguro, como na
-        nuvem (Google Drive, Dropbox e etc...)
+        {{ description }}
       </p>
     </IonCol>
   </IonRow>
