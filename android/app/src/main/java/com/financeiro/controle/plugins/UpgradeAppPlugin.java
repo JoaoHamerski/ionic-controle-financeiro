@@ -10,11 +10,9 @@ import android.os.Build;
 import android.provider.Settings;
 
 import androidx.activity.result.ActivityResult;
-import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 
 import com.getcapacitor.JSObject;
-import com.getcapacitor.Logger;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
@@ -96,7 +94,7 @@ public class UpgradeAppPlugin extends Plugin {
     }
 
     @PluginMethod
-    public void hasNewVersion(PluginCall call)
+    public void checkNewVersion(PluginCall call)
     {
         String newPkgPath = call.getString("newPkgPath");
 
@@ -107,10 +105,11 @@ public class UpgradeAppPlugin extends Plugin {
 
         JSObject obj = new JSObject();
 
-        long currentVersion = getCurrentPackageVersion();
         long newVersion = getPackageVersion(newPkgPath);
+        long currentVersion = getCurrentPackageVersion();
 
         obj.put("result", newVersion > currentVersion);
+
         call.resolve(obj);
     }
 

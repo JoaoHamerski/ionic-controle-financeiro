@@ -48,7 +48,7 @@ const checkUpdate = async () => {
 
   const path = await downloadAppFile(url)
 
-  const { result } = await UpgradeApp.hasNewVersion({ newPkgPath: path })
+  const { result } = await UpgradeApp.checkNewVersion({ newPkgPath: path })
 
   if (result) {
     await Preferences.set({ key: PREFERENCES.HAS_NEW_VERSION, value: 'true' })
