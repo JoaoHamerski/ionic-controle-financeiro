@@ -33,7 +33,6 @@ const ITEMS: OptionItem[] = [
   {
     label: 'Verificar atualizações',
     icon: sync,
-    // description: '',
     url: '/tabs/opcoes/atualizacoes',
   },
 ]

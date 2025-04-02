@@ -20,10 +20,6 @@ const routes: Array<RouteRecordRaw> = [
     component: TabsPage,
     children: [
       {
-        path: '',
-        redirect: '/tabs/inicio',
-      },
-      {
         path: 'inicio',
         component: HomePage,
       },
