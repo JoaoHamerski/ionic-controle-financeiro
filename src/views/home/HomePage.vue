@@ -15,7 +15,7 @@ import HomeSegments from './_partials/HomeSegments.vue'
 import EntriesCreateModal from './entries-form/EntriesCreateModal.vue'
 import EntriesList from './entries-list/EntriesList.vue'
 
-type Segment = 'all' | 'sales' | 'expenses'
+type Segment = 'all' | 'inflows' | 'outflows'
 
 export type EntryRecordHome = { id: string } & Prefix<Customer, 'customer'> &
   Prefix<Product, 'product'> &
@@ -58,7 +58,7 @@ const fetch = async (reset: boolean = false) => {
     .offset(!reset ? entries.value.length : 0)
 
   if (segment.value !== 'all') {
-    const operator = segment.value === 'sales' ? '>' : '<'
+    const operator = segment.value === 'inflows' ? '>' : '<'
 
     builder.where('total', operator, 0)
   }
@@ -108,10 +108,13 @@ const calculateTotalRecords = async (builder: Knex.QueryBuilder) => {
           @refetch="fetch(true)"
           @load-more="fetch"
         />
-        <AppEmptyResult v-else />
+        <AppEmptyResult
+          v-else
+          :key="`empty-${segment}`"
+        />
       </Transition>
 
-      <HomeFabButton @entry-click="isCreateEntryModalOpen = true" />
+      <HomeFabButton @click="isCreateEntryModalOpen = true" />
     </IonContent>
 
     <EntriesCreateModal

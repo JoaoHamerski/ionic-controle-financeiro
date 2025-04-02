@@ -107,7 +107,7 @@ const closeSlidingItems = async () => {
     lines="full"
   >
     <TransitionGroup
-      key="sales-list"
+      key="entries-list"
       name="fade"
     >
       <IonItemSliding

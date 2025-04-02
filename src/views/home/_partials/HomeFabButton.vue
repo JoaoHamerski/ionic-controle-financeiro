@@ -2,7 +2,7 @@
 import { IonFab, IonFabButton, IonIcon } from '@ionic/vue'
 import { add } from 'ionicons/icons'
 
-defineEmits(['entry-click', 'customer-click'])
+defineEmits(['click'])
 </script>
 
 <template>
@@ -13,7 +13,7 @@ defineEmits(['entry-click', 'customer-click'])
   >
     <IonFabButton
       color="success"
-      @click="$emit('entry-click')"
+      @click="$emit('click')"
     >
       <IonIcon :icon="add" />
     </IonFabButton>
