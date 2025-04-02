@@ -10,7 +10,7 @@ const ionRouter = useIonRouter()
 
 onMounted(async () => {
   handleAppExit()
-  handleBootAfterUpgrade()
+  handleBootForUpgrades()
 })
 
 const handleAppExit = () => {
@@ -21,19 +21,18 @@ const handleAppExit = () => {
   })
 }
 
-const handleBootAfterUpgrade = async () => {
-  const build = (await App.getInfo()).build
-  const oldBuild = (await Preferences.get({ key: PREFERENCES.CURRENT_BUILD })).value
+const handleBootForUpgrades = async () => {
+  const currentVersion = (await App.getInfo()).version
+  const oldVersion = (await Preferences.get({ key: PREFERENCES.CURRENT_VERSION_NAME })).value
 
-  if (!oldBuild) {
-    await Preferences.set({ key: PREFERENCES.CURRENT_BUILD, value: build })
-    return
+  if (oldVersion && oldVersion !== currentVersion) {
+    await Preferences.remove({ key: PREFERENCES.LATEST_RELEASE_DATA })
   }
 
-  if (build !== oldBuild) {
-    await Preferences.remove({ key: PREFERENCES.HAS_NEW_VERSION })
-    await Preferences.remove({ key: PREFERENCES.LATEST_RELEASE_PATH })
-  }
+  await Preferences.set({
+    key: PREFERENCES.CURRENT_VERSION_NAME,
+    value: (await App.getInfo()).version,
+  })
 }
 </script>
 

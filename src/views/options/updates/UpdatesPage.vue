@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { App } from '@capacitor/app'
 import { Directory, Filesystem } from '@capacitor/filesystem'
 import { Preferences } from '@capacitor/preferences'
 import {
@@ -10,95 +11,157 @@ import {
   IonPage,
   IonRow,
   onIonViewWillEnter,
+  onIonViewWillLeave,
 } from '@ionic/vue'
 import { syncCircle } from 'ionicons/icons'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import UpgradeApp from '@/plugins/upgrade-app-plugin'
 import { PREFERENCES } from '@/support/preferences-keys'
 
 import HeaderPageInfo from '../_partials/HeaderPageInfo.vue'
 import OptionsHeader from '../_partials/OptionsHeader.vue'
+import { IsFetchingUpdate, ReleaseUpdate } from './updates-types'
 
+const PACKAGE_FILENAME = 'app-release.apk'
+
+const GITHUB_MARKDOWN_ENDPOINT = 'https://api.github.com/markdown'
 const LATEST_RELEASE_ENDPOINT =
   'https://api.github.com/repos/JoaoHamerski/ionic-controle-financeiro/releases/latest'
 
-const hasNewVersion = ref<boolean>(false)
-const isLoading = ref<boolean>(false)
-const newApkPath = ref<string>('')
+const isFetching = ref<IsFetchingUpdate>({ releaseInfo: false, download: false })
+
+const release = ref<ReleaseUpdate>({
+  data: null,
+  filepath: '',
+  bodyRendered: '',
+  downloadProgress: 0,
+})
+
 const isPermissionDialogOpen = ref<boolean>(false)
 
 onIonViewWillEnter(async () => {
-  const _hasNewVersion = (await Preferences.get({ key: PREFERENCES.HAS_NEW_VERSION })).value
+  const latestReleaseStored = JSON.parse(
+    (await Preferences.get({ key: PREFERENCES.LATEST_RELEASE_DATA })).value || '{}',
+  )
 
-  if (_hasNewVersion === 'true') {
-    hasNewVersion.value = true
-    newApkPath.value = (await Preferences.get({ key: PREFERENCES.LATEST_RELEASE_PATH })).value || ''
-  }
+  release.value = latestReleaseStored
+
+  addDownloadProgressListener()
 })
 
-const checkUpdate = async () => {
-  isLoading.value = true
+onIonViewWillLeave(async () => {
+  await Filesystem.removeAllListeners()
+})
 
-  const url = await fetchLatestVersion()
+const hasNewVersion = computed(() => {
+  const { currentVersion, remoteVersion } = release.value
 
-  if (!url) {
-    throw new Error('Something went wrong while fetching package info')
-  }
+  return remoteVersion && currentVersion !== remoteVersion
+})
 
-  const path = await downloadAppFile(url)
+const addDownloadProgressListener = () => {
+  Filesystem.addListener('progress', (progress) => {
+    const percentage = (100 * progress.bytes) / progress.contentLength
 
-  const { result } = await UpgradeApp.checkNewVersion({ newPkgPath: path })
-
-  if (result) {
-    await Preferences.set({ key: PREFERENCES.HAS_NEW_VERSION, value: 'true' })
-    await Preferences.set({ key: PREFERENCES.LATEST_RELEASE_PATH, value: path })
-
-    hasNewVersion.value = true
-  }
-
-  isLoading.value = false
-}
-
-const downloadAppFile = async (url: string) => {
-  const { path } = await Filesystem.downloadFile({
-    url,
-    path: 'app-release.apk',
-    directory: Directory.Cache,
+    release.value.downloadProgress = +percentage.toFixed(0)
   })
-
-  if (!path) {
-    throw new Error('Path cannot be null')
-  }
-
-  return path
 }
 
-const fetchLatestVersion = async () => {
+const checkForUpdate = async () => {
+  await Preferences.remove({ key: PREFERENCES.LATEST_RELEASE_DATA })
+  isFetching.value.releaseInfo = true
+
+  await fetchLatestRelease()
+  await setVersionNames()
+
+  isFetching.value.releaseInfo = false
+
+  await Preferences.set({
+    key: PREFERENCES.LATEST_RELEASE_DATA,
+    value: JSON.stringify(release.value),
+  })
+}
+
+const fetchLatestRelease = async () => {
   const response = await fetch(LATEST_RELEASE_ENDPOINT)
   const data = await response.json()
-  const latestVersionUrl = data.assets[0].browser_download_url
 
-  return latestVersionUrl as string
+  Object.assign<object, Partial<typeof release.value>>(release.value, {
+    bodyRendered: await getRenderedBody(data.body),
+    data,
+  })
+}
+
+const getRenderedBody = async (markdownBody: string) => {
+  const response = await fetch(GITHUB_MARKDOWN_ENDPOINT, {
+    method: 'POST',
+    body: JSON.stringify({
+      text: markdownBody,
+    }),
+  })
+
+  return await response.text()
+}
+
+const setVersionNames = async () => {
+  if (!release.value.data) {
+    throw new Error('Latest release data not fetched')
+  }
+
+  Object.assign<object, Partial<typeof release.value>>(release.value, {
+    remoteVersion: release.value.data.tag_name,
+    currentVersion: (await App.getInfo()).version,
+  })
+}
+
+const downloadReleasePkg = async () => {
+  if (!release.value.data) {
+    throw new Error('Latest release data not fetched')
+  }
+
+  const pkgUrl = release.value.data.assets[0].browser_download_url
+
+  isFetching.value.download = true
+
+  const { path } = await Filesystem.downloadFile({
+    path: PACKAGE_FILENAME,
+    url: pkgUrl,
+    directory: Directory.Cache,
+    progress: true,
+  })
+
+  release.value.filepath = path!
+
+  isFetching.value.download = false
+  Preferences.set({ key: PREFERENCES.LATEST_RELEASE_DATA, value: JSON.stringify(release.value) })
 }
 
 const onInstallClick = async () => {
-  const { result: hasPermission } = await UpgradeApp.checkAppInstallPermission()
+  const { result } = await UpgradeApp.checkAppInstallPermission()
 
-  if (!hasPermission) {
+  if (!result) {
     isPermissionDialogOpen.value = true
     return
   }
 
-  await UpgradeApp.installApp({ path: newApkPath.value })
+  await installApp()
 }
 
-const onPermissionDialogDismiss = async (event: CustomEvent) => {
+const installApp = async () => {
+  if (!release.value.filepath) {
+    throw new Error('Latest release filepath is not set')
+  }
+
+  await UpgradeApp.installApp({ path: release.value.filepath })
+}
+
+const onPermissionModalDismiss = async (event: CustomEvent) => {
   if (event.detail.role === 'destructive') {
     const { result } = await UpgradeApp.requestAppInstallPermission()
 
     if (result === 'GRANTED') {
-      await UpgradeApp.installApp({ path: newApkPath.value })
+      await installApp()
     }
   }
 
@@ -106,6 +169,7 @@ const onPermissionDialogDismiss = async (event: CustomEvent) => {
 }
 </script>
 
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <IonPage>
     <OptionsHeader
@@ -119,33 +183,73 @@ const onPermissionDialogDismiss = async (event: CustomEvent) => {
           description="Baixe e instale novas versões do aplicativo"
           :icon="syncCircle"
         />
-        <IonRow v-if="isLoading">
-          <IonCol> CARREGANDO... </IonCol>
-        </IonRow>
+        <Transition name="fade">
+          <IonRow v-if="hasNewVersion && release.data">
+            <IonCol>
+              <h4>
+                Nova versão disponível:
+                <b style="color: var(--ion-color-primary)">{{ release.data.tag_name }}</b>
+              </h4>
+            </IonCol>
+          </IonRow>
+        </Transition>
+
+        <Transition name="fade">
+          <IonRow v-if="release.data">
+            <IonCol>
+              <div
+                style="font-size: 0.9rem; color: var(--ion-color-medium)"
+                v-html="release.bodyRendered"
+              />
+            </IonCol>
+          </IonRow>
+        </Transition>
 
         <IonRow style="flex-grow: 1" />
 
         <IonRow>
           <IonCol>
-            <IonButton
-              v-if="!hasNewVersion"
-              style="width: 100%"
-              shape="round"
-              fill="outline"
-              :disabled="isLoading"
-              @click="checkUpdate"
+            <Transition
+              name="fade"
+              mode="out-in"
             >
-              Procurar atualizações
-            </IonButton>
-            <IonButton
-              v-else
-              style="width: 100%"
-              shape="round"
-              color="success"
-              @click="onInstallClick"
-            >
-              Instalar nova versão
-            </IonButton>
+              <IonButton
+                v-if="!hasNewVersion"
+                style="width: 100%"
+                shape="round"
+                fill="outline"
+                :disabled="isFetching.releaseInfo"
+                @click="checkForUpdate"
+              >
+                Procurar atualizações
+              </IonButton>
+              <IonButton
+                v-else-if="hasNewVersion && !release.filepath"
+                style="width: 100%"
+                shape="round"
+                color="success"
+                fill="outline"
+                :disabled="isFetching.download"
+                @click="downloadReleasePkg"
+              >
+                {{
+                  !isFetching.download
+                    ? 'Baixar atualização'
+                    : release.downloadProgress
+                      ? `Baixando (${release.downloadProgress}%)...`
+                      : 'Baixar atualização'
+                }}
+              </IonButton>
+              <IonButton
+                v-else-if="release.filepath"
+                color="primary"
+                shape="round"
+                style="width: 100%"
+                @click="onInstallClick"
+              >
+                Instalar atualização
+              </IonButton>
+            </Transition>
           </IonCol>
         </IonRow>
       </IonGrid>
@@ -158,7 +262,7 @@ const onPermissionDialogDismiss = async (event: CustomEvent) => {
           { text: 'Cancelar', role: 'cancel' },
           { text: 'Entendido', role: 'destructive' },
         ]"
-        @did-dismiss="onPermissionDialogDismiss"
+        @did-dismiss="onPermissionModalDismiss"
       />
     </IonContent>
   </IonPage>
