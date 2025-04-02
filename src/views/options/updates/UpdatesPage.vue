@@ -8,7 +8,6 @@ import {
   IonCol,
   IonContent,
   IonGrid,
-  IonPage,
   IonRow,
   onIonViewWillEnter,
   onIonViewWillLeave,
@@ -20,7 +19,7 @@ import UpgradeApp from '@/plugins/upgrade-app-plugin'
 import { PREFERENCES } from '@/support/preferences-keys'
 
 import HeaderPageInfo from '../_partials/HeaderPageInfo.vue'
-import OptionsHeader from '../_partials/OptionsHeader.vue'
+import OptionPageLayout from '../_partials/OptionPageLayout.vue'
 import { IsFetchingUpdate, ReleaseUpdate } from './updates-types'
 
 const PACKAGE_FILENAME = 'app-release.apk'
@@ -171,11 +170,7 @@ const onPermissionModalDismiss = async (event: CustomEvent) => {
 
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <IonPage>
-    <OptionsHeader
-      has-back-button
-      title="Atualizações"
-    />
+  <OptionPageLayout title="Atualizações">
     <IonContent class="ion-padding">
       <IonGrid style="display: flex; flex-direction: column; height: 100%">
         <HeaderPageInfo
@@ -265,7 +260,7 @@ const onPermissionModalDismiss = async (event: CustomEvent) => {
         @did-dismiss="onPermissionModalDismiss"
       />
     </IonContent>
-  </IonPage>
+  </OptionPageLayout>
 </template>
 
 <style scoped>

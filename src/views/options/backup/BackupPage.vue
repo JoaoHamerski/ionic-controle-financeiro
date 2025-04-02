@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IonContent, IonGrid, IonPage, IonRow, onIonViewWillEnter } from '@ionic/vue'
+import { IonContent, IonGrid, IonRow, onIonViewWillEnter } from '@ionic/vue'
 import { saveSharp } from 'ionicons/icons'
 import { DateTime } from 'luxon'
 import { ref } from 'vue'
@@ -8,7 +8,7 @@ import { useBackup } from '@/composables/use-backup'
 import { useDatabaseStore } from '@/stores/database-store'
 
 import HeaderPageInfo from '../_partials/HeaderPageInfo.vue'
-import OptionsHeader from '../_partials/OptionsHeader.vue'
+import OptionPageLayout from '../_partials/OptionPageLayout.vue'
 import BackupInfo from './_paritals/BackupInfo.vue'
 import BackupPageFooter from './_paritals/BackupPageFooter.vue'
 import SaveBackupFileModal from './_paritals/SaveBackupFileModal.vue'
@@ -87,12 +87,7 @@ const onRecover = async () => {
 </script>
 
 <template>
-  <IonPage>
-    <OptionsHeader
-      title="Backup"
-      has-back-button
-    />
-
+  <OptionPageLayout title="Backup">
     <IonContent class="ion-padding">
       <IonGrid style="display: flex; flex-direction: column; height: 100%">
         <HeaderPageInfo
@@ -101,7 +96,6 @@ const onRecover = async () => {
           description="O arquivo de dados ficará somente no seu aparelho, armazene-o em um local seguro, como na
         nuvem (Google Drive, Dropbox e etc...)"
         />
-
         <Transition
           name="fade"
           mode="out-in"
@@ -112,9 +106,7 @@ const onRecover = async () => {
             :backup-file-info="backupFileInfo"
           />
         </Transition>
-
         <IonRow style="flex-grow: 1" />
-
         <BackupPageFooter
           @save="onSave"
           @recover="onRecover"
@@ -127,5 +119,5 @@ const onRecover = async () => {
       @did-dismiss="isBackupFileModalOpen = false"
       @submit="onBackupSubmit"
     />
-  </IonPage>
+  </OptionPageLayout>
 </template>

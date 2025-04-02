@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IonContent, IonPage, onIonViewWillEnter } from '@ionic/vue'
+import { IonContent, onIonViewWillEnter } from '@ionic/vue'
 import { ref } from 'vue'
 
 import AppEmptyResult from '@/components/AppEmptyResult.vue'
@@ -7,7 +7,7 @@ import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { Customer } from '@/types/models'
 
-import OptionsHeader from '../_partials/OptionsHeader.vue'
+import OptionPageLayout from '../_partials/OptionPageLayout.vue'
 import CustomersList from './_partials/CustomersList.vue'
 
 const { knex } = useDatabaseStore()
@@ -25,11 +25,7 @@ const fetch = async () => {
 </script>
 
 <template>
-  <IonPage>
-    <OptionsHeader
-      title="Clientes"
-      has-back-button
-    />
+  <OptionPageLayout title="Clientes">
     <IonContent>
       <CustomersList
         v-if="customers.length"
@@ -38,5 +34,5 @@ const fetch = async () => {
       />
       <AppEmptyResult v-else />
     </IonContent>
-  </IonPage>
+  </OptionPageLayout>
 </template>
