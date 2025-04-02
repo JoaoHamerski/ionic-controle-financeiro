@@ -17,6 +17,11 @@ defineProps<{
 const closeModal = () => {
   modal.value?.$el.dismiss()
 }
+
+const onFormSubmit = () => {
+  closeModal()
+  $emit('submit')
+}
 </script>
 
 <template>
@@ -25,16 +30,13 @@ const closeModal = () => {
     class="modal-dialog"
   >
     <div class="ion-margin">
+      <h6 style="margin-top: 0">Altere o nome do produto</h6>
+
       <div class="ion-margin-bottom ion-margin-top">
         <ProductForm
           id="product-form"
           :product="product"
-          @submitted="
-            () => {
-              closeModal()
-              $emit('submit')
-            }
-          "
+          @submit="onFormSubmit"
         />
       </div>
 

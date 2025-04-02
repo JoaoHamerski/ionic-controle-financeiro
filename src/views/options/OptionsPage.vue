@@ -49,7 +49,7 @@ const ITEMS: OptionItem[] = [
           :key="item.label"
           button
           detail
-          :router-link="item.url"
+          :router-link="item.url as any"
         >
           <IonIcon
             slot="start"

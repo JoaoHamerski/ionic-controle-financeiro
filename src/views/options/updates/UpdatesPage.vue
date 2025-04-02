@@ -20,6 +20,7 @@ import { PREFERENCES } from '@/support/preferences-keys'
 
 import HeaderPageInfo from '../_partials/HeaderPageInfo.vue'
 import OptionPageLayout from '../_partials/OptionPageLayout.vue'
+import UpdatesNewReleaseInfo from './_partials/UpdatesNewReleaseInfo.vue'
 import { IsFetchingUpdate, ReleaseUpdate } from './updates-types'
 
 const PACKAGE_FILENAME = 'app-release.apk'
@@ -29,6 +30,7 @@ const LATEST_RELEASE_ENDPOINT =
   'https://api.github.com/repos/JoaoHamerski/ionic-controle-financeiro/releases/latest'
 
 const isFetching = ref<IsFetchingUpdate>({ releaseInfo: false, download: false })
+const isFetched = ref({ releaseInfo: false })
 
 const release = ref<ReleaseUpdate>({
   data: null,
@@ -40,6 +42,8 @@ const release = ref<ReleaseUpdate>({
 const isPermissionDialogOpen = ref<boolean>(false)
 
 onIonViewWillEnter(async () => {
+  await handleCachedPkgDeleted()
+
   const latestReleaseStored = JSON.parse(
     (await Preferences.get({ key: PREFERENCES.LATEST_RELEASE_DATA })).value || '{}',
   )
@@ -58,6 +62,27 @@ const hasNewVersion = computed(() => {
 
   return remoteVersion && currentVersion !== remoteVersion
 })
+
+const downloadButtonLabel = computed(() =>
+  release.value.downloadProgress
+    ? `Baixando (${release.value.downloadProgress}%)`
+    : 'Baixar atualização',
+)
+
+const fetchingUpdateButtonLabel = computed(() =>
+  !isFetching.value.releaseInfo ? 'Procurar atualização' : 'Procurando...',
+)
+
+const handleCachedPkgDeleted = async () => {
+  try {
+    await Filesystem.stat({
+      path: PACKAGE_FILENAME,
+      directory: Directory.Cache,
+    })
+  } catch (e) {
+    await Preferences.remove({ key: PREFERENCES.LATEST_RELEASE_DATA })
+  }
+}
 
 const addDownloadProgressListener = () => {
   Filesystem.addListener('progress', (progress) => {
@@ -90,6 +115,8 @@ const fetchLatestRelease = async () => {
     bodyRendered: await getRenderedBody(data.body),
     data,
   })
+
+  isFetched.value.releaseInfo = true
 }
 
 const getRenderedBody = async (markdownBody: string) => {
@@ -168,7 +195,6 @@ const onPermissionModalDismiss = async (event: CustomEvent) => {
 }
 </script>
 
-<!-- eslint-disable vue/no-v-html -->
 <template>
   <OptionPageLayout title="Atualizações">
     <IonContent class="ion-padding">
@@ -178,27 +204,18 @@ const onPermissionModalDismiss = async (event: CustomEvent) => {
           description="Baixe e instale novas versões do aplicativo"
           :icon="syncCircle"
         />
-        <Transition name="fade">
-          <IonRow v-if="hasNewVersion && release.data">
-            <IonCol>
-              <h4>
-                Nova versão disponível:
-                <b style="color: var(--ion-color-primary)">{{ release.data.tag_name }}</b>
-              </h4>
-            </IonCol>
-          </IonRow>
-        </Transition>
 
-        <Transition name="fade">
-          <IonRow v-if="release.data">
-            <IonCol>
-              <div
-                style="font-size: 0.9rem; color: var(--ion-color-medium)"
-                v-html="release.bodyRendered"
-              />
-            </IonCol>
-          </IonRow>
-        </Transition>
+        <UpdatesNewReleaseInfo
+          v-if="hasNewVersion"
+          :release="release"
+        />
+
+        <div
+          v-if="!hasNewVersion && isFetched.releaseInfo"
+          class="ion-text-center ion-margin-top"
+        >
+          <h5 style="color: var(--ion-color-medium)">Versão mais recente instalada</h5>
+        </div>
 
         <IonRow style="flex-grow: 1" />
 
@@ -216,7 +233,7 @@ const onPermissionModalDismiss = async (event: CustomEvent) => {
                 :disabled="isFetching.releaseInfo"
                 @click="checkForUpdate"
               >
-                Procurar atualizações
+                {{ fetchingUpdateButtonLabel }}
               </IonButton>
               <IonButton
                 v-else-if="hasNewVersion && !release.filepath"
@@ -227,13 +244,7 @@ const onPermissionModalDismiss = async (event: CustomEvent) => {
                 :disabled="isFetching.download"
                 @click="downloadReleasePkg"
               >
-                {{
-                  !isFetching.download
-                    ? 'Baixar atualização'
-                    : release.downloadProgress
-                      ? `Baixando (${release.downloadProgress}%)...`
-                      : 'Baixar atualização'
-                }}
+                {{ downloadButtonLabel }}
               </IonButton>
               <IonButton
                 v-else-if="release.filepath"
