@@ -6,13 +6,13 @@ import { Product } from '@/types/models'
 
 import ProductForm from './ProductForm.vue'
 
-const modal = useTemplateRef('modal')
-
 const emit = defineEmits(['submit'])
 
 defineProps<{
   product?: Product
 }>()
+
+const modal = useTemplateRef('modal')
 
 const closeModal = () => {
   modal.value?.$el.dismiss()
