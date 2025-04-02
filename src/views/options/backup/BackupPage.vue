@@ -7,8 +7,8 @@ import { ref } from 'vue'
 import { useBackup } from '@/composables/use-backup'
 import { useDatabaseStore } from '@/stores/database-store'
 
-import HeaderPageInfo from '../_partials/HeaderPageInfo.vue'
-import OptionPageLayout from '../_partials/OptionPageLayout.vue'
+import OptionsInfoHeader from '../_partials/OptionsInfoHeader.vue'
+import OptionsPageLayout from '../_partials/OptionsPageLayout.vue'
 import BackupInfo from './_paritals/BackupInfo.vue'
 import BackupPageFooter from './_paritals/BackupPageFooter.vue'
 import SaveBackupFileModal from './_paritals/SaveBackupFileModal.vue'
@@ -87,10 +87,10 @@ const onRecover = async () => {
 </script>
 
 <template>
-  <OptionPageLayout title="Backup">
+  <OptionsPageLayout title="Backup">
     <IonContent class="ion-padding">
       <IonGrid style="display: flex; flex-direction: column; height: 100%">
-        <HeaderPageInfo
+        <OptionsInfoHeader
           :icon="saveSharp"
           title="Salve ou recupere seus dados"
           description="O arquivo de dados ficará somente no seu aparelho, armazene-o em um local seguro, como na
@@ -119,5 +119,5 @@ const onRecover = async () => {
       @did-dismiss="isBackupFileModalOpen = false"
       @submit="onBackupSubmit"
     />
-  </OptionPageLayout>
+  </OptionsPageLayout>
 </template>

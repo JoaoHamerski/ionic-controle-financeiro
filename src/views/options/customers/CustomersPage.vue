@@ -7,7 +7,7 @@ import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { Customer } from '@/types/models'
 
-import OptionPageLayout from '../_partials/OptionPageLayout.vue'
+import OptionsPageLayout from '../_partials/OptionsPageLayout.vue'
 import CustomersList from './_partials/CustomersList.vue'
 
 const { knex } = useDatabaseStore()
@@ -25,7 +25,7 @@ const fetch = async () => {
 </script>
 
 <template>
-  <OptionPageLayout title="Clientes">
+  <OptionsPageLayout title="Clientes">
     <IonContent>
       <CustomersList
         v-if="customers.length"
@@ -34,5 +34,5 @@ const fetch = async () => {
       />
       <AppEmptyResult v-else />
     </IonContent>
-  </OptionPageLayout>
+  </OptionsPageLayout>
 </template>

@@ -27,7 +27,7 @@ const form = useForm(
 
 const input = useTemplateRef('input')
 
-onMounted(async () => {
+onMounted(() => {
   form.data.name = props.product?.name || ''
 
   setTimeout(() => {

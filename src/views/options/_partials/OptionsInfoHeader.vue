@@ -18,13 +18,11 @@ defineProps<{
       />
     </IonCol>
   </IonRow>
-
   <IonRow>
     <IonCol>
       <h3 class="ion-text-center">{{ title }}</h3>
     </IonCol>
   </IonRow>
-
   <IonRow>
     <IonCol>
       <p

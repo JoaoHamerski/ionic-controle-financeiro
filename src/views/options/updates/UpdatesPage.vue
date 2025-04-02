@@ -18,8 +18,8 @@ import { computed, ref } from 'vue'
 import UpgradeApp from '@/plugins/upgrade-app-plugin'
 import { PREFERENCES } from '@/support/preferences-keys'
 
-import HeaderPageInfo from '../_partials/HeaderPageInfo.vue'
-import OptionPageLayout from '../_partials/OptionPageLayout.vue'
+import OptionsInfoHeader from '../_partials/OptionsInfoHeader.vue'
+import OptionsPageLayout from '../_partials/OptionsPageLayout.vue'
 import UpdatesNewReleaseInfo from './_partials/UpdatesNewReleaseInfo.vue'
 import { IsFetchingUpdate, ReleaseUpdate } from './updates-types'
 
@@ -196,10 +196,10 @@ const onPermissionModalDismiss = async (event: CustomEvent) => {
 </script>
 
 <template>
-  <OptionPageLayout title="Atualizações">
+  <OptionsPageLayout title="Atualizações">
     <IonContent class="ion-padding">
       <IonGrid style="display: flex; flex-direction: column; height: 100%">
-        <HeaderPageInfo
+        <OptionsInfoHeader
           title="Verificar atualizações"
           description="Baixe e instale novas versões do aplicativo"
           :icon="syncCircle"
@@ -271,7 +271,7 @@ const onPermissionModalDismiss = async (event: CustomEvent) => {
         @did-dismiss="onPermissionModalDismiss"
       />
     </IonContent>
-  </OptionPageLayout>
+  </OptionsPageLayout>
 </template>
 
 <style scoped>
