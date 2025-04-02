@@ -2,6 +2,7 @@
 import { IonContent, IonPage, onIonViewWillEnter } from '@ionic/vue'
 import { ref } from 'vue'
 
+import AppEmptyResult from '@/components/AppEmptyResult.vue'
 import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { Customer } from '@/types/models'
@@ -31,9 +32,11 @@ const fetch = async () => {
     />
     <IonContent>
       <CustomersList
+        v-if="customers.length"
         :customers="customers"
         @submitted="fetch"
       />
+      <AppEmptyResult v-else />
     </IonContent>
   </IonPage>
 </template>

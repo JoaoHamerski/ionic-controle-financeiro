@@ -9,6 +9,9 @@
       color: 'var(--ion-color-medium)',
     }"
   >
-    <div>Nada por aqui ainda</div>
+    <div>
+      <slot v-if="$slots['default']" />
+      <template v-else>Nada por aqui ainda</template>
+    </div>
   </div>
 </template>

@@ -3,13 +3,13 @@ import { IonContent, IonHeader, IonPage, IonToolbar, onIonViewDidEnter } from '@
 import { Knex } from 'knex'
 import { ref } from 'vue'
 
+import AppEmptyResult from '@/components/AppEmptyResult.vue'
 import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { prefixColumns } from '@/support/helpers'
 import type { Prefix } from '@/types/helpers'
 import type { Customer, Entry, Product } from '@/types/models'
 
-import HomeEmpty from './_partials/HomeEmpty.vue'
 import HomeFabButton from './_partials/HomeFabButton.vue'
 import HomeSegments from './_partials/HomeSegments.vue'
 import EntriesCreateModal from './entries-form/EntriesCreateModal.vue'
@@ -108,7 +108,7 @@ const calculateTotalRecords = async (builder: Knex.QueryBuilder) => {
           @refetch="fetch(true)"
           @load-more="fetch"
         />
-        <HomeEmpty v-else-if="!entries.length && isFetched" />
+        <AppEmptyResult v-else />
       </Transition>
 
       <HomeFabButton @entry-click="isCreateEntryModalOpen = true" />

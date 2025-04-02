@@ -6,6 +6,7 @@ import { useDatabaseStore } from '@/stores/database-store'
 import { decodeBase64 } from '@/support/helpers'
 
 const BACKUP_FILENAME_KEY = 'backup-filename'
+
 export const useBackup = () => {
   const { database, connection } = useDatabaseStore()
 
