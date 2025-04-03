@@ -10,31 +10,31 @@ import {
 } from '@ionic/vue'
 import { calendar, cog, home } from 'ionicons/icons'
 
-type TabsItem = {
+type TabItem = {
   icon: string
   label: string
   href: string
-  tab: string
+  name: string
 }
 
-const TABS: TabsItem[] = [
+const TABS: TabItem[] = [
   {
     label: 'Início',
     href: '/tabs/inicio',
     icon: home,
-    tab: 'home',
+    name: 'home',
   },
   {
     label: 'Balanço',
     href: '/tabs/balanco',
     icon: calendar,
-    tab: 'balance',
+    name: 'balance',
   },
   {
     label: 'Opções',
     href: '/tabs/opcoes',
     icon: cog,
-    tab: 'opcoes',
+    name: 'opcoes',
   },
 ]
 </script>
@@ -47,8 +47,8 @@ const TABS: TabsItem[] = [
       <IonTabBar slot="bottom">
         <IonTabButton
           v-for="tab in TABS"
-          :key="tab.tab"
-          :tab="tab.tab"
+          :key="tab.name"
+          :tab="tab.name"
           :href="tab.href"
         >
           <IonIcon :icon="tab.icon" />
