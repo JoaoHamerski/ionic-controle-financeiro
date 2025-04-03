@@ -4,6 +4,7 @@ import { Preferences } from '@capacitor/preferences'
 import { IonApp, IonRouterOutlet, useBackButton } from '@ionic/vue'
 import { onMounted } from 'vue'
 import { ref } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { PREFERENCES } from './support/preferences-keys'
@@ -16,15 +17,15 @@ onMounted(async () => {
   handleBootForUpgrades()
 })
 
-const handleAppExit = () => {
-  const currentPath = router.currentRoute.value.path
+const currentPath = computed(() => router.currentRoute.value.path)
 
+const handleAppExit = () => {
   router.afterEach(() => {
-    previousRoute.value = currentPath
+    previousRoute.value = currentPath.value
   })
 
   useBackButton(0, async () => {
-    if (currentPath === '/tabs/inicio') {
+    if (currentPath.value === '/tabs/inicio') {
       await App.exitApp()
       return
     }
