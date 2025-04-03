@@ -16,24 +16,24 @@ const ITEMS: OptionItem[] = [
     label: 'Clientes',
     icon: peopleCircle,
     description: 'Gerencie sua lista de clientes',
-    url: '/tabs/opcoes/clientes',
+    url: '/opcoes/clientes',
   },
   {
     label: 'Produtos',
     icon: grid,
     description: 'Gerencie sua lista de produtos',
-    url: '/tabs/opcoes/produtos',
+    url: '/opcoes/produtos',
   },
   {
     label: 'Backup dos dados',
     icon: save,
     description: 'Salve ou recupere seus dados',
-    url: '/tabs/opcoes/backup',
+    url: '/opcoes/backup',
   },
   {
     label: 'Verificar atualizações',
     icon: sync,
-    url: '/tabs/opcoes/atualizacoes',
+    url: '/opcoes/atualizacoes',
   },
 ]
 </script>

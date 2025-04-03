@@ -31,23 +31,23 @@ const routes: Array<RouteRecordRaw> = [
         path: 'opcoes',
         component: OptionsPage,
       },
-      {
-        path: 'opcoes/clientes',
-        component: CustomersPage,
-      },
-      {
-        path: 'opcoes/produtos',
-        component: ProductsPage,
-      },
-      {
-        path: 'opcoes/backup',
-        component: BackupPage,
-      },
-      {
-        path: 'opcoes/atualizacoes',
-        component: UpdatesPage,
-      },
     ],
+  },
+  {
+    path: '/opcoes/clientes',
+    component: CustomersPage,
+  },
+  {
+    path: '/opcoes/produtos',
+    component: ProductsPage,
+  },
+  {
+    path: '/opcoes/backup',
+    component: BackupPage,
+  },
+  {
+    path: '/opcoes/atualizacoes',
+    component: UpdatesPage,
   },
 ]
 
