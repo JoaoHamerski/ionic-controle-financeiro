@@ -1,5 +1,6 @@
 import '@/bootstrap/styles'
 import '@/support/datetime'
+import '@/assets/fonts/Inter/inter.css'
 
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import { IonicVue } from '@ionic/vue'

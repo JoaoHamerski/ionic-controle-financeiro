@@ -36,7 +36,7 @@ const SEGMENTS: Segment[] = [
         color="var(--ion-color-light)"
         size="22"
       />
-      <IonLabel :style="{ color: 'var(--ion-color-light)', marginTop: 0 }">
+      <IonLabel :style="{ color: 'var(--ion-color-light)', marginTop: 0, fontWeight: '600' }">
         {{ segment.label }}
       </IonLabel>
     </IonSegmentButton>

@@ -2,26 +2,25 @@
 import { IonList } from '@ionic/vue'
 import { ref } from 'vue'
 
-import { Product } from '@/types/models'
-
+import { ProductRecord } from '../ProductsPage.vue'
 import ProductEditModal from './ProductsEditModal.vue'
 import ProductsListItem from './ProductsListItem.vue'
 
 defineEmits(['submit'])
 
 defineProps<{
-  products: Product[]
+  products: ProductRecord[]
 }>()
 
 const editProductModal = ref<{
   isOpen: boolean
-  product?: Product
+  product?: ProductRecord
 }>({
   isOpen: false,
   product: undefined,
 })
 
-const onEdit = ({ product }: { product: Product }) => {
+const onEdit = ({ product }: { product: ProductRecord }) => {
   editProductModal.value = {
     isOpen: true,
     product,
@@ -50,6 +49,6 @@ const resetModal = () => {
     :is-open="editProductModal.isOpen"
     :product="editProductModal.product"
     @did-dismiss="resetModal"
-    @submitted="$emit('submit')"
+    @submit="$emit('submit')"
   />
 </template>
