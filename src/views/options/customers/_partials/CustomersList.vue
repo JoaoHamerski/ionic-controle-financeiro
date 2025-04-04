@@ -2,26 +2,25 @@
 import { IonList } from '@ionic/vue'
 import { ref } from 'vue'
 
-import type { Customer } from '@/types/models'
-
+import { CustomerRecord } from '../CustomersPage.vue'
 import CustomersEditModal from './CustomersEditModal.vue'
 import CustomersListItem from './CustomersListItem.vue'
 
 const emit = defineEmits(['submit'])
 
 defineProps<{
-  customers: Customer[]
+  customers: CustomerRecord[]
 }>()
 
 const editCustomerModal = ref<{
   isOpen: boolean
-  customer?: Customer
+  customer?: CustomerRecord
 }>({
   isOpen: false,
   customer: undefined,
 })
 
-const onEdit = ({ customer }: { customer: Customer }) => {
+const onEdit = ({ customer }: { customer: CustomerRecord }) => {
   editCustomerModal.value.isOpen = true
   editCustomerModal.value.customer = customer
 }

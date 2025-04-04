@@ -201,13 +201,13 @@ const insert = async () => {
               label="Qtd."
               type="text"
               inputmode="numeric"
-              style="text-align: center"
+              style="text-align: center; margin: 0 !important; padding: 0 !important"
             >
               <IonButton
                 slot="start"
                 fill="clear"
                 :disabled="form.data.quantity <= 1"
-                @click="decreaseQuantity"
+                @click.stop="decreaseQuantity"
               >
                 <AppIcon
                   slot="icon-only"
@@ -219,7 +219,7 @@ const insert = async () => {
                 slot="end"
                 fill="clear"
                 :disabled="form.data.quantity >= 100"
-                @click="increaseQuantity"
+                @click.stop="increaseQuantity"
               >
                 <AppIcon
                   slot="icon-only"

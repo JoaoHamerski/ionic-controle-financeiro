@@ -4,18 +4,30 @@ import { PhPen } from '@phosphor-icons/vue'
 import { logoWhatsapp } from 'ionicons/icons'
 
 import AppIcon from '@/components/AppIcon.vue'
-import { titleCase } from '@/support/helpers'
-import { Customer } from '@/types/models'
+import { formatCurrencyBRL, titleCase } from '@/support/helpers'
+
+import { CustomerRecord } from '../CustomersPage.vue'
 
 defineEmits(['edit'])
 defineProps<{
-  customer: Customer
+  customer: CustomerRecord
 }>()
 </script>
 
 <template>
   <IonItem>
-    <IonLabel>{{ titleCase(customer.name) }}</IonLabel>
+    <IonLabel>
+      <div>{{ titleCase(customer.name) }}</div>
+      <div
+        :style="{
+          fontSize: '.8rem',
+          color: 'var(--ion-color-medium)',
+        }"
+      >
+        Total gasto:
+        {{ formatCurrencyBRL(customer.total_spent) }}
+      </div>
+    </IonLabel>
 
     <IonButton
       v-if="customer.phone"
