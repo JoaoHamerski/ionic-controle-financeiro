@@ -1,21 +1,13 @@
 <script setup lang="ts">
-import {
-  IonCol,
-  IonContent,
-  IonFab,
-  IonFabButton,
-  IonFooter,
-  IonGrid,
-  IonIcon,
-  IonRow,
-} from '@ionic/vue'
+import { IonCol, IonContent, IonFab, IonFabButton, IonFooter, IonGrid, IonRow } from '@ionic/vue'
 import { type MaskitoOptions, maskitoTransform } from '@maskito/core'
 import { maskito as vMaskito } from '@maskito/vue'
+import { PhCheck, PhUserCircle } from '@phosphor-icons/vue'
 import { helpers, minLength, required } from '@vuelidate/validators'
-import { checkmark, peopleCircle } from 'ionicons/icons'
 import { computed } from 'vue'
 import { onMounted } from 'vue'
 
+import AppIcon from '@/components/AppIcon.vue'
 import AppInput from '@/components/AppInput.vue'
 import { useForm } from '@/composables/use-form'
 import { dbStatement } from '@/services/db-service'
@@ -24,7 +16,7 @@ import { stripNonDigits } from '@/support/helpers'
 import { phoneMask } from '@/support/masks'
 import { Customer } from '@/types/models'
 
-import CustomerFormHeader from './CustomerFormHeader.vue'
+import CustomerFormHeader from './CustomersFormHeader.vue'
 
 type FormRecordData = Pick<typeof form.data, 'name' | 'phone'>
 
@@ -107,7 +99,7 @@ const update = async ({ name, phone }: FormRecordData) => {
       <IonGrid class="ion-margin-bottom">
         <CustomerFormHeader
           :text="!isEdit ? 'Cadastre um novo cliente' : 'Altere os dados do cliente'"
-          :icon="peopleCircle"
+          :icon="PhUserCircle"
         />
 
         <IonRow class="ion-margin-bottom">
@@ -153,7 +145,11 @@ const update = async ({ name, phone }: FormRecordData) => {
           type="submit"
           @click="submit"
         >
-          <IonIcon :icon="checkmark" />
+          <AppIcon
+            :icon="PhCheck"
+            size="28"
+            weight="bold"
+          />
         </IonFabButton>
       </IonFab>
     </IonFooter>

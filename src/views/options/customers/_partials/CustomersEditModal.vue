@@ -1,19 +1,12 @@
 <script setup lang="ts">
-import {
-  IonButton,
-  IonButtons,
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonModal,
-  IonToolbar,
-} from '@ionic/vue'
-import { arrowBack } from 'ionicons/icons'
+import { IonButton, IonButtons, IonContent, IonHeader, IonModal, IonToolbar } from '@ionic/vue'
+import { PhArrowLeft } from '@phosphor-icons/vue'
 import { useTemplateRef } from 'vue'
 
+import AppIcon from '@/components/AppIcon.vue'
 import { Customer } from '@/types/models'
 
-import CustomerForm from './CustomerForm.vue'
+import CustomerForm from './CustomersForm.vue'
 
 defineEmits(['submit'])
 
@@ -33,9 +26,11 @@ const modal = useTemplateRef('modal')
             slot="start"
             @click="modal?.$el.dismiss()"
           >
-            <IonIcon
+            <AppIcon
               slot="icon-only"
-              :icon="arrowBack"
+              :icon="PhArrowLeft"
+              size="26"
+              weight="bold"
             />
           </IonButton>
         </IonButtons>

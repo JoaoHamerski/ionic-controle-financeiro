@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { IonBackButton, IonButtons, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/vue'
-import { cog } from 'ionicons/icons'
+import { IonBackButton, IonButtons, IonHeader, IonTitle, IonToolbar } from '@ionic/vue'
+import { PhGear } from '@phosphor-icons/vue'
+
+import AppIcon from '@/components/AppIcon.vue'
 
 defineProps<{
   title: string
@@ -16,7 +18,10 @@ defineProps<{
       </IonButtons>
       <IonTitle :slot="hasBackButton ? 'end' : 'start'">
         <div :style="{ display: 'inline-flex', gap: '0.5rem', alignItems: 'center' }">
-          <IonIcon :icon="cog" />
+          <AppIcon
+            :icon="PhGear"
+            weight="fill"
+          />
           {{ title }}
         </div>
       </IonTitle>

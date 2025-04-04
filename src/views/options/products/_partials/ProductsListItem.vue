@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { IonButton, IonIcon, IonItem, IonLabel } from '@ionic/vue'
-import { createOutline } from 'ionicons/icons'
+import { IonButton, IonItem, IonLabel } from '@ionic/vue'
+import { PhPen } from '@phosphor-icons/vue'
 
+import AppIcon from '@/components/AppIcon.vue'
 import { Product } from '@/types/models'
 
 defineEmits(['edit'])
@@ -21,9 +22,10 @@ defineProps<{
       shape="round"
       @click="$emit('edit', { product })"
     >
-      <IonIcon
+      <AppIcon
         slot="icon-only"
-        :icon="createOutline"
+        :icon="PhPen"
+        size="24"
       />
     </IonButton>
   </IonItem>

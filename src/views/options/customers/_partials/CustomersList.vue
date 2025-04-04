@@ -4,8 +4,8 @@ import { ref } from 'vue'
 
 import type { Customer } from '@/types/models'
 
-import CustomerEditModal from './CustomerEditModal.vue'
-import CustomerListItem from './CustomerListItem.vue'
+import CustomersEditModal from './CustomersEditModal.vue'
+import CustomersListItem from './CustomersListItem.vue'
 
 const emit = defineEmits(['submit'])
 
@@ -41,14 +41,14 @@ const onSubmitted = () => {
 
 <template>
   <IonList lines="full">
-    <CustomerListItem
+    <CustomersListItem
       v-for="customer in customers"
       :key="customer.id"
       :customer="customer"
       @edit="onEdit"
     />
 
-    <CustomerEditModal
+    <CustomersEditModal
       :is-open="editCustomerModal.isOpen"
       :customer="editCustomerModal.customer"
       @did-dismiss="resetModal"

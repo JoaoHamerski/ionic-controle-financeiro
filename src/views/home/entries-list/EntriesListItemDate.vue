@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { IonIcon } from '@ionic/vue'
-import { calendarSharp } from 'ionicons/icons'
+import { PhCalendarDots } from '@phosphor-icons/vue'
 import { upperFirst } from 'lodash'
 import { DateTime } from 'luxon'
 import { computed } from 'vue'
+
+import AppIcon from '@/components/AppIcon.vue'
 
 const props = defineProps<{
   date: string
@@ -23,7 +24,10 @@ const luxonDate = computed(() => DateTime.fromISO(props.date, { locale: 'pt-BR' 
       gap: '.25rem',
     }"
   >
-    <IonIcon :icon="calendarSharp" />
+    <AppIcon
+      :icon="PhCalendarDots"
+      weight="fill"
+    />
     {{ upperFirst(luxonDate.toFormat('cccc')) }}
     ({{ luxonDate.toFormat('dd/MM') }})
   </div>

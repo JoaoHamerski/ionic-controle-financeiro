@@ -8,17 +8,17 @@ import {
   IonFabButton,
   IonFooter,
   IonGrid,
-  IonIcon,
   IonRow,
   IonSelectOption,
 } from '@ionic/vue'
 import { maskito as vMaskito } from '@maskito/vue'
+import { PhCheck, PhMinus, PhPlus } from '@phosphor-icons/vue'
 import { helpers, minValue, required } from '@vuelidate/validators'
-import { add, checkmark, removeOutline } from 'ionicons/icons'
 import { DateTime } from 'luxon'
 import { ref } from 'vue'
 import { computed } from 'vue'
 
+import AppIcon from '@/components/AppIcon.vue'
 import AppInput from '@/components/AppInput.vue'
 import AppSelect from '@/components/AppSelect.vue'
 import { useForm } from '@/composables/use-form'
@@ -209,9 +209,10 @@ const insert = async () => {
                 :disabled="form.data.quantity <= 1"
                 @click="decreaseQuantity"
               >
-                <IonIcon
+                <AppIcon
                   slot="icon-only"
-                  :icon="removeOutline"
+                  :icon="PhMinus"
+                  weight="bold"
                 />
               </IonButton>
               <IonButton
@@ -220,9 +221,10 @@ const insert = async () => {
                 :disabled="form.data.quantity >= 100"
                 @click="increaseQuantity"
               >
-                <IonIcon
+                <AppIcon
                   slot="icon-only"
-                  :icon="add"
+                  :icon="PhPlus"
+                  weight="bold"
                 />
               </IonButton>
             </AppInput>
@@ -310,7 +312,11 @@ const insert = async () => {
           :disabled="isTimedOut"
           @click="submit"
         >
-          <IonIcon :icon="checkmark" />
+          <AppIcon
+            :icon="PhCheck"
+            size="28"
+            weight="bold"
+          />
         </IonFabButton>
       </IonFab>
     </IonFooter>

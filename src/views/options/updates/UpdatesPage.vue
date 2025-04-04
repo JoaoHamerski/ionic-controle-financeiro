@@ -12,7 +12,7 @@ import {
   onIonViewWillEnter,
   onIonViewWillLeave,
 } from '@ionic/vue'
-import { syncCircle } from 'ionicons/icons'
+import { PhArrowClockwise } from '@phosphor-icons/vue'
 import { computed, ref } from 'vue'
 
 import UpgradeApp from '@/plugins/upgrade-app-plugin'
@@ -202,7 +202,7 @@ const onPermissionModalDismiss = async (event: CustomEvent) => {
         <OptionsInfoHeader
           title="Verificar atualizações"
           description="Baixe e instale novas versões do aplicativo"
-          :icon="syncCircle"
+          :icon="PhArrowClockwise"
         />
 
         <UpdatesNewReleaseInfo

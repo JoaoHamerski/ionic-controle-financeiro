@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { IonFab, IonFabButton, IonIcon } from '@ionic/vue'
-import { add } from 'ionicons/icons'
+import { IonFab, IonFabButton } from '@ionic/vue'
+import { PhPlus } from '@phosphor-icons/vue'
+
+import AppIcon from '@/components/AppIcon.vue'
 
 defineEmits(['click'])
 </script>
@@ -15,7 +17,11 @@ defineEmits(['click'])
       color="success"
       @click="$emit('click')"
     >
-      <IonIcon :icon="add" />
+      <AppIcon
+        :icon="PhPlus"
+        weight="bold"
+        size="24"
+      />
     </IonFabButton>
   </IonFab>
 </template>

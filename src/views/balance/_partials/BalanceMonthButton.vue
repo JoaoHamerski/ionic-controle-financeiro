@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { IonButton, IonIcon } from '@ionic/vue'
+import { PhCaretCircleDown } from '@phosphor-icons/vue'
 import { chevronDownCircleSharp } from 'ionicons/icons'
+
+import AppIcon from '@/components/AppIcon.vue'
 
 import { SelectedPeriodType } from '../BalancePage.vue'
 import { PERIODS } from './balance-periods'
@@ -46,9 +49,12 @@ const getSelectedPeriodLabel = () => {
       <span :style="{ marginLeft: '1.5rem' }">
         {{ getSelectedPeriodLabel() }}
       </span>
-      <IonIcon
+      <AppIcon
         slot="end"
-        :icon="chevronDownCircleSharp"
+        :icon="PhCaretCircleDown"
+        weight="fill"
+        :style="{ marginLeft: '.5rem' }"
+        size="24"
       />
     </IonButton>
   </div>

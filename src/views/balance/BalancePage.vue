@@ -1,19 +1,12 @@
 <script setup lang="ts">
-import {
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  onIonViewDidEnter,
-} from '@ionic/vue'
-import { calendar } from 'ionicons/icons'
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, onIonViewDidEnter } from '@ionic/vue'
+import { PhCalendarDots } from '@phosphor-icons/vue'
 import { get, groupBy, range, round, sumBy } from 'lodash'
 import { DateTime } from 'luxon'
 import { ref } from 'vue'
 import { computed } from 'vue'
 
+import AppIcon from '@/components/AppIcon.vue'
 import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 
@@ -137,7 +130,11 @@ const onPeriodSelected = async (monthDate: DateTime) => {
       <IonToolbar color="primary">
         <IonTitle>
           <div :style="{ display: 'flex', gap: '0.5rem' }">
-            <IonIcon :icon="calendar" />
+            <AppIcon
+              :icon="PhCalendarDots"
+              weight="fill"
+              size="22"
+            />
             Balanço
           </div>
         </IonTitle>

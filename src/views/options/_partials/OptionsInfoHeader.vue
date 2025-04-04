@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { IonCol, IonIcon, IonRow } from '@ionic/vue'
+import { IonCol, IonRow } from '@ionic/vue'
+
+import AppIcon from '@/components/AppIcon.vue'
 
 defineProps<{
-  icon: string
+  icon: any
   title: string
   description: string
 }>()
@@ -11,10 +13,11 @@ defineProps<{
 <template>
   <IonRow>
     <IonCol class="ion-text-center">
-      <IonIcon
-        color="primary"
+      <AppIcon
         :icon="icon"
         style="font-size: 5rem"
+        weight="fill"
+        color="var(--ion-color-primary)"
       />
     </IonCol>
   </IonRow>

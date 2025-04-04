@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { IonIcon } from '@ionic/vue'
-import { checkmarkCircleSharp, timeSharp } from 'ionicons/icons'
+import { PhCheckCircle, PhClock } from '@phosphor-icons/vue'
+
+import AppIcon from '@/components/AppIcon.vue'
 
 defineProps<{
   paidAt: boolean
@@ -21,11 +22,17 @@ defineProps<{
       }"
     >
       <template v-if="paidAt">
-        <IonIcon :icon="checkmarkCircleSharp" />
+        <AppIcon
+          :icon="PhCheckCircle"
+          weight="fill"
+        />
         Pago
       </template>
       <template v-else>
-        <IonIcon :icon="timeSharp" />
+        <AppIcon
+          :icon="PhClock"
+          weight="fill"
+        />
         Pagamento pendente
       </template>
     </div>

@@ -34,6 +34,7 @@ const SEGMENTS: Segment[] = [
         style="margin-top: 0.5rem"
         :icon="segment.icon"
         color="var(--ion-color-light)"
+        size="22"
       />
       <IonLabel :style="{ color: 'var(--ion-color-light)', marginTop: 0 }">
         {{ segment.label }}

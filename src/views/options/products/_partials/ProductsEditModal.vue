@@ -4,7 +4,7 @@ import { useTemplateRef } from 'vue'
 
 import { Product } from '@/types/models'
 
-import ProductForm from './ProductForm.vue'
+import ProductForm from './ProductsForm.vue'
 
 const emit = defineEmits(['submit'])
 

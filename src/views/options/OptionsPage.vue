@@ -1,38 +1,40 @@
 <script setup lang="ts">
-import { IonContent, IonIcon, IonItem, IonLabel, IonList, IonPage } from '@ionic/vue'
-import { grid, peopleCircle, save, sync } from 'ionicons/icons'
+import { IonContent, IonItem, IonLabel, IonList, IonPage } from '@ionic/vue'
+import { PhArrowClockwise, PhFloppyDiskBack, PhPackage, PhUsersThree } from '@phosphor-icons/vue'
+
+import AppIcon from '@/components/AppIcon.vue'
 
 import OptionsHeader from './_partials/OptionsHeader.vue'
 
 type OptionItem = {
   label: string
   description?: string
-  icon: string
-  url?: string
+  icon: any
+  url?: any
 }
 
 const ITEMS: OptionItem[] = [
   {
     label: 'Clientes',
-    icon: peopleCircle,
+    icon: PhUsersThree,
     description: 'Gerencie sua lista de clientes',
     url: '/opcoes/clientes',
   },
   {
     label: 'Produtos',
-    icon: grid,
+    icon: PhPackage,
     description: 'Gerencie sua lista de produtos',
     url: '/opcoes/produtos',
   },
   {
     label: 'Backup dos dados',
-    icon: save,
+    icon: PhFloppyDiskBack,
     description: 'Salve ou recupere seus dados',
     url: '/opcoes/backup',
   },
   {
     label: 'Verificar atualizações',
-    icon: sync,
+    icon: PhArrowClockwise,
     url: '/opcoes/atualizacoes',
   },
 ]
@@ -49,11 +51,14 @@ const ITEMS: OptionItem[] = [
           :key="item.label"
           button
           detail
-          :router-link="item.url as any"
+          :router-link="item.url"
         >
-          <IonIcon
+          <AppIcon
             slot="start"
             :icon="item.icon"
+            size="26"
+            weight="fill"
+            color="var(--ion-color-medium)"
           />
           <IonLabel>
             <h2>{{ item.label }}</h2>

@@ -1,15 +1,9 @@
 <script setup lang="ts">
-import {
-  IonButton,
-  IonButtons,
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonModal,
-  IonToolbar,
-} from '@ionic/vue'
-import { arrowBackOutline } from 'ionicons/icons'
+import { IonButton, IonButtons, IonContent, IonHeader, IonModal, IonToolbar } from '@ionic/vue'
+import { PhArrowLeft } from '@phosphor-icons/vue'
 import { ref } from 'vue'
+
+import AppIcon from '@/components/AppIcon.vue'
 
 import EntriesForm from './EntriesForm.vue'
 
@@ -29,9 +23,11 @@ const onFormSubmit = () => {
       <IonToolbar color="success">
         <IonButtons slot="start">
           <IonButton @click="modal.$el.dismiss()">
-            <IonIcon
+            <AppIcon
               slot="icon-only"
-              :icon="arrowBackOutline"
+              :icon="PhArrowLeft"
+              size="26"
+              weight="bold"
             />
           </IonButton>
         </IonButtons>

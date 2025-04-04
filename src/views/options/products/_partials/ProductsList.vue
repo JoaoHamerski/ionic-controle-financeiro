@@ -4,7 +4,7 @@ import { ref } from 'vue'
 
 import { Product } from '@/types/models'
 
-import ProductEditModal from './ProductEditModal.vue'
+import ProductEditModal from './ProductsEditModal.vue'
 import ProductsListItem from './ProductsListItem.vue'
 
 defineEmits(['submit'])

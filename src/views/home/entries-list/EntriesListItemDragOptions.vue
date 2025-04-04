@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { IonIcon, IonItemOption, IonItemOptions } from '@ionic/vue'
-import { checkmarkCircleSharp, trashSharp } from 'ionicons/icons'
+import { IonItemOption, IonItemOptions } from '@ionic/vue'
+import { PhCheckCircle, PhTrash } from '@phosphor-icons/vue'
+
+import AppIcon from '@/components/AppIcon.vue'
 
 const emit = defineEmits(['pay', 'delete'])
 
@@ -24,10 +26,12 @@ const onPayClick = async (entry: any) => {
       color="success"
       @click="onPayClick(entry)"
     >
-      <IonIcon
+      <AppIcon
         slot="top"
-        :icon="checkmarkCircleSharp"
-        :style="{ fontSize: '1.4rem', marginBottom: '0.5rem' }"
+        :icon="PhCheckCircle"
+        weight="fill"
+        size="24"
+        :style="{ marginBottom: '.5rem' }"
       />
       Pagar
     </IonItemOption>
@@ -36,10 +40,12 @@ const onPayClick = async (entry: any) => {
       color="danger"
       @click="onDeleteClick(entry)"
     >
-      <IonIcon
+      <AppIcon
         slot="top"
-        :icon="trashSharp"
-        :style="{ fontSize: '1.4rem', marginBottom: '0.5rem' }"
+        :icon="PhTrash"
+        weight="fill"
+        size="24"
+        :style="{ marginBottom: '.5rem' }"
       />
       Excluir
     </IonItemOption>

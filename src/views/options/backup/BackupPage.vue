@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { IonContent, IonGrid, IonRow, onIonViewWillEnter } from '@ionic/vue'
-import { saveSharp } from 'ionicons/icons'
+import { PhFloppyDiskBack } from '@phosphor-icons/vue'
 import { DateTime } from 'luxon'
 import { ref } from 'vue'
 
@@ -91,7 +91,7 @@ const onRecover = async () => {
     <IonContent class="ion-padding">
       <IonGrid style="display: flex; flex-direction: column; height: 100%">
         <OptionsInfoHeader
-          :icon="saveSharp"
+          :icon="PhFloppyDiskBack"
           title="Salve ou recupere seus dados"
           description="O arquivo de dados ficará somente no seu aparelho, armazene-o em um local seguro, como na
         nuvem (Google Drive, Dropbox e etc...)"

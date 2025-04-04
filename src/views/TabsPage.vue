@@ -48,6 +48,7 @@ const TABS: TabItem[] = [
           <AppIcon
             weight="fill"
             :icon="tab.icon"
+            size="26"
           />
           <IonLabel>{{ tab.label }}</IonLabel>
         </IonTabButton>

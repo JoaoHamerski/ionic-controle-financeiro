@@ -3,10 +3,10 @@ defineProps<{
   icon: any
 }>()
 </script>
+
 <template>
   <Component
     :is="icon"
-    size="26"
-    weight="duotone"
+    v-bind="$attrs"
   />
 </template>

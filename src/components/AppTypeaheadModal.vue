@@ -4,16 +4,16 @@ import {
   IonButtons,
   IonContent,
   IonHeader,
-  IonIcon,
   IonItem,
   IonLabel,
   IonList,
   IonModal,
   IonToolbar,
 } from '@ionic/vue'
-import { arrowBackOutline } from 'ionicons/icons'
+import { PhArrowLeft } from '@phosphor-icons/vue'
 import { ref } from 'vue'
 
+import AppIcon from './AppIcon.vue'
 import AppInput from './AppInput.vue'
 
 const emit = defineEmits(['create', 'select'])
@@ -57,9 +57,11 @@ const onModalDidDismiss = () => {
       >
         <IonButtons slot="start">
           <IonButton @click="modal.$el.dismiss()">
-            <IonIcon
+            <AppIcon
               slot="icon-only"
-              :icon="arrowBackOutline"
+              :icon="PhArrowLeft"
+              size="28"
+              weight="bold"
             />
           </IonButton>
         </IonButtons>

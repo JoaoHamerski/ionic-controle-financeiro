@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { IonIcon } from '@ionic/vue'
-import { personSharp } from 'ionicons/icons'
+import { PhUser } from '@phosphor-icons/vue'
 
+import AppIcon from '@/components/AppIcon.vue'
 import { titleCase } from '@/support/helpers'
 
 defineProps<{
@@ -11,7 +11,10 @@ defineProps<{
 
 <template>
   <div :style="{ fontSize: '.8rem', color: 'var(--ion-color-medium)' }">
-    <IonIcon :icon="personSharp" />
+    <AppIcon
+      :icon="PhUser"
+      weight="fill"
+    />
     {{ titleCase(customerName) }}
   </div>
 </template>
