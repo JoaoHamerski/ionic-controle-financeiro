@@ -10,7 +10,8 @@ const props = defineProps<{
   date: string
 }>()
 
-const luxonDate = computed(() => DateTime.fromISO(props.date, { locale: 'pt-BR' }))
+const date = computed(() => DateTime.fromISO(props.date, { locale: 'pt-BR' }))
+const now = computed(() => DateTime.now())
 </script>
 
 <template>
@@ -28,7 +29,11 @@ const luxonDate = computed(() => DateTime.fromISO(props.date, { locale: 'pt-BR' 
       :icon="PhCalendarDots"
       weight="fill"
     />
-    {{ upperFirst(luxonDate.toFormat('cccc')) }}
-    ({{ luxonDate.toFormat('dd/MM') }})
+    <template v-if="now.hasSame(date, 'day')"> Hoje </template>
+    <template v-else-if="now.minus({ day: 1 }).hasSame(date, 'day')">Ontem</template>
+    <template v-else>
+      {{ upperFirst(date.toFormat('cccc')) }}
+    </template>
+    ({{ date.toFormat('dd/MM') }})
   </div>
 </template>
