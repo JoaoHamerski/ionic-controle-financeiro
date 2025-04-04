@@ -1,17 +1,11 @@
 <script setup lang="ts">
-import {
-  IonIcon,
-  IonLabel,
-  IonPage,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
-} from '@ionic/vue'
-import { calendar, cog, home } from 'ionicons/icons'
+import { IonLabel, IonPage, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/vue'
+import { PhCalendarDots, PhGear, PhHouseLine } from '@phosphor-icons/vue'
+
+import AppIcon from '@/components/AppIcon.vue'
 
 type TabItem = {
-  icon: string
+  icon: any
   label: string
   href: string
   name: string
@@ -21,19 +15,19 @@ const TABS: TabItem[] = [
   {
     label: 'Início',
     href: '/tabs/inicio',
-    icon: home,
+    icon: PhHouseLine,
     name: 'home',
   },
   {
     label: 'Balanço',
     href: '/tabs/balanco',
-    icon: calendar,
+    icon: PhCalendarDots,
     name: 'balance',
   },
   {
     label: 'Opções',
     href: '/tabs/opcoes',
-    icon: cog,
+    icon: PhGear,
     name: 'opcoes',
   },
 ]
@@ -51,7 +45,10 @@ const TABS: TabItem[] = [
           :tab="tab.name"
           :href="tab.href"
         >
-          <IonIcon :icon="tab.icon" />
+          <AppIcon
+            weight="fill"
+            :icon="tab.icon"
+          />
           <IonLabel>{{ tab.label }}</IonLabel>
         </IonTabButton>
       </IonTabBar>
