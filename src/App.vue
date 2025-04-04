@@ -13,33 +13,40 @@ const router = useRouter()
 const previousRoute = ref('')
 
 onMounted(async () => {
-  handleAppExit()
-  handleBootForUpgrades()
-})
-
-const currentPath = computed(() => router.currentRoute.value.path)
-
-const handleAppExit = () => {
   router.afterEach(() => {
     previousRoute.value = currentPath.value
   })
 
+  handleBackButton()
+  handleBootAfterUpgrade()
+})
+
+const currentPath = computed(() => router.currentRoute.value.path)
+
+const handleBackButton = () => {
   useBackButton(0, async () => {
-    if (currentPath.value === '/tabs/inicio') {
-      await App.exitApp()
-      return
-    }
-
-    if (previousRoute.value.includes('/tabs')) {
-      router.replace('/tabs/inicio')
-      return
-    }
-
-    router.back()
+    handleAppExit()
+    handleTabsRedirect()
   })
 }
 
-const handleBootForUpgrades = async () => {
+const handleAppExit = async () => {
+  if (currentPath.value === '/tabs/inicio') {
+    await App.exitApp()
+    return
+  }
+}
+
+const handleTabsRedirect = () => {
+  if (previousRoute.value.includes('/tabs')) {
+    router.replace('/tabs/inicio')
+    return
+  }
+
+  router.back()
+}
+
+const handleBootAfterUpgrade = async () => {
   const currentVersion = (await App.getInfo()).version
   const oldVersion = (await Preferences.get({ key: PREFERENCES.CURRENT_VERSION_NAME })).value
 
