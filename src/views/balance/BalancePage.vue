@@ -140,7 +140,6 @@ const onPeriodSelected = async (monthDate: DateTime) => {
         </IonTitle>
       </IonToolbar>
     </IonHeader>
-
     <IonContent>
       <BalanceMonthPickerModal
         v-model="isPickerModalOpen"
@@ -148,12 +147,10 @@ const onPeriodSelected = async (monthDate: DateTime) => {
         @period-selected="onPeriodSelected"
         @did-dismiss="isPickerModalOpen = false"
       />
-
       <BalanceMonthButton
         :selected-period="selectedPeriod"
         @click="isPickerModalOpen = true"
       />
-
       <div
         class="ion-margin"
         :style="{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }"
@@ -168,7 +165,6 @@ const onPeriodSelected = async (monthDate: DateTime) => {
             :selected-period="selectedPeriod"
           />
         </Transition>
-
         <Transition name="fade">
           <BalanceChart
             v-if="paymentsData.length"
@@ -179,7 +175,6 @@ const onPeriodSelected = async (monthDate: DateTime) => {
             :selected-period="selectedPeriod"
           />
         </Transition>
-
         <Transition name="fade">
           <BalanceChart
             v-if="outflowsData.length"

@@ -43,7 +43,6 @@ const ITEMS: OptionItem[] = [
 <template>
   <IonPage>
     <OptionsHeader title="Opções" />
-
     <IonContent>
       <IonList lines="full">
         <IonItem

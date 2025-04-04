@@ -109,7 +109,7 @@ const calculateTotalRecords = async (builder: Knex.QueryBuilder) => {
           @load-more="fetch"
         />
         <AppEmptyResult
-          v-else
+          v-else-if="isFetched"
           :key="`empty-${segment}`"
         />
       </Transition>
