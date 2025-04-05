@@ -1,5 +1,6 @@
 import { CapacitorSQLite, SQLiteConnection, SQLiteDBConnection } from '@capacitor-community/sqlite'
 import { type Knex, knex as knexBuilder } from 'knex'
+import { last } from 'lodash'
 import { defineStore } from 'pinia'
 import { Ref, ref } from 'vue'
 
@@ -33,18 +34,19 @@ export const useDatabaseStore = defineStore('database', () => {
 
   const migrateDatabase = async () => {
     const dbVersion = await getDbVersion()
+    const reversedMigrations = MIGRATIONS.reverse()
 
-    for (const migration of MIGRATIONS) {
-      if (migration.version < dbVersion) {
+    for (const migration of reversedMigrations) {
+      if (migration.version <= dbVersion) {
         continue
       }
 
       for (const statement of migration.statements) {
         await database.value!.execute(statement)
       }
-
-      await database.value!.execute(`PRAGMA user_version = ${migration.version};`)
     }
+
+    await database.value!.execute(`PRAGMA user_version = ${last(reversedMigrations)?.version};`)
   }
 
   const getDbVersion = async () => {
