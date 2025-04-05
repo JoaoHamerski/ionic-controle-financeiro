@@ -13,7 +13,7 @@ import EntriesListAfter from './EntriesListAfter.vue'
 import EntriesListItem from './EntriesListItem.vue'
 import EntriesListItemDragOptions from './EntriesListItemDragOptions.vue'
 
-const emit = defineEmits(['refetch', 'load-more'])
+const emit = defineEmits(['refetch', 'load-more', 'deleted'])
 
 defineProps<{
   entries: any[]
@@ -50,13 +50,6 @@ const deleteAlertMessage = computed(() => {
   return 'Excluir'
 })
 
-const onDelete = ({ entry }: { entry: any }) => {
-  deleteAlert.value = {
-    isOpen: true,
-    entry,
-  }
-}
-
 const onDeleteAlertDismiss = async (event: ItemSlidingCustomEvent) => {
   if (event.detail.role === 'delete') {
     deleteEntry(deleteAlert.value.entry)
@@ -77,6 +70,18 @@ const deleteEntry = async (entry: any) => {
 
   await dbStatement(builder)
   await closeSlidingItems()
+}
+
+const onDelete = ({ entry }: { entry: any }) => {
+  deleteAlert.value = {
+    isOpen: true,
+    entry,
+  }
+}
+
+const onPay = async ({ entry }: { entry: any }) => {
+  await payEntry(entry)
+  await closeSlidingItems()
 
   emit('refetch')
 }
@@ -89,13 +94,6 @@ const payEntry = async (entry: any) => {
   await dbStatement(builder)
 }
 
-const onPay = async ({ entry }: { entry: any }) => {
-  await payEntry(entry)
-  await closeSlidingItems()
-
-  emit('refetch')
-}
-
 const closeSlidingItems = async () => {
   await list.value.$el.closeSlidingItems()
 }
@@ -106,10 +104,7 @@ const closeSlidingItems = async () => {
     ref="list"
     lines="full"
   >
-    <TransitionGroup
-      key="entries-list"
-      name="fade"
-    >
+    <TransitionGroup name="list">
       <IonItemSliding
         v-for="entry in entries"
         :key="entry.id"
