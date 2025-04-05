@@ -67,7 +67,6 @@ const fetch = async (reset: boolean = false) => {
     entries.value = await dbSelect(builder)
     totalRecords.value = await calculateTotalRecords(builder)
 
-    console.log(entries.value)
     isFetched.value = true
     return
   }

@@ -23,7 +23,10 @@ router.isReady().then(async () => {
   const { initDatabase } = useDatabaseStore()
 
   await initDatabase()
-  await seedDatabase()
+
+  if (import.meta.env.DEV) {
+    await seedDatabase()
+  }
 
   app.mount('#app')
 })
