@@ -10,7 +10,6 @@ defineEmits(['save', 'recover'])
       <IonButton
         color="success"
         shape="round"
-        fill="outline"
         style="width: 100%"
         @click="$emit('save')"
       >
@@ -22,7 +21,6 @@ defineEmits(['save', 'recover'])
       <IonButton
         color="primary"
         shape="round"
-        fill="outline"
         style="width: 100%"
         @click="$emit('recover')"
       >
