@@ -44,3 +44,7 @@ ion-button {
   --box-shadow: none;
   --border-width: 0;
 }
+
+ion-fab-button {
+	--ripple-color: transparent;
+}
