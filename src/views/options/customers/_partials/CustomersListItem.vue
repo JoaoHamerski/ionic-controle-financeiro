@@ -20,7 +20,7 @@ defineProps<{
       <div>{{ titleCase(customer.name) }}</div>
       <div
         :style="{
-          fontSize: '.8rem',
+          fontSize: '.75rem',
           color: 'var(--ion-color-medium)',
         }"
       >

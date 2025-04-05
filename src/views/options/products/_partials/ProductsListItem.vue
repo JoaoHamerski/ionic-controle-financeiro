@@ -20,7 +20,7 @@ defineProps<{
       <div>{{ product.name }}</div>
       <div
         v-if="product.total_sold"
-        :style="{ fontSize: '.85rem', color: 'var(--ion-color-medium)' }"
+        :style="{ fontSize: '.75rem', color: 'var(--ion-color-medium)' }"
       >
         Total vendido: {{ formatCurrencyBRL(product.total_sold) }}
       </div>
