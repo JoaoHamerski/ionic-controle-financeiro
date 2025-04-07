@@ -106,7 +106,7 @@ const chartOptions = computed(() => {
 </script>
 
 <template>
-  <div :style="{ maxHeight: '21dvh' }">
+  <div style="max-height: 20dvh">
     <div
       class="ion-text-center"
       :style="{ fontWeight: 500, fontSize: '.8rem' }"

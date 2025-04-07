@@ -143,6 +143,7 @@ const onPeriodSelected = async (monthDate: DateTime) => {
         </IonTitle>
       </IonToolbar>
     </IonHeader>
+
     <IonContent>
       <BalanceMonthPickerModal
         v-model="isPickerModalOpen"
@@ -165,9 +166,9 @@ const onPeriodSelected = async (monthDate: DateTime) => {
       </div>
       <div
         class="ion-margin"
-        :style="{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }"
+        style="display: flex; flex-direction: column; gap: 2rem"
       >
-        <Transition name="fade">
+        <TransitionGroup name="fade">
           <BalanceChart
             v-if="inflowsData.length"
             title="ENTRADAS"
@@ -176,8 +177,6 @@ const onPeriodSelected = async (monthDate: DateTime) => {
             :total-days="totalDays"
             :selected-period="selectedPeriod"
           />
-        </Transition>
-        <Transition name="fade">
           <BalanceChart
             v-if="paymentsData.length"
             title="PAGAMENTOS"
@@ -186,8 +185,6 @@ const onPeriodSelected = async (monthDate: DateTime) => {
             :total-days="totalDays"
             :selected-period="selectedPeriod"
           />
-        </Transition>
-        <Transition name="fade">
           <BalanceChart
             v-if="outflowsData.length"
             title="SAÍDAS"
@@ -196,7 +193,7 @@ const onPeriodSelected = async (monthDate: DateTime) => {
             :total-days="totalDays"
             :selected-period="selectedPeriod"
           />
-        </Transition>
+        </TransitionGroup>
       </div>
     </IonContent>
   </IonPage>

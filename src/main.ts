@@ -25,6 +25,7 @@ router.isReady().then(async () => {
   const { initDatabase } = useDatabaseStore()
 
   SafeAreaController.injectCSSVariables()
+
   await initDatabase()
 
   if (import.meta.env.DEV) {
