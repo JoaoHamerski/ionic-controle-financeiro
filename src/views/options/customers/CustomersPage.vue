@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { IonContent, onIonViewWillEnter } from '@ionic/vue'
+import { IonButton, IonContent, onIonViewWillEnter } from '@ionic/vue'
 import { ref } from 'vue'
 
 import AppEmptyResult from '@/components/AppEmptyResult.vue'
 import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
+import { presentToast } from '@/support/toast'
 import { Customer } from '@/types/models'
 
 import OptionsPageLayout from '../_partials/OptionsPageLayout.vue'
