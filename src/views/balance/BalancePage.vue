@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, onIonViewDidEnter } from '@ionic/vue'
 import { PhCalendarDots } from '@phosphor-icons/vue'
-import { get, groupBy, range, round, sumBy } from 'lodash'
+import { get, groupBy, range, round, sum, sumBy } from 'lodash'
 import { DateTime } from 'luxon'
 import { ref } from 'vue'
 import { computed } from 'vue'
@@ -9,6 +9,7 @@ import { computed } from 'vue'
 import AppIcon from '@/components/AppIcon.vue'
 import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
+import { formatCurrencyBRL } from '@/support/helpers'
 
 import { PERIODS } from './_partials/balance-periods'
 import BalanceChart from './_partials/BalanceChart.vue'
@@ -39,6 +40,8 @@ const totalDays = computed(() => {
 
   return selectedPeriod.value.daysInMonth!
 })
+
+const profit = computed(() => (sum(paymentsData.value) - sum(outflowsData.value)).toFixed(2))
 
 const fetch = async () => {
   const [startDate, endDate] = getDateInterval()
@@ -147,10 +150,19 @@ const onPeriodSelected = async (monthDate: DateTime) => {
         @period-selected="onPeriodSelected"
         @did-dismiss="isPickerModalOpen = false"
       />
+
       <BalanceMonthButton
         :selected-period="selectedPeriod"
         @click="isPickerModalOpen = true"
       />
+
+      <div
+        class="ion-text-center"
+        style="font-weight: 600; color: var(--ion-color-medium); font-size: 0.85rem"
+      >
+        Receita:
+        {{ formatCurrencyBRL(profit) }}
+      </div>
       <div
         class="ion-margin"
         :style="{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }"

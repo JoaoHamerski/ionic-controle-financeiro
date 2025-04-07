@@ -106,7 +106,7 @@ const chartOptions = computed(() => {
 </script>
 
 <template>
-  <div :style="{ maxHeight: '22dvh' }">
+  <div :style="{ maxHeight: '21dvh' }">
     <div
       class="ion-text-center"
       :style="{ fontWeight: 500, fontSize: '.8rem' }"
@@ -114,6 +114,7 @@ const chartOptions = computed(() => {
       {{ title }} <b :style="{ fontWeight: 800 }">({{ formatCurrencyBRL(total) }})</b>
     </div>
     <Line
+      style="min-width: 100%"
       :data="chartData"
       :options="chartOptions"
     />

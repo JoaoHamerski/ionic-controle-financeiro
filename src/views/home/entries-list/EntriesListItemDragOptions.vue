@@ -33,7 +33,7 @@ const onPayClick = async (entry: any) => {
         size="24"
         :style="{ marginBottom: '.5rem' }"
       />
-      Pagar
+      Pago
     </IonItemOption>
     <IonItemOption
       id="delete-alert"
