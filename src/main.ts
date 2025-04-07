@@ -1,7 +1,9 @@
 import '@/bootstrap/styles'
 import '@/support/datetime'
 import '@/assets/fonts/Inter/inter.css'
+import './plugins'
 
+import { SafeAreaController } from '@aashu-dubey/capacitor-statusbar-safe-area'
 import { autoAnimatePlugin } from '@formkit/auto-animate/vue'
 import { IonicVue } from '@ionic/vue'
 import { createPinia } from 'pinia'
@@ -22,6 +24,7 @@ const app = createApp(App).use(IonicVue).use(router).use(pinia).use(autoAnimateP
 router.isReady().then(async () => {
   const { initDatabase } = useDatabaseStore()
 
+  SafeAreaController.injectCSSVariables()
   await initDatabase()
 
   if (import.meta.env.DEV) {

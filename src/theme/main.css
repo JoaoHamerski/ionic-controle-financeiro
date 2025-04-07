@@ -48,3 +48,7 @@ ion-button {
 ion-fab-button {
 	--ripple-color: transparent;
 }
+
+ion-toolbar {
+  padding-top: var(--safe-area-inset-top) !important;
+}
