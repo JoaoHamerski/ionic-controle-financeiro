@@ -58,7 +58,10 @@ const onConcludeClick = () => {
     :breakpoints="[0, 1]"
   >
     <IonContent>
-      <IonToolbar color="light">
+      <IonToolbar
+        color="light"
+        style="padding-top: 0 !important"
+      >
         <IonButtons slot="start">
           <IonButton @click="onCancelClick">Cancelar</IonButton>
         </IonButtons>
