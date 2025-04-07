@@ -19,6 +19,7 @@ export type Entry = {
   quantity: number
   total: number
   paid_at: string | null
+  note: string | null
   date: string
   created_at: string
 }

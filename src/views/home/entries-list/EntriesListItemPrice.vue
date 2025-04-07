@@ -14,7 +14,13 @@ const isInflow = computed(() => props.total > 0)
 </script>
 
 <template>
-  <h2 class="currency">
+  <h2
+    v-tippy="{
+      content: isInflow ? (paidAt ? 'Pago' : 'Pagamento pendente') : '',
+      placement: 'right',
+    }"
+    class="currency"
+  >
     <span
       :style="{
         color: isInflow ? 'var(--ion-color-success-shade)' : 'var(--ion-color-danger-shade)',
@@ -38,7 +44,7 @@ const isInflow = computed(() => props.total > 0)
 
 <style scoped>
 .currency {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.25rem;
   font-weight: 600;

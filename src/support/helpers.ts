@@ -37,3 +37,11 @@ export const decodeBase64 = (base64: string) => {
 
   return new TextDecoder('utf-8').decode(bytes)
 }
+
+export const limit = (str: string, limit: number) => {
+  if (str.length < limit) {
+    return str
+  }
+
+  return str.substring(0, limit).trim() + '...'
+}

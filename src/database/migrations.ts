@@ -21,6 +21,7 @@ export default [
         quantity MEDIUM INTEGER,
         total DECIMAL(10, 2),
         paid_at DATETIME,
+        note TEXT,
         date DATE DEFAULT CURRENT_DATE,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );`,

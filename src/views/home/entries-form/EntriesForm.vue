@@ -15,8 +15,7 @@ import { maskito as vMaskito } from '@maskito/vue'
 import { PhCheck, PhMinus, PhPlus } from '@phosphor-icons/vue'
 import { helpers, minValue, required } from '@vuelidate/validators'
 import { DateTime } from 'luxon'
-import { ref } from 'vue'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 import AppIcon from '@/components/AppIcon.vue'
 import AppInput from '@/components/AppInput.vue'
@@ -38,6 +37,7 @@ type EntryFormFields = {
   product: Product | null
   is_paid: boolean
   date: string
+  note: string
   type: 'inflow' | 'outflow'
 }
 
@@ -52,6 +52,7 @@ const form = useForm<EntryFormFields, keyof EntryFormFields>({
   customer: null,
   product: null,
   is_paid: false,
+  note: '',
   date: DateTime.now().toISODate(),
 })
 
@@ -137,6 +138,7 @@ const insert = async () => {
     product_id: form.data.product!.id,
     value,
     quantity,
+    note: form.data.note || null,
     paid_at: form.data.is_paid ? DateTime.now().toISODate() : null,
     date: form.data.date,
     total: form.data.type === 'inflow' ? total : -total,
@@ -281,6 +283,15 @@ const insert = async () => {
               :error="form.errors.date"
               label="Data"
               type="date"
+            />
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol>
+            <AppInput
+              v-model="form.data.note"
+              label="Anotação (opcional)"
+              placeholder="Digite uma anotação..."
             />
           </IonCol>
         </IonRow>

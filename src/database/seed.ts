@@ -91,6 +91,7 @@ const seedEntries = async (knex: Knex) => {
       product_id: faker.helpers.arrayElement(products || []),
       value,
       quantity,
+      note: faker.datatype.boolean({ probability: 0.4 }) ? faker.lorem.sentence() : null,
       total: isInflow ? total : -total,
       paid_at: faker.datatype.boolean({ probability: 0.7 }) ? paid_at.toISOString() : null,
       date: created_at.toISOString().split('T')[0],

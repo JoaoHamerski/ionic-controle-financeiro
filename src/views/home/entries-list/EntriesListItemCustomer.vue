@@ -10,7 +10,7 @@ defineProps<{
 </script>
 
 <template>
-  <div :style="{ fontSize: '.8rem', color: 'var(--ion-color-medium)' }">
+  <div>
     <AppIcon
       :icon="PhUser"
       weight="fill"
