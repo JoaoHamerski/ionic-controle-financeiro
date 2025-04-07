@@ -4,6 +4,7 @@ import { PhArrowLeft } from '@phosphor-icons/vue'
 import { ref } from 'vue'
 
 import AppIcon from '@/components/AppIcon.vue'
+import { presentToast } from '@/support/toast'
 
 import EntriesForm from './EntriesForm.vue'
 
@@ -14,6 +15,7 @@ const onFormSubmit = () => {
   modal.value.$el.dismiss()
 
   emit('submit')
+  presentToast({ message: 'Entrada registrada', color: 'success' })
 }
 </script>
 
