@@ -23,7 +23,7 @@ onIonViewWillEnter(async () => {
 
 const fetch = async () => {
   const builder = knex
-    .select('*')
+    .select(['products.*'])
     .sum('entries.value AS total_sold')
     .from('products')
     .join('entries', 'products.id', 'entries.product_id')

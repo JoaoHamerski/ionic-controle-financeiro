@@ -6,14 +6,15 @@ import AppInput from '@/components/AppInput.vue'
 import { useForm } from '@/composables/use-form'
 import { dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
-import { Product } from '@/types/models'
+
+import { ProductRecord } from '../ProductsPage.vue'
 
 const { knex } = useDatabaseStore()
 
 const emit = defineEmits(['submit'])
 
 const props = defineProps<{
-  product?: Product
+  product?: ProductRecord
 }>()
 
 const form = useForm(

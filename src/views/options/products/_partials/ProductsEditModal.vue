@@ -2,14 +2,13 @@
 import { IonButton, IonModal } from '@ionic/vue'
 import { useTemplateRef } from 'vue'
 
-import { Product } from '@/types/models'
-
+import { ProductRecord } from '../ProductsPage.vue'
 import ProductForm from './ProductsForm.vue'
 
 const emit = defineEmits(['submit'])
 
 defineProps<{
-  product?: Product
+  product?: ProductRecord
 }>()
 
 const modal = useTemplateRef('modal')

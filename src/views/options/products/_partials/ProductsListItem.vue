@@ -17,6 +17,7 @@ defineProps<{
 <template>
   <IonItem>
     <IonLabel>
+      {{ product.id }}
       <div>{{ product.name }}</div>
       <div
         v-if="product.total_sold"

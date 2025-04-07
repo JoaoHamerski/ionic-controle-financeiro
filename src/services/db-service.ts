@@ -8,6 +8,7 @@ export const dbStatement = async (builder: Knex.QueryBuilder) => {
 
   const result = await database.run(native.sql, native.bindings as any[])
 
+  console.log(result)
   if (result.changes?.changes === 1 && result.changes?.lastId) {
     // @ts-expect-error The "_single" attribute doesn't exist
     return await dbSelectById(builder._single.table, result.changes.lastId)

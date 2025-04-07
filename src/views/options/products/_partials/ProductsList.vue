@@ -12,26 +12,28 @@ defineProps<{
   products: ProductRecord[]
 }>()
 
-const editProductModal = ref<{
+type EditProductModal = {
   isOpen: boolean
   product?: ProductRecord
-}>({
+}
+
+const editProductModal = ref<EditProductModal>({
   isOpen: false,
   product: undefined,
 })
 
 const onEdit = ({ product }: { product: ProductRecord }) => {
-  editProductModal.value = {
+  Object.assign(editProductModal.value, {
     isOpen: true,
     product,
-  }
+  })
 }
 
 const resetModal = () => {
-  editProductModal.value = {
+  Object.assign(editProductModal.value, {
     isOpen: false,
     product: undefined,
-  }
+  })
 }
 </script>
 
