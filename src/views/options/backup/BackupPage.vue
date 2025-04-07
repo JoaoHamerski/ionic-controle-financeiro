@@ -6,6 +6,7 @@ import { ref } from 'vue'
 
 import { useBackup } from '@/composables/use-backup'
 import { useDatabaseStore } from '@/stores/database-store'
+import { presentToast } from '@/support/toast'
 
 import OptionsInfoHeader from '../_partials/OptionsInfoHeader.vue'
 import OptionsPageLayout from '../_partials/OptionsPageLayout.vue'
@@ -70,6 +71,7 @@ const onBackupSubmit = async ({ filename }: { filename: string }) => {
 
   await saveBackupFile(filename)
   await fetchBackupInfo()
+  presentToast({ message: 'Arquivo de backup salvo', color: 'success' })
 }
 
 const onRecover = async () => {

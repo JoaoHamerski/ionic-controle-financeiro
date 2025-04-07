@@ -2,6 +2,8 @@
 import { IonButton, IonModal } from '@ionic/vue'
 import { useTemplateRef } from 'vue'
 
+import { presentToast } from '@/support/toast'
+
 import { ProductRecord } from '../ProductsPage.vue'
 import ProductForm from './ProductsForm.vue'
 
@@ -20,6 +22,7 @@ const closeModal = () => {
 const onFormSubmit = () => {
   closeModal()
   emit('submit')
+  presentToast({ message: 'Produto atualizado', color: 'success' })
 }
 </script>
 
