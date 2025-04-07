@@ -39,7 +39,7 @@ const modal = useTemplateRef('modal')
     <IonContent class="ion-padding">
       <CustomerForm
         :customer="customer"
-        @submitted="$emit('submit')"
+        @submit="$emit('submit')"
       />
     </IonContent>
   </IonModal>

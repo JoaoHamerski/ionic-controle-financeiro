@@ -32,7 +32,7 @@ const resetModal = () => {
   }
 }
 
-const onSubmitted = () => {
+const onSubmit = () => {
   resetModal()
   emit('submit')
 }
@@ -51,7 +51,7 @@ const onSubmitted = () => {
       :is-open="editCustomerModal.isOpen"
       :customer="editCustomerModal.customer"
       @did-dismiss="resetModal"
-      @submitted="onSubmitted"
+      @submit="onSubmit"
     />
   </IonList>
 </template>

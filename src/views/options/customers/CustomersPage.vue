@@ -29,9 +29,7 @@ const fetch = async () => {
     .orderByRaw('name COLLATE NOCASE ASC')
     .groupBy('customers.id')
 
-  console.log(builder.toSQL().toNative().sql)
   customers.value = await dbSelect(builder)
-  console.log(customers.value)
 }
 </script>
 
@@ -41,7 +39,7 @@ const fetch = async () => {
       <CustomersList
         v-if="customers.length"
         :customers="customers"
-        @submitted="fetch"
+        @submit="fetch"
       />
       <AppEmptyResult v-else />
     </IonContent>
