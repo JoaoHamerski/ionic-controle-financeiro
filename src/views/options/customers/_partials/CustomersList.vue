@@ -2,6 +2,8 @@
 import { IonList } from '@ionic/vue'
 import { ref } from 'vue'
 
+import { presentToast } from '@/support/toast'
+
 import { CustomerRecord } from '../CustomersPage.vue'
 import CustomersEditModal from './CustomersEditModal.vue'
 import CustomersListItem from './CustomersListItem.vue'
@@ -32,8 +34,15 @@ const resetModal = () => {
   }
 }
 
-const onSubmit = () => {
+const onSubmit = (payload: { isEdit: boolean }) => {
   resetModal()
+  console.log(payload)
+  if (payload.isEdit) {
+    presentToast({ message: 'Cliente atualizado ', color: 'success' })
+  } else {
+    presentToast({ message: 'Cliente cadastrado', color: 'success' })
+  }
+
   emit('submit')
 }
 </script>

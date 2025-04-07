@@ -6,6 +6,7 @@ import { PhCheck, PhUserCircle } from '@phosphor-icons/vue'
 import { helpers, minLength, required } from '@vuelidate/validators'
 import { computed } from 'vue'
 import { onMounted } from 'vue'
+import { ref } from 'vue'
 
 import AppIcon from '@/components/AppIcon.vue'
 import AppInput from '@/components/AppInput.vue'
@@ -27,6 +28,7 @@ const props = defineProps<{
 }>()
 
 const { knex } = useDatabaseStore()
+const isLoading = ref(false)
 
 onMounted(() => {
   if (props.customer) {
@@ -48,7 +50,6 @@ const form = useForm(
 )
 
 const isEdit = computed(() => !!props.customer)
-
 const phoneRaw = computed(() => stripNonDigits(form.data.phone))
 const phoneDynamicMask = computed<MaskitoOptions>(() => phoneMask(phoneRaw.value))
 
@@ -67,6 +68,8 @@ const submit = async () => {
     return
   }
 
+  isLoading.value = true
+
   const { name, phone } = form.data
 
   if (!isEdit.value) {
@@ -75,7 +78,9 @@ const submit = async () => {
     await update({ name, phone })
   }
 
-  emit('submit')
+  isLoading.value = false
+
+  emit('submit', { isEdit: isEdit.value })
 }
 
 const create = async ({ name, phone }: FormRecordData) => {
@@ -143,6 +148,7 @@ const update = async ({ name, phone }: FormRecordData) => {
       >
         <IonFabButton
           type="submit"
+          :disabled="isLoading"
           @click="submit"
         >
           <AppIcon
