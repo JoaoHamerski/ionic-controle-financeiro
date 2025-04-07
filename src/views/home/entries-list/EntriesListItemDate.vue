@@ -19,6 +19,7 @@ const now = computed(() => DateTime.now())
     <AppIcon
       :icon="PhCalendarDots"
       weight="fill"
+      style="margin-right: 0.25rem"
     />
     <template v-if="now.hasSame(date, 'day')"> Hoje </template>
     <template v-else-if="now.minus({ day: 1 }).hasSame(date, 'day')">Ontem</template>

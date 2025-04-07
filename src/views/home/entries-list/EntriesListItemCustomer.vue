@@ -12,6 +12,7 @@ defineProps<{
 <template>
   <div>
     <AppIcon
+      style="margin-right: 0.25rem"
       :icon="PhUser"
       weight="fill"
     />

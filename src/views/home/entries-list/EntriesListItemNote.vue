@@ -12,6 +12,7 @@ defineProps<{
 <template>
   <div v-tippy="{ content: note.length > 25 ? note : '' }">
     <AppIcon
+      style="margin-right: 0.25rem"
       :icon="PhNote"
       weight="fill"
     />

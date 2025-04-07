@@ -9,14 +9,7 @@ defineProps<{
 </script>
 
 <template>
-  <div
-    :style="{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'end',
-      gap: '.2rem',
-    }"
-  >
+  <div style="display: flex; flex-direction: column; text-align: right">
     <h2
       :style="{
         fontSize: '.9rem',
@@ -27,7 +20,7 @@ defineProps<{
     </h2>
     <span
       v-if="entry.entry_quantity > 1"
-      :style="{ fontSize: '.7rem', color: 'var(--ion-color-medium)' }"
+      style="font-size: 0.7rem; color: var(--ion-color-medium)"
     >
       ({{ entry.entry_quantity }} x {{ formatCurrencyBRL(entry.entry_value) }})
     </span>

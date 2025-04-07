@@ -16,13 +16,13 @@ defineProps<{
 <template>
   <IonItem>
     <IonLabel>
-      <div :style="{ display: 'flex', justifyContent: 'space-between' }">
+      <div style="display: flex; justify-content: space-between">
         <div style="width: 60%">
           <EntriesListItemPrice
             :total="entry.entry_total"
             :paid-at="entry.entry_paid_at"
           />
-          <div class="entries-list">
+          <div class="entry-details-list">
             <EntriesListItemCustomer
               v-if="entry.entry_total > 0"
               :customer-name="entry.customer_name"
@@ -41,17 +41,16 @@ defineProps<{
 </template>
 
 <style scoped>
-.entries-list {
+.entry-details-list {
   display: flex;
   flex-direction: column;
-  gap: 0.1rem;
   font-size: 0.8rem;
   color: var(--ion-color-medium);
 }
 
-.entries-list div {
+.entry-details-list div {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  margin-bottom: 0.25rem;
 }
 </style>
