@@ -22,6 +22,7 @@ const isInflow = computed(() => props.total > 0)
     class="currency"
   >
     <span
+      style="margin-right: 0.25rem"
       :style="{
         color: isInflow ? 'var(--ion-color-success-shade)' : 'var(--ion-color-danger-shade)',
       }"
