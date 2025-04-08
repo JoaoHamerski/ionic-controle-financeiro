@@ -18,8 +18,14 @@ export type Entry = {
   value: number
   quantity: number
   total: number
-  paid_at: string | null
   note: string | null
   date: string
+  created_at: string
+}
+
+export type Payment = {
+  id: number
+  entry_id: number
+  value: number
   created_at: string
 }

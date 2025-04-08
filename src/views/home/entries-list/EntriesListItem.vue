@@ -1,16 +1,20 @@
 <script setup lang="ts">
 import { IonItem, IonLabel } from '@ionic/vue'
+import { provide } from 'vue'
 
-import { EntryRecordHome } from '../HomePage.vue'
+import { EntryRecordHome } from '../types'
 import EntriesListItemCustomer from './EntriesListItemCustomer.vue'
 import EntriesListItemDate from './EntriesListItemDate.vue'
 import EntriesListItemNote from './EntriesListItemNote.vue'
 import EntriesListItemPrice from './EntriesListItemPrice.vue'
 import EntriesListItemProduct from './EntriesListItemProduct.vue'
+import { entryInjectionKey } from './injection-key'
 
-defineProps<{
+const props = defineProps<{
   entry: EntryRecordHome
 }>()
+
+provide(entryInjectionKey, props.entry)
 </script>
 
 <template>
@@ -18,23 +22,14 @@ defineProps<{
     <IonLabel>
       <div style="display: flex; justify-content: space-between">
         <div style="width: 60%">
-          <EntriesListItemPrice
-            :total="entry.entry_total"
-            :paid-at="entry.entry_paid_at"
-          />
+          <EntriesListItemPrice />
           <div class="entry-details-list">
-            <EntriesListItemCustomer
-              v-if="entry.entry_total > 0"
-              :customer-name="entry.customer_name"
-            />
-            <EntriesListItemDate :date="entry.entry_date" />
-            <EntriesListItemNote
-              v-if="entry.entry_note"
-              :note="entry.entry_note"
-            />
+            <EntriesListItemCustomer v-if="entry.entry_total > 0" />
+            <EntriesListItemDate />
+            <EntriesListItemNote v-if="entry.entry_note" />
           </div>
         </div>
-        <EntriesListItemProduct :entry="entry" />
+        <EntriesListItemProduct />
       </div>
     </IonLabel>
   </IonItem>

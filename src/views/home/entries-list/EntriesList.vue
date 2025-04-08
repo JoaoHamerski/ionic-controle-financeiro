@@ -8,7 +8,7 @@ import { dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { formatCurrencyBRL, titleCase } from '@/support/helpers'
 
-import { EntryRecordHome } from '../HomePage.vue'
+import { EntryRecordHome } from '../types'
 import EntriesListAfter from './EntriesListAfter.vue'
 import EntriesListItem from './EntriesListItem.vue'
 import EntriesListItemDragOptions from './EntriesListItemDragOptions.vue'
@@ -16,7 +16,7 @@ import EntriesListItemDragOptions from './EntriesListItemDragOptions.vue'
 const emit = defineEmits(['refetch', 'load-more', 'deleted'])
 
 defineProps<{
-  entries: any[]
+  entries: EntryRecordHome[]
   totalRecords: number
 }>()
 

@@ -20,11 +20,16 @@ export default [
         value DECIMAL(10, 2),
         quantity MEDIUM INTEGER,
         total DECIMAL(10, 2),
-        paid_at DATETIME,
         note TEXT,
         date DATE DEFAULT CURRENT_DATE,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );`,
+      `CREATE TABLE IF NOT EXISTS payments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        entry_id INTEGER,
+        value DECIMAL(10, 2),
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );`,
     ],
   },
 ]

@@ -81,7 +81,7 @@ const onRecover = async () => {
     await importBackupFromFile(file)
     await initDatabase()
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 
   await fetchBackupInfo()

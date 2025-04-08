@@ -2,15 +2,16 @@
 import { PhCalendarDots } from '@phosphor-icons/vue'
 import { upperFirst } from 'lodash'
 import { DateTime } from 'luxon'
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 
 import AppIcon from '@/components/AppIcon.vue'
 
-const props = defineProps<{
-  date: string
-}>()
+import { EntryRecordHome } from '../types'
+import { entryInjectionKey } from './injection-key'
 
-const date = computed(() => DateTime.fromISO(props.date, { locale: 'pt-BR' }))
+const entry = inject(entryInjectionKey) as EntryRecordHome
+
+const date = computed(() => DateTime.fromISO(entry.entry_date, { locale: 'pt-BR' }))
 const now = computed(() => DateTime.now())
 </script>
 

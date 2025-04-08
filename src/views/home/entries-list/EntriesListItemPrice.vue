@@ -1,22 +1,24 @@
 <script setup lang="ts">
 import { PhCheckCircle, PhClock } from '@phosphor-icons/vue'
 import { computed } from 'vue'
+import { inject } from 'vue'
 
 import AppIcon from '@/components/AppIcon.vue'
 import { formatCurrencyBRL } from '@/support/helpers'
 
-const props = defineProps<{
-  total: number
-  paidAt: string | null
-}>()
+import { EntryRecordHome } from '../types'
+import { entryInjectionKey } from './injection-key'
 
-const isInflow = computed(() => props.total > 0)
+const entry = inject(entryInjectionKey) as EntryRecordHome
+
+const isInflow = computed(() => entry.entry_total > 0)
+const isPaid = computed(() => entry.entry_total >= entry.total_paid)
 </script>
 
 <template>
   <h2
     v-tippy="{
-      content: isInflow ? (paidAt ? 'Pago' : 'Pagamento pendente') : '',
+      content: isInflow ? (isPaid ? 'Pago' : 'Pagamento pendente') : '',
       placement: 'right',
     }"
     class="currency"
@@ -27,16 +29,16 @@ const isInflow = computed(() => props.total > 0)
         color: isInflow ? 'var(--ion-color-success-shade)' : 'var(--ion-color-danger-shade)',
       }"
     >
-      {{ formatCurrencyBRL(total) }}
+      {{ formatCurrencyBRL(entry.entry_total) }}
     </span>
 
     <Transition name="fade">
       <AppIcon
         v-if="isInflow"
-        :icon="paidAt ? PhCheckCircle : PhClock"
+        :icon="isPaid ? PhCheckCircle : PhClock"
         weight="duotone"
         :style="{
-          color: paidAt ? 'var(--ion-color-success-shade)' : 'var(--ion-color-medium)',
+          color: isPaid ? 'var(--ion-color-success-shade)' : 'var(--ion-color-medium)',
         }"
       />
     </Transition>

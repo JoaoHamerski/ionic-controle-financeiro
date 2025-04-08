@@ -36,7 +36,7 @@ const resetModal = () => {
 
 const onSubmit = (payload: { isEdit: boolean }) => {
   resetModal()
-  console.log(payload)
+
   if (payload.isEdit) {
     presentToast({ message: 'Cliente atualizado ', color: 'success' })
   } else {

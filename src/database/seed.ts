@@ -6,7 +6,7 @@ import { DateTime } from 'luxon'
 import { dbSelect, dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 
-import { Customer, Entry } from '../types/models'
+import { Customer, Entry, Payment } from '../types/models'
 
 export const seedDatabase = async () => {
   const { database, knex } = useDatabaseStore()
@@ -15,6 +15,7 @@ export const seedDatabase = async () => {
   await seedCustomers(knex)
   await seedProducts(knex)
   await seedEntries(knex)
+  await seedPayments(knex)
 }
 
 const truncateAllTables = async (database: SQLiteDBConnection) => {
@@ -80,11 +81,6 @@ const seedEntries = async (knex: Knex) => {
       to: now.toISODate(),
     })
 
-    const paid_at = faker.date.between({
-      from: created_at.toISOString(),
-      to: now.toISODate(),
-    })
-
     data.push({
       id: i,
       customer_id: isInflow ? faker.helpers.arrayElement(customers || []) : null,
@@ -93,11 +89,37 @@ const seedEntries = async (knex: Knex) => {
       quantity,
       note: faker.datatype.boolean({ probability: 0.4 }) ? faker.lorem.sentence() : null,
       total: isInflow ? total : -total,
-      paid_at: faker.datatype.boolean({ probability: 0.7 }) ? paid_at.toISOString() : null,
       date: created_at.toISOString().split('T')[0],
       created_at: created_at.toISOString(),
     })
   }
 
   await dbStatement(knex.insert(data).into('entries'))
+}
+
+const seedPayments = async (knex: Knex) => {
+  const entries = await dbSelect(
+    knex.select(['id', 'total']).from('entries').where('total', '>', 0),
+  )
+
+  const payments: Payment[] = []
+  const now = DateTime.now()
+  let id = 1
+
+  entries.forEach((entry) => {
+    const paymentsQuantity = faker.number.int({ min: 1, max: 3 })
+
+    for (let i = 0; i < paymentsQuantity; i++) {
+      const value = +(entry.total / paymentsQuantity).toFixed(2)
+
+      payments.push({
+        id: id++,
+        value,
+        entry_id: entry.id,
+        created_at: now.toISODate(),
+      })
+    }
+  })
+
+  await dbStatement(knex.insert(payments).into('payments'))
 }

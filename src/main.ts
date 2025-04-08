@@ -1,7 +1,6 @@
 import '@/bootstrap/styles'
 import '@/support/datetime'
 import '@/assets/fonts/Inter/inter.css'
-import './plugins'
 import 'tippy.js/dist/tippy.css'
 
 import { SafeAreaController } from '@aashu-dubey/capacitor-statusbar-safe-area'

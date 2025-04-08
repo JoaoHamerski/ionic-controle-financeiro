@@ -7,19 +7,14 @@ import AppEmptyResult from '@/components/AppEmptyResult.vue'
 import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { prefixColumns } from '@/support/helpers'
-import type { Prefix } from '@/types/helpers'
-import type { Customer, Entry, Product } from '@/types/models'
 
 import HomeFabButton from './_partials/HomeFabButton.vue'
 import HomeSegments from './_partials/HomeSegments.vue'
 import EntriesCreateModal from './entries-form/EntriesCreateModal.vue'
 import EntriesList from './entries-list/EntriesList.vue'
+import { EntryRecordHome } from './types'
 
 type Segment = 'all' | 'inflows' | 'outflows'
-
-export type EntryRecordHome = { id: string } & Prefix<Customer, 'customer'> &
-  Prefix<Product, 'product'> &
-  Prefix<Entry, 'entry'>
 
 const { knex } = useDatabaseStore()
 
@@ -45,17 +40,20 @@ const fetch = async (reset: boolean = false) => {
   const builder = knex
     .select([
       'entries.id as id',
-      ...(await prefixColumns('*', 'customers', 'customer')),
-      ...(await prefixColumns('*', 'products', 'product')),
+      ...(await prefixColumns(['id', 'name'], 'customers', 'customer')),
+      ...(await prefixColumns(['id', 'name'], 'products', 'product')),
       ...(await prefixColumns('*', 'entries', 'entry')),
     ])
+    .sum('payments.value AS total_paid')
     .from('entries')
     .leftJoin('customers', 'entries.customer_id', '=', 'customers.id')
     .join('products', 'entries.product_id', '=', 'products.id')
+    .join('payments', 'entries.id', '=', 'payments.entry_id')
     .orderBy('entries.date', 'desc')
     .orderBy('entries.created_at', 'desc')
     .limit(20)
     .offset(!reset ? entries.value.length : 0)
+    .groupBy('entries.id')
 
   if (segment.value !== 'all') {
     const operator = segment.value === 'inflows' ? '>' : '<'
@@ -68,6 +66,7 @@ const fetch = async (reset: boolean = false) => {
     totalRecords.value = await calculateTotalRecords(builder)
 
     isFetched.value = true
+    console.log(entries.value)
     return
   }
 
@@ -95,7 +94,7 @@ const calculateTotalRecords = async (builder: Knex.QueryBuilder) => {
       </IonToolbar>
     </IonHeader>
 
-    <IonContent :style="{ backgroundColor: 'white', height: '100%' }">
+    <IonContent>
       <Transition
         name="fade"
         mode="out-in"

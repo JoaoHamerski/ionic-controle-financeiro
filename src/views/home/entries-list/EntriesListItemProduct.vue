@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import { inject } from 'vue'
+
 import { formatCurrencyBRL } from '@/support/helpers'
 
-import { EntryRecordHome } from '../HomePage.vue'
+import { EntryRecordHome } from '../types'
+import { entryInjectionKey } from './injection-key'
 
-defineProps<{
-  entry: EntryRecordHome
-}>()
+const entry = inject(entryInjectionKey) as EntryRecordHome
 </script>
 
 <template>
