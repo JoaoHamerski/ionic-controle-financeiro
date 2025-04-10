@@ -4,10 +4,12 @@ import { PhCheckCircle, PhTrash } from '@phosphor-icons/vue'
 
 import AppIcon from '@/components/AppIcon.vue'
 
+import { EntryRecordHome } from '../types'
+
 const emit = defineEmits(['pay', 'delete'])
 
 defineProps<{
-  entry: any
+  entry: EntryRecordHome
 }>()
 
 const onDeleteClick = (entry: any) => {
@@ -22,7 +24,7 @@ const onPayClick = async (entry: any) => {
 <template>
   <IonItemOptions side="end">
     <IonItemOption
-      v-if="entry.entry_total > 0 && !entry.entry_paid_at"
+      v-if="entry.total_paid && entry.total_paid < entry.entry_total"
       color="success"
       @click="onPayClick(entry)"
     >
@@ -33,7 +35,7 @@ const onPayClick = async (entry: any) => {
         size="24"
         :style="{ marginBottom: '.5rem' }"
       />
-      Pago
+      Pagar
     </IonItemOption>
     <IonItemOption
       id="delete-alert"
