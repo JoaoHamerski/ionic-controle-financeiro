@@ -64,7 +64,6 @@ const seedProducts = async (knex: Knex) => {
 
 const seedEntries = async (knex: Knex) => {
   const QUANTITY = faker.number.int({ min: 100, max: 200 })
-
   const customers = (await dbSelect(knex.select('id').from('customers')))?.map(({ id }) => id)
   const products = (await dbSelect(knex.select('id').from('products')))?.map(({ id }) => id)
   const data: Entry[] = []
@@ -108,9 +107,14 @@ const seedPayments = async (knex: Knex) => {
 
   entries.forEach((entry) => {
     const paymentsQuantity = faker.number.int({ min: 1, max: 3 })
+    const isFullyPaid = faker.datatype.boolean({ probability: 0.5 })
 
     for (let i = 0; i < paymentsQuantity; i++) {
       const value = +(entry.total / paymentsQuantity).toFixed(2)
+
+      if (!isFullyPaid && i == 0) {
+        continue
+      }
 
       payments.push({
         id: id++,

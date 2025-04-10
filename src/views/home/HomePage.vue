@@ -37,45 +37,50 @@ const onSegmentChange = async (selectedSegment: Segment) => {
 }
 
 const fetch = async (reset: boolean = false) => {
+  const COLUMNS = [
+    'entries.id as id',
+    ...(await prefixColumns(['id', 'name'], 'customers', 'customer')),
+    ...(await prefixColumns(['id', 'name'], 'products', 'product')),
+    ...(await prefixColumns('*', 'entries', 'entry')),
+  ]
+
   const builder = knex
-    .select([
-      'entries.id as id',
-      ...(await prefixColumns(['id', 'name'], 'customers', 'customer')),
-      ...(await prefixColumns(['id', 'name'], 'products', 'product')),
-      ...(await prefixColumns('*', 'entries', 'entry')),
-    ])
+    .select(COLUMNS)
     .sum('payments.value AS total_paid')
     .from('entries')
     .leftJoin('customers', 'entries.customer_id', '=', 'customers.id')
-    .join('products', 'entries.product_id', '=', 'products.id')
-    .join('payments', 'entries.id', '=', 'payments.entry_id')
+    .leftJoin('payments', 'entries.id', '=', 'payments.entry_id')
+    .leftJoin('products', 'entries.product_id', '=', 'products.id')
     .orderBy('entries.date', 'desc')
     .orderBy('entries.created_at', 'desc')
-    .limit(20)
     .offset(!reset ? entries.value.length : 0)
+    .limit(20)
     .groupBy('entries.id')
 
-  if (segment.value !== 'all') {
-    const operator = segment.value === 'inflows' ? '>' : '<'
-
-    builder.where('total', operator, 0)
-  }
-
   if (reset) {
-    entries.value = await dbSelect(builder)
-    totalRecords.value = await calculateTotalRecords(builder)
+    totalRecords.value = await fetchTotalRecords()
+    entries.value = await dbSelect(applyFilter(builder))
 
     isFetched.value = true
-    console.log(entries.value)
+
     return
   }
 
   entries.value.push(...(await dbSelect(builder)))
 }
 
-const calculateTotalRecords = async (builder: Knex.QueryBuilder) => {
-  builder.count('* as total')
+const applyFilter = (builder: Knex.QueryBuilder) => {
+  if (segment.value !== 'all') {
+    const operator = segment.value === 'inflows' ? '>' : '<'
 
+    builder.where('entries.total', operator, 0)
+  }
+
+  return builder
+}
+
+const fetchTotalRecords = async () => {
+  const builder = applyFilter(knex.count('* as total').from('entries'))
   const data = await dbSelect(builder)
 
   if (data.length) {
