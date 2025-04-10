@@ -6,8 +6,8 @@ import { inject } from 'vue'
 import AppIcon from '@/components/AppIcon.vue'
 import { formatCurrencyBRL } from '@/support/helpers'
 
-import { EntryRecordHome } from '../types'
 import { entryInjectionKey } from '../injection-key'
+import { EntryRecordHome } from '../types'
 
 const entry = inject(entryInjectionKey) as EntryRecordHome
 
@@ -36,6 +36,7 @@ const isPaid = computed(() => entry.total_paid && entry.total_paid >= entry.entr
         }"
       />
     </Transition>
+    {{ entry.total_paid }}
   </h2>
 </template>
 

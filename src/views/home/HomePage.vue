@@ -42,11 +42,11 @@ const fetch = async (reset: boolean = false) => {
     ...(await prefixColumns(['id', 'name'], 'customers', 'customer')),
     ...(await prefixColumns(['id', 'name'], 'products', 'product')),
     ...(await prefixColumns('*', 'entries', 'entry')),
+    knex.raw('ROUND(SUM(payments.value)) AS total_paid'),
   ]
 
   const builder = knex
     .select(COLUMNS)
-    .sum('payments.value AS total_paid')
     .from('entries')
     .leftJoin('customers', 'entries.customer_id', '=', 'customers.id')
     .leftJoin('payments', 'entries.id', '=', 'payments.entry_id')

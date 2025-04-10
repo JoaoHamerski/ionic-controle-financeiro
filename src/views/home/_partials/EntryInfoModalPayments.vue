@@ -19,7 +19,7 @@ defineProps<{
 const entry = inject(entryInjectionKey) as EntryRecordHome
 
 const remaining = computed(() =>
-  entry.total_paid ? (entry.entry_total - entry.total_paid).toFixed(2) : 0,
+  entry.total_paid ? parseFloat((entry.entry_total - entry.total_paid).toFixed(2)) : 0,
 )
 </script>
 
@@ -32,9 +32,12 @@ const remaining = computed(() =>
         weight="fill"
       />
       <span>Pagamentos</span> &nbsp;
-      <span class="text-sm text-[var(--ion-color-medium)]"
-        >({{ formatCurrencyBRL(remaining) }} restante)</span
-      >
+      <span class="text-sm text-[var(--ion-color-medium)]">
+        <template v-if="remaining > 0">
+          ({{ formatCurrencyBRL(Math.abs(remaining)) }} restante)
+        </template>
+        <template v-else>(Pago)</template>
+      </span>
     </h5>
     <IonList>
       <IonItem

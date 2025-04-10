@@ -1,6 +1,7 @@
 import { SQLiteDBConnection } from '@capacitor-community/sqlite'
 import { fakerPT_BR as faker } from '@faker-js/faker'
 import { Knex } from 'knex'
+import { chunk, sum } from 'lodash'
 import { DateTime } from 'luxon'
 
 import { dbSelect, dbStatement } from '@/services/db-service'
@@ -97,8 +98,8 @@ const seedEntries = async (knex: Knex) => {
 }
 
 const seedPayments = async (knex: Knex) => {
-  const entries = await dbSelect(
-    knex.select(['id', 'total']).from('entries').where('total', '>', 0),
+  const entries: Pick<Entry, 'id' | 'total' | 'quantity'>[] = await dbSelect(
+    knex.select(['id', 'total', 'quantity']).from('entries').where('total', '>', 0),
   )
 
   const payments: Payment[] = []
@@ -106,24 +107,38 @@ const seedPayments = async (knex: Knex) => {
   let id = 1
 
   entries.forEach((entry) => {
-    const paymentsQuantity = faker.number.int({ min: 1, max: 3 })
-    const isFullyPaid = faker.datatype.boolean({ probability: 0.5 })
+    // const paymentsQuantity = faker.number.int({ min: 2, max: 4 })
+    // const isFullyPaid = faker.datatype.boolean({ probability: 0.5 })
+    const values: number[] = []
+    let rest = entry.total
 
-    for (let i = 0; i < paymentsQuantity; i++) {
-      const value = +(entry.total / paymentsQuantity).toFixed(2)
-
-      if (!isFullyPaid && i == 0) {
-        continue
-      }
-
-      payments.push({
-        id: id++,
-        value,
-        entry_id: entry.id,
-        created_at: now.toISO(),
+    while (rest > 0) {
+      const value = faker.number.float({
+        min: parseFloat((entry.total / 8).toFixed(2)),
+        max: parseFloat((entry.total / 4).toFixed(2)),
+        fractionDigits: 2,
       })
+
+      rest -= value
+
+      if (rest < 0) {
+        values.push(parseFloat((entry.total - sum(values)).toFixed(2)))
+      } else {
+        values.push(value)
+      }
     }
+
+    payments.push(
+      ...values.map<Payment>((value) => ({
+        id: id++,
+        entry_id: entry.id,
+        value,
+        created_at: now.toISO(),
+      })),
+    )
   })
 
-  await dbStatement(knex.insert(payments).into('payments'))
+  for (const _payments of chunk(payments, 100)) {
+    await dbStatement(knex.insert(_payments).into('payments'))
+  }
 }
