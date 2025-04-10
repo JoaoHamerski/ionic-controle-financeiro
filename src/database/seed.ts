@@ -106,8 +106,13 @@ const seedPayments = async (knex: Knex) => {
   let id = 1
 
   entries.forEach((entry) => {
-    const values = generateDistributedValues(entry.total)
+    const isPaid = faker.datatype.boolean({ probability: 0.6 })
     const date = DateTime.fromISO(entry.created_at)
+    let values = generateDistributedValues(entry.total)
+
+    if (!isPaid) {
+      values = values.slice(0, faker.number.int({ min: 1, max: values.length }))
+    }
 
     payments.push(
       ...values.map<Payment>((value) => ({

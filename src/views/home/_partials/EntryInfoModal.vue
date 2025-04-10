@@ -1,12 +1,6 @@
 <script setup lang="ts">
-import { IonModal, IonSpinner } from '@ionic/vue'
-import { ref } from 'vue'
-import { computed } from 'vue'
-import { provide } from 'vue'
-
-import { dbSelect } from '@/services/db-service'
-import { useDatabaseStore } from '@/stores/database-store'
-import { Payment } from '@/types/models'
+import { IonModal } from '@ionic/vue'
+import { computed, provide } from 'vue'
 
 import { entryInjectionKey, isInflowInjectionKey } from '../injection-key'
 import { EntryRecordHome } from '../types'
@@ -19,65 +13,28 @@ const props = defineProps<{
   entry: EntryRecordHome
 }>()
 
-const { knex } = useDatabaseStore()
-
-const payments = ref<Payment[]>([])
-const isFetched = ref(false)
-
 const isInflow = computed(() => props.entry.entry_total > 0)
-
-const fetchPayments = async () => {
-  const builder = knex
-    .select('*')
-    .from('payments')
-    .where('entry_id', '=', props.entry.id)
-    .orderBy('created_at', 'desc')
-
-  payments.value = await dbSelect(builder)
-  isFetched.value = true
-}
-
-const onModalWillPresent = async () => {
-  await fetchPayments()
-
-  isFetched.value = true
-}
 
 provide(entryInjectionKey, props.entry)
 provide(isInflowInjectionKey, isInflow.value)
 </script>
 
 <template>
-  <IonModal
-    class="modal-dialog"
-    @did-present="onModalWillPresent"
-  >
+  <IonModal class="modal-dialog">
     <div
       style="min-width: 90vw"
       class="ion-padding"
     >
-      <div v-if="isFetched">
+      <div>
         <EntryInfoModalTitle />
         <EntryInfoModalProduct class="mb-3" />
 
         <EntryInfoModalData class="mb-4" />
 
-        <hr
-          v-if="payments.length"
-          class="bg-[var(--ion-color-medium)] opacity-25"
-        />
-
         <EntryInfoModalPayments
-          v-if="payments.length"
+          v-if="entry.entry_total > 0"
           style="margin-top: 1rem"
-          :payments="payments"
         />
-      </div>
-      <div
-        v-else
-        class="text-center"
-      >
-        <IonSpinner color="medium" />
       </div>
     </div>
   </IonModal>
