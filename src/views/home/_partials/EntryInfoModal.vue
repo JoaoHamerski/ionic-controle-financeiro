@@ -58,9 +58,9 @@ provide(isInflowInjectionKey, isInflow.value)
     >
       <div v-if="isFetched">
         <EntryInfoModalTitle />
-        <EntryInfoModalProduct />
+        <EntryInfoModalProduct class="mb-3" />
 
-        <EntryInfoModalData style="margin-bottom: 1rem" />
+        <EntryInfoModalData class="mb-4" />
 
         <hr
           v-if="payments.length"

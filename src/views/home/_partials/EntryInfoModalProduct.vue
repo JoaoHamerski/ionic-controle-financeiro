@@ -13,10 +13,17 @@ const isInflow = inject(isInflowInjectionKey) as boolean
 <template>
   <div>
     <div
-      class="text-center text-[var(--ion-color-medium)] mb-2"
+      class="text-center text-[var(--ion-color-medium)]"
       style="font-weight: 600"
     >
       {{ entry.product_name }}
+      <span v-if="entry.entry_quantity > 1">({{ formatCurrencyBRL(entry.entry_value) }}) </span>
+    </div>
+    <div
+      v-if="entry.entry_quantity > 1"
+      class="text-center text-sm text-[var(--ion-color-medium)] mb-3"
+    >
+      Qtd. {{ entry.entry_quantity }}
     </div>
     <h4
       class="ion-text-center"
@@ -27,11 +34,5 @@ const isInflow = inject(isInflowInjectionKey) as boolean
     >
       {{ formatCurrencyBRL(entry.entry_total) }}
     </h4>
-    <div
-      v-if="entry.entry_quantity"
-      class="ion-text-center text-sm font-medium text-[var(--ion-color-medium)] mb-4"
-    >
-      {{ formatCurrencyBRL(entry.entry_value) }} x {{ entry.entry_quantity }}
-    </div>
   </div>
 </template>
