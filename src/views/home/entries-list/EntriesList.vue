@@ -8,10 +8,16 @@ import { dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { formatCurrencyBRL, titleCase } from '@/support/helpers'
 
+import EntryInfoModal from '../_partials/EntryInfoModal.vue'
 import { EntryRecordHome } from '../types'
 import EntriesListAfter from './EntriesListAfter.vue'
 import EntriesListItem from './EntriesListItem.vue'
 import EntriesListItemDragOptions from './EntriesListItemDragOptions.vue'
+
+type EntryModal = {
+  isOpen: boolean
+  entry: EntryRecordHome | null
+}
 
 const emit = defineEmits(['refetch', 'load-more', 'deleted'])
 
@@ -22,10 +28,12 @@ defineProps<{
 
 const list = ref()
 
-const deleteAlert = ref<{
-  isOpen: boolean
-  entry: EntryRecordHome | null
-}>({
+const deleteAlert = ref<EntryModal>({
+  isOpen: false,
+  entry: null,
+})
+
+const infoModal = ref<EntryModal>({
   isOpen: false,
   entry: null,
 })
@@ -97,6 +105,20 @@ const payEntry = async (entry: any) => {
 const closeSlidingItems = async () => {
   await list.value.$el.closeSlidingItems()
 }
+
+const onEntryClick = (entry: EntryRecordHome) => {
+  infoModal.value = {
+    isOpen: true,
+    entry,
+  }
+}
+
+const onEntryInfoModalDismiss = () => {
+  infoModal.value = {
+    isOpen: false,
+    entry: null,
+  }
+}
 </script>
 
 <template>
@@ -109,7 +131,10 @@ const closeSlidingItems = async () => {
         v-for="entry in entries"
         :key="entry.id"
       >
-        <EntriesListItem :entry="entry" />
+        <EntriesListItem
+          :entry="entry"
+          @entry-click="onEntryClick"
+        />
         <EntriesListItemDragOptions
           :entry="entry"
           @pay="onPay"
@@ -133,6 +158,13 @@ const closeSlidingItems = async () => {
         { text: 'Sim, excluir', role: 'delete' },
       ]"
       @did-dismiss="onDeleteAlertDismiss"
+    />
+
+    <EntryInfoModal
+      v-if="infoModal.entry"
+      :is-open="infoModal.isOpen"
+      :entry="infoModal.entry"
+      @did-dismiss="onEntryInfoModalDismiss"
     />
   </IonList>
 </template>

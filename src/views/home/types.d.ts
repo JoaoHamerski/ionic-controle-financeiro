@@ -1,7 +1,7 @@
 import type { Prefix } from '@/types/helpers'
 import type { Customer, Entry, Product } from '@/types/models'
 
-export type EntryRecordHome = { id: string; total_paid: number } & Prefix<
+export type EntryRecordHome = { id: string; total_paid: number | null } & Prefix<
   Pick<Customer, 'id' | 'name'>,
   'customer'
 > &

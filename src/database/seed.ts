@@ -120,7 +120,7 @@ const seedPayments = async (knex: Knex) => {
         id: id++,
         value,
         entry_id: entry.id,
-        created_at: now.toISODate(),
+        created_at: now.toISO(),
       })
     }
   })

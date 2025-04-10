@@ -15,7 +15,7 @@ const note = computed(() => entry.entry_note!)
 </script>
 
 <template>
-  <div v-tippy="{ content: note.length > 25 ? note : '' }">
+  <div>
     <AppIcon
       style="margin-right: 0.25rem"
       :icon="PhNote"

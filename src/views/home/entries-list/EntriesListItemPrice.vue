@@ -12,17 +12,11 @@ import { entryInjectionKey } from './injection-key'
 const entry = inject(entryInjectionKey) as EntryRecordHome
 
 const isInflow = computed(() => entry.entry_total > 0)
-const isPaid = computed(() => entry.entry_total >= entry.total_paid)
+const isPaid = computed(() => entry.total_paid && entry.total_paid >= entry.entry_total)
 </script>
 
 <template>
-  <h2
-    v-tippy="{
-      content: isInflow ? (isPaid ? 'Pago' : 'Pagamento pendente') : '',
-      placement: 'right',
-    }"
-    class="currency"
-  >
+  <h2 class="currency">
     <span
       style="margin-right: 0.25rem"
       :style="{

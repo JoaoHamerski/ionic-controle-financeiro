@@ -10,6 +10,8 @@ import EntriesListItemPrice from './EntriesListItemPrice.vue'
 import EntriesListItemProduct from './EntriesListItemProduct.vue'
 import { entryInjectionKey } from './injection-key'
 
+defineEmits(['entry-click'])
+
 const props = defineProps<{
   entry: EntryRecordHome
 }>()
@@ -18,8 +20,11 @@ provide(entryInjectionKey, props.entry)
 </script>
 
 <template>
-  <IonItem>
-    <IonLabel>
+  <IonItem
+    button
+    @click="$emit('entry-click', entry)"
+  >
+    <IonLabel v-auto-animate>
       <div style="display: flex; justify-content: space-between">
         <div style="width: 60%">
           <EntriesListItemPrice />
