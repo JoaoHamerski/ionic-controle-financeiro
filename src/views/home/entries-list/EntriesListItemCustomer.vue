@@ -6,7 +6,7 @@ import AppIcon from '@/components/AppIcon.vue'
 import { titleCase } from '@/support/helpers'
 
 import { EntryRecordHome } from '../types'
-import { entryInjectionKey } from './injection-key'
+import { entryInjectionKey } from '../injection-key'
 
 const entry = inject(entryInjectionKey) as EntryRecordHome
 </script>

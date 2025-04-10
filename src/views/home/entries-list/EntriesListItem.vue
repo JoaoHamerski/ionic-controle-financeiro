@@ -2,13 +2,13 @@
 import { IonItem, IonLabel } from '@ionic/vue'
 import { provide } from 'vue'
 
+import { entryInjectionKey } from '../injection-key'
 import { EntryRecordHome } from '../types'
 import EntriesListItemCustomer from './EntriesListItemCustomer.vue'
 import EntriesListItemDate from './EntriesListItemDate.vue'
 import EntriesListItemNote from './EntriesListItemNote.vue'
 import EntriesListItemPrice from './EntriesListItemPrice.vue'
 import EntriesListItemProduct from './EntriesListItemProduct.vue'
-import { entryInjectionKey } from './injection-key'
 
 defineEmits(['entry-click'])
 

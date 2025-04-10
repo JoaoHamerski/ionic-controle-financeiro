@@ -7,7 +7,7 @@ import { computed, inject } from 'vue'
 import AppIcon from '@/components/AppIcon.vue'
 
 import { EntryRecordHome } from '../types'
-import { entryInjectionKey } from './injection-key'
+import { entryInjectionKey } from '../injection-key'
 
 const entry = inject(entryInjectionKey) as EntryRecordHome
 
