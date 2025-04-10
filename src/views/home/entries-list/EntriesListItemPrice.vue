@@ -36,7 +36,6 @@ const isPaid = computed(() => entry.total_paid && entry.total_paid >= entry.entr
         }"
       />
     </Transition>
-    {{ entry.total_paid }}
   </h2>
 </template>
 

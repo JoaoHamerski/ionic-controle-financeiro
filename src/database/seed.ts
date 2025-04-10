@@ -98,42 +98,28 @@ const seedEntries = async (knex: Knex) => {
 }
 
 const seedPayments = async (knex: Knex) => {
-  const entries: Pick<Entry, 'id' | 'total' | 'quantity'>[] = await dbSelect(
-    knex.select(['id', 'total', 'quantity']).from('entries').where('total', '>', 0),
+  const entries: Pick<Entry, 'id' | 'total' | 'quantity' | 'created_at'>[] = await dbSelect(
+    knex.select(['id', 'total', 'quantity', 'created_at']).from('entries').where('total', '>', 0),
   )
 
   const payments: Payment[] = []
-  const now = DateTime.now()
   let id = 1
 
   entries.forEach((entry) => {
-    // const paymentsQuantity = faker.number.int({ min: 2, max: 4 })
-    // const isFullyPaid = faker.datatype.boolean({ probability: 0.5 })
-    const values: number[] = []
-    let rest = entry.total
-
-    while (rest > 0) {
-      const value = faker.number.float({
-        min: parseFloat((entry.total / 8).toFixed(2)),
-        max: parseFloat((entry.total / 4).toFixed(2)),
-        fractionDigits: 2,
-      })
-
-      rest -= value
-
-      if (rest < 0) {
-        values.push(parseFloat((entry.total - sum(values)).toFixed(2)))
-      } else {
-        values.push(value)
-      }
-    }
+    const values = generateDistributedValues(entry.total)
+    const date = DateTime.fromISO(entry.created_at)
 
     payments.push(
       ...values.map<Payment>((value) => ({
         id: id++,
         entry_id: entry.id,
         value,
-        created_at: now.toISO(),
+        created_at: faker.date
+          .between({
+            to: date.toISO()!,
+            from: date.minus({ days: 100 }).toISO()!,
+          })
+          .toISOString(),
       })),
     )
   })
@@ -141,4 +127,29 @@ const seedPayments = async (knex: Knex) => {
   for (const _payments of chunk(payments, 100)) {
     await dbStatement(knex.insert(_payments).into('payments'))
   }
+}
+
+const generateDistributedValues = (total: number) => {
+  const values: number[] = []
+  let rest = total
+
+  while (rest > 0) {
+    const value = faker.number.float({
+      min: parseFloat((total / 8).toFixed(2)),
+      max: parseFloat((total / 4).toFixed(2)),
+      fractionDigits: 2,
+    })
+
+    rest -= value
+
+    if (rest < 0) {
+      const totalValues = parseFloat(sum(values).toFixed(2))
+
+      values.push(parseFloat((total - totalValues).toFixed(2)))
+    } else {
+      values.push(value)
+    }
+  }
+
+  return values
 }
