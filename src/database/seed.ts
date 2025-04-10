@@ -21,7 +21,7 @@ export const seedDatabase = async () => {
 const truncateAllTables = async (database: SQLiteDBConnection) => {
   const tables = await database.query("SELECT name FROM sqlite_master WHERE type='table'")
 
-  for (const table of tables.values || []) {
+  for (const table of tables.values?.reverse() || []) {
     await database.execute(`DELETE FROM ${table.name}`)
   }
 }

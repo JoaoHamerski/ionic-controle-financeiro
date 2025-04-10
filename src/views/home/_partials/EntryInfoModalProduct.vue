@@ -23,7 +23,7 @@ const isInflow = inject(isInflowInjectionKey) as boolean
       v-if="entry.entry_quantity > 1"
       class="text-center text-sm text-[var(--ion-color-medium)] mb-3"
     >
-      Qtd. {{ entry.entry_quantity }}
+      Qtd.: {{ entry.entry_quantity }}
     </div>
     <h4
       class="ion-text-center"
