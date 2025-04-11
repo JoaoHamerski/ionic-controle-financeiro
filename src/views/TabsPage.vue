@@ -41,6 +41,8 @@ const theme = ref({
 const bar = ref()
 
 const activeTabName = computed(() => bar.value?.tabState?.activeTab)
+
+const isTabActive = (tab: TabItem) => tab.name == activeTabName.value
 </script>
 
 <template>
@@ -60,14 +62,14 @@ const activeTabName = computed(() => bar.value?.tabState?.activeTab)
         >
           <AppIcon
             class="icon"
-            :weight="tab.name === activeTabName ? 'fill' : 'regular'"
+            :weight="isTabActive(tab) ? 'fill' : 'regular'"
             :icon="tab.icon"
             size="26"
           />
 
           <IonLabel
             class="label"
-            :class="tab.name === activeTabName ? 'label-active' : ''"
+            :class="isTabActive(tab) ? 'label-active' : ''"
           >
             {{ tab.label }}
           </IonLabel>
