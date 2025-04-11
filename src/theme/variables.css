@@ -2,6 +2,7 @@
 http://ionicframework.com/docs/theming/ */
 
 :root {
+	--ion-backdrop-opacity: 0.4;
 	--ion-color-primary: #0070E8;
 	--ion-color-primary-rgb: 0,112,232;
 	--ion-color-primary-contrast: #ffffff;

@@ -1,7 +1,12 @@
+:root {
+  --transition-duration: 0.25s;
+  --transition-duration-lg: 0.5s
+}
+
 /* Fade transition */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.25s ease;
+  transition: opacity var(--transition-duration) ease;
 }
 
 .fade-enter-from,
@@ -13,7 +18,7 @@
 .list-move,
 .list-enter-active,
 .list-leave-active {
-  transition: all 0.5s ease;
+  transition: all var(--transition-duration-lg) ease;
 }
 
 .list-enter-from,
@@ -26,11 +31,11 @@
   position: absolute;
 }
 
-
+/* Height animation */
 .height-animated {
   display: grid;
   grid-template-rows: 0px;
-  transition: grid-template-rows 250ms;
+  transition: grid-template-rows var(--transition-duration);
 }
 
 .height-animated > *:first-child {
