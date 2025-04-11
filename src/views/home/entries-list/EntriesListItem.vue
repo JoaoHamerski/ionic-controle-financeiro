@@ -24,7 +24,7 @@ provide(entryInjectionKey, props.entry)
     button
     @click="$emit('entry-click', entry)"
   >
-    <IonLabel v-auto-animate>
+    <IonLabel>
       <div style="display: flex; justify-content: space-between">
         <div style="width: 60%">
           <EntriesListItemPrice />

@@ -14,11 +14,11 @@ import EntriesCreateModal from './entries-form/EntriesCreateModal.vue'
 import EntriesList from './entries-list/EntriesList.vue'
 import { EntryRecordHome } from './types'
 
-type Segment = 'all' | 'inflows' | 'outflows'
+export type HomeSegment = 'all' | 'inflows' | 'outflows'
 
 const { knex } = useDatabaseStore()
 
-const segment = ref<Segment>('all')
+const segment = ref<HomeSegment>('all')
 
 const isCreateEntryModalOpen = ref<boolean>(false)
 
@@ -30,7 +30,7 @@ onIonViewDidEnter(async () => {
   await fetch(true)
 })
 
-const onSegmentChange = async (selectedSegment: Segment) => {
+const onSegmentChange = async (selectedSegment: HomeSegment) => {
   segment.value = selectedSegment
 
   await fetch(true)
@@ -109,6 +109,7 @@ const fetchTotalRecords = async () => {
           :key="segment"
           :entries="entries"
           :total-records="totalRecords"
+          :segment="segment"
           @refetch="fetch(true)"
           @load-more="fetch"
         />

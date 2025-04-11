@@ -3,12 +3,14 @@ import { IonAlert, IonItemSliding, IonList, ItemSlidingCustomEvent } from '@ioni
 import { DateTime } from 'luxon'
 import { ref } from 'vue'
 import { computed } from 'vue'
+import { onMounted } from 'vue'
 
 import { dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 import { formatCurrencyBRL, titleCase } from '@/support/helpers'
 
 import EntryInfoModal from '../_partials/EntryInfoModal.vue'
+import { HomeSegment } from '../HomePage.vue'
 import { EntryRecordHome } from '../types'
 import EntriesListAfter from './EntriesListAfter.vue'
 import EntriesListItem from './EntriesListItem.vue'
@@ -24,8 +26,10 @@ const emit = defineEmits(['refetch', 'load-more', 'deleted'])
 defineProps<{
   entries: EntryRecordHome[]
   totalRecords: number
+  segment: HomeSegment
 }>()
 
+const isTransitionActive = ref(false)
 const list = ref()
 
 const deleteAlert = ref<EntryModal>({
@@ -119,6 +123,12 @@ const onEntryInfoModalDismiss = () => {
     entry: null,
   }
 }
+
+onMounted(() => {
+  setTimeout(() => {
+    isTransitionActive.value = true
+  }, 5000)
+})
 </script>
 
 <template>
