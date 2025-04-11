@@ -1,10 +1,6 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
 
-* {
-	font-family: 'Inter' !important;
-}
-
 :root {
 	--ion-color-primary: #0070E8;
 	--ion-color-primary-rgb: 0,112,232;

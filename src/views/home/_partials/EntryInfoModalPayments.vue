@@ -45,7 +45,10 @@ const onPaymentsClick = async () => {
   }
 
   isPaymentsExpanded.value = true
-  await fetchPayments()
+  if (!isFetched.value) {
+    await fetchPayments()
+  }
+
   isFetched.value = true
 }
 </script>
@@ -53,7 +56,11 @@ const onPaymentsClick = async () => {
 <template>
   <div>
     <h5
-      class="relative ion-activatable overflow-hidden py-2 px-3 font-semibold flex justify-between items-center mb-0 color-[var(--ion-color-medium)]"
+      class="relative ion-activatable overflow-hidden py-2 px-3 font-semibold flex justify-between items-center mb-0 transition-colors"
+      :class="{
+        'text-[var(--ion-color-medium)]': !isPaymentsExpanded,
+        'text-[var(--ion-color-primary)]': isPaymentsExpanded,
+      }"
       @click="onPaymentsClick"
     >
       <div>
@@ -65,7 +72,7 @@ const onPaymentsClick = async () => {
           />
           <span>Pagamentos</span>
         </div>
-        <span class="text-sm text-[var(--ion-color-medium)]">
+        <span class="text-sm">
           <template v-if="remaining > 0">
             {{ formatCurrencyBRL(Math.abs(remaining)) }} restante
           </template>
@@ -73,7 +80,7 @@ const onPaymentsClick = async () => {
         </span>
       </div>
       <AppIcon
-        class="text-[var(--ion-color-medium)] transition-all"
+        class="transition-all"
         :class="{
           '-rotate-90': isPaymentsExpanded,
         }"
@@ -84,17 +91,12 @@ const onPaymentsClick = async () => {
       <IonRippleEffect />
     </h5>
 
-    <Transition
-      enter-from-class="h-0"
-      enter-to-class="h-[200px]"
-      enter-active-class="transition-all"
-      leave-from-class="h-[200px]"
-      leave-to-class="h-0"
-      leave-active-class="transition-all"
-    >
+    <div class="max-h-[200px] overflow-auto">
       <div
-        v-if="isPaymentsExpanded"
-        class="max-h-[200px] overflow-auto"
+        class="height-animated"
+        :class="{
+          'height-animated-active': isPaymentsExpanded,
+        }"
       >
         <IonList>
           <IonItem
@@ -109,6 +111,6 @@ const onPaymentsClick = async () => {
           </IonItem>
         </IonList>
       </div>
-    </Transition>
+    </div>
   </div>
 </template>

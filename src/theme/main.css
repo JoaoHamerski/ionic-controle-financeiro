@@ -1,58 +1,15 @@
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);
+@import "./transitions.css";
+@import "./ionic-custom.css";
 
-/* Fade transition */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.25s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-/* Standard smooth transition for lists */
-.list-move,
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.5s ease;
-}
-
-.list-enter-from,
-.list-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
-}
-
-.list-leave-active {
-  position: absolute;
-}
-
-
-.modal-dialog {
-  --width: fit-content;
-  --min-width: 250px;
-  --max-width: 90%;
-  --border-radius: 6px;
-  --height: fit-content;
-  --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
-}
-
-body {
-  background-color: var(--ion-color-light) !important;
-}
-
-ion-button {
-  --box-shadow: none;
-  --border-width: 0;
-}
-
-ion-fab-button {
-	--ripple-color: transparent;
-}
-
-ion-toolbar {
-  padding-top: var(--safe-area-inset-top) !important;
+@layer base {
+  * {
+    font-family: 'Inter' !important;
+  }
+  
+  body {
+    background-color: var(--ion-color-light) !important;
+  }
 }

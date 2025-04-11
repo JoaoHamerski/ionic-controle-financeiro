@@ -60,7 +60,7 @@ const activeTabName = computed(() => bar.value?.tabState?.activeTab)
         >
           <AppIcon
             class="icon"
-            weight="fill"
+            :weight="tab.name === activeTabName ? 'fill' : 'regular'"
             :icon="tab.icon"
             size="26"
           />

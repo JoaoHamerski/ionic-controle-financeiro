@@ -1,0 +1,42 @@
+/* Fade transition */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Standard smooth transition for lists */
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.list-leave-active {
+  position: absolute;
+}
+
+
+.height-animated {
+  display: grid;
+  grid-template-rows: 0px;
+  transition: grid-template-rows 250ms;
+}
+
+.height-animated > *:first-child {
+  overflow: auto;
+}
+
+.height-animated.height-animated-active {
+  grid-template-rows: 200px;
+}
