@@ -24,7 +24,7 @@ const onPayClick = async (entry: any) => {
 <template>
   <IonItemOptions side="end">
     <IonItemOption
-      v-if="entry.total_paid && entry.total_paid < entry.entry_total"
+      v-if="!entry.total_paid || entry.total_paid < entry.entry_total"
       color="success"
       @click="onPayClick(entry)"
     >
