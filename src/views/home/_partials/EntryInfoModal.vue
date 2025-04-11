@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { IonModal } from '@ionic/vue'
+import { IonButton, IonModal } from '@ionic/vue'
 import { computed, provide } from 'vue'
+import { useTemplateRef } from 'vue'
 
 import { entryInjectionKey, isInflowInjectionKey } from '../injection-key'
 import { EntryRecordHome } from '../types'
@@ -13,6 +14,7 @@ const props = defineProps<{
   entry: EntryRecordHome
 }>()
 
+const modal = useTemplateRef('modal')
 const isInflow = computed(() => props.entry.entry_total > 0)
 
 provide(entryInjectionKey, props.entry)
@@ -20,7 +22,10 @@ provide(isInflowInjectionKey, isInflow.value)
 </script>
 
 <template>
-  <IonModal class="modal-dialog">
+  <IonModal
+    ref="modal"
+    class="modal-dialog"
+  >
     <div
       style="min-width: 90vw"
       class="ion-padding"
@@ -35,6 +40,14 @@ provide(isInflowInjectionKey, isInflow.value)
           v-if="entry.entry_total > 0"
           style="margin-top: 1rem"
         />
+
+        <IonButton
+          class="w-full"
+          fill="clear"
+          @click="modal?.$el.dismiss()"
+        >
+          Fechar
+        </IonButton>
       </div>
     </div>
   </IonModal>

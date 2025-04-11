@@ -27,6 +27,8 @@ const remaining = computed(() =>
   entry.total_paid ? parseFloat((entry.entry_total - entry.total_paid).toFixed(2)) : 0,
 )
 
+const hasAnyPayment = computed(() => entry.total_paid && entry.total_paid > 0)
+
 const fetchPayments = async () => {
   const builder = knex
     .select('*')
@@ -39,12 +41,17 @@ const fetchPayments = async () => {
 }
 
 const onPaymentsClick = async () => {
+  if (entry.total_paid === null) {
+    return
+  }
+
   if (isPaymentsExpanded.value) {
     isPaymentsExpanded.value = false
     return
   }
 
   isPaymentsExpanded.value = true
+
   if (!isFetched.value) {
     await fetchPayments()
   }
@@ -56,7 +63,7 @@ const onPaymentsClick = async () => {
 <template>
   <div>
     <h5
-      class="relative ion-activatable overflow-hidden py-2 px-3 font-semibold flex justify-between items-center mb-0 transition-colors"
+      class="relative ion-activatable overflow-hidden py-2 px-3 font-semibold flex justify-between items-center mb-0 transition-colors rounded"
       :class="{
         'text-[var(--ion-color-medium)]': !isPaymentsExpanded,
         'text-[var(--ion-color-primary)]': isPaymentsExpanded,
@@ -76,10 +83,12 @@ const onPaymentsClick = async () => {
           <template v-if="remaining > 0">
             {{ formatCurrencyBRL(Math.abs(remaining)) }} restante
           </template>
-          <template v-else>Pago</template>
+          <template v-else-if="hasAnyPayment">Pago</template>
+          <template v-else>Nenhum pagamento registrado</template>
         </span>
       </div>
       <AppIcon
+        v-if="hasAnyPayment"
         class="transition-all"
         :class="{
           '-rotate-90': isPaymentsExpanded,
@@ -88,10 +97,13 @@ const onPaymentsClick = async () => {
         weight="fill"
         size="24"
       />
-      <IonRippleEffect />
+      <IonRippleEffect v-if="hasAnyPayment" />
     </h5>
 
-    <div class="max-h-[200px] overflow-auto">
+    <div
+      v-if="entry.total_paid"
+      class="max-h-[200px] overflow-auto"
+    >
       <div
         class="height-animated"
         :class="{
