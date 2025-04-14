@@ -26,6 +26,7 @@ const onPayClick = async (entry: any) => {
     <IonItemOption
       v-if="!entry.total_paid || entry.total_paid < entry.entry_total"
       color="success"
+      class="min-w-[90px]"
       @click="onPayClick(entry)"
     >
       <AppIcon
@@ -40,6 +41,7 @@ const onPayClick = async (entry: any) => {
     <IonItemOption
       id="delete-alert"
       color="danger"
+      class="min-w-[90px]"
       @click="onDeleteClick(entry)"
     >
       <AppIcon
