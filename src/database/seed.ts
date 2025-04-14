@@ -73,7 +73,7 @@ const seedEntries = async (knex: Knex) => {
     const value = +faker.number.float({ min: 10, max: 50 }).toFixed(1)
     const quantity = faker.number.int({ min: 1, max: 5 })
     const total = +(value * quantity).toFixed(1)
-    const isInflow = faker.datatype.boolean({ probability: 0.8 })
+    const isInflow = faker.datatype.boolean({ probability: 0.4 })
 
     const now = DateTime.now()
     const created_at = faker.date.between({
@@ -127,8 +127,8 @@ const seedPayments = async (knex: Knex) => {
         value,
         created_at: faker.date
           .between({
+            from: date.minus({ days: 50 }).toISO()!,
             to: date.toISO()!,
-            from: date.minus({ days: 100 }).toISO()!,
           })
           .toISOString(),
       })),
