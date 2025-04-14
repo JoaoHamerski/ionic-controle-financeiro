@@ -82,12 +82,13 @@ const fetchOutflows = async (startDate: DateTime, endDate: DateTime) => {
 const fetchPayments = async (startDate: DateTime, endDate: DateTime) => {
   const paymentsBuilder = knex
     .select('*')
-    .from('entries')
-    .where('paid_at', '>=', startDate.toISO())
-    .where('paid_at', '<=', endDate.toISO())
+    .from('payments')
+    .where('created_at', '>=', startDate.toISO())
+    .where('created_at', '<=', endDate.toISO())
 
   const data = await dbSelect(paymentsBuilder)
 
+  console.log(data)
   paymentsData.value = groupTotalByDay(data, true)
 }
 
@@ -106,18 +107,20 @@ const getStartDate = (): DateTime => {
   return selectedPeriod.value.startOf('month')
 }
 
-const groupTotalByDay = (entries: any[], isPayment: boolean = false) => {
-  const entriesByDate = !isPayment
-    ? groupBy(entries, 'date')
-    : groupBy(entries, (entry) => entry.paid_at.split('T')[0])
+const groupTotalByDay = (records: any[], isPayment: boolean = false) => {
+  const recordsByDate = !isPayment
+    ? groupBy(records, 'date')
+    : groupBy(records, (entry) => entry.created_at.split('T')[0])
 
   const startDate = getStartDate()
 
   return range(0, totalDays.value).map((index) => {
     const date = startDate.plus({ day: index })
-    const dateEntries = get(entriesByDate, date.toISODate()!, [])
+    const dateRecords = get(recordsByDate, date.toISODate()!, [])
 
-    return round(Math.abs(sumBy(dateEntries, 'total')), 2)
+    return !isPayment
+      ? round(Math.abs(sumBy(dateRecords, 'total')), 2)
+      : round(sumBy(dateRecords, 'value'), 2)
   })
 }
 
