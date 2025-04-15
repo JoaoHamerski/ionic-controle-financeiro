@@ -8,7 +8,7 @@ import { formatCurrencyBRL, titleCase } from '@/support/helpers'
 
 import { EntryRecordHome } from '../types'
 
-const emit = defineEmits(['deleted'])
+const emit = defineEmits(['deleted', 'canceled'])
 const props = defineProps<{
   entry: EntryRecordHome
 }>()
@@ -37,7 +37,10 @@ const onDeleteAlertDismiss = async (event: any) => {
   if (event.detail.role === 'delete') {
     await deleteEntry()
     emit('deleted')
+    return
   }
+
+  emit('canceled')
 }
 
 const deleteEntry = async () => {
@@ -59,7 +62,7 @@ const deleteEntry = async () => {
   />
 </template>
 
-<style>
+<style scoped>
 ion-alert {
   --min-width: 90% !important;
 }
