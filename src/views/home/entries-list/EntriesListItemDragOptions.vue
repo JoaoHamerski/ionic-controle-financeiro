@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { IonItemOption, IonItemOptions } from '@ionic/vue'
 import { PhCheckCircle, PhTrash } from '@phosphor-icons/vue'
+import { computed } from 'vue'
 
 import AppIcon from '@/components/AppIcon.vue'
 
@@ -8,7 +9,7 @@ import { EntryRecordHome } from '../types'
 
 const emit = defineEmits(['pay', 'delete'])
 
-defineProps<{
+const { entry } = defineProps<{
   entry: EntryRecordHome
 }>()
 
@@ -19,12 +20,16 @@ const onDeleteClick = (entry: any) => {
 const onPayClick = async (entry: any) => {
   emit('pay', { entry })
 }
+
+const showPayButton = computed(
+  () => entry.entry_total > 0 && (!entry.total_paid || entry.total_paid < entry.entry_total),
+)
 </script>
 
 <template>
   <IonItemOptions side="end">
     <IonItemOption
-      v-if="!entry.total_paid || entry.total_paid < entry.entry_total"
+      v-if="showPayButton"
       color="success"
       class="min-w-[90px]"
       @click="onPayClick(entry)"
