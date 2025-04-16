@@ -132,6 +132,7 @@ const update = async ({ name, phone }: FormRecordData) => {
             class="w-full"
             fill="clear"
             shape="round"
+            color="dark"
             @click="$emit('cancel')"
           >
             Cancelar

@@ -82,6 +82,7 @@ const submit = async () => {
             fill="clear"
             class="w-full"
             shape="round"
+            color="dark"
             @click="$emit('cancel')"
           >
             Cancelar
