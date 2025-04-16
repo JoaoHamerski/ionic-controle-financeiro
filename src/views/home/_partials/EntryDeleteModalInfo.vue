@@ -8,8 +8,6 @@ import { EntryRecordHome } from '../types'
 import EntryInfoModalData from './EntryInfoModalData.vue'
 import EntryInfoModalProduct from './EntryInfoModalProduct.vue'
 
-defineEmits(['confirm', 'cancel'])
-
 const props = defineProps<{
   entry: EntryRecordHome
 }>()

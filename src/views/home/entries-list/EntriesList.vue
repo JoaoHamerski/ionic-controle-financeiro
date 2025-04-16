@@ -2,7 +2,7 @@
 import { IonItemSliding, IonList } from '@ionic/vue'
 import { reactive, useTemplateRef } from 'vue'
 
-import { ModalCloseOptions, useModal } from '@/composables/use-modal'
+import { useModal } from '@/composables/use-modal'
 import { presentToast } from '@/support/toast'
 
 import EntryDeleteModal from '../_partials/EntryDeleteModal.vue'
@@ -36,17 +36,19 @@ const closeSlidingItems = async () => {
   await list.value.$el.closeSlidingItems()
 }
 
-const onDismissModal = async (modal: any, closeOptions: ModalCloseOptions = {}) => {
-  modal.close(closeOptions)
+const onDismissModal = async (event: CustomEvent, modal: any) => {
+  if (event.detail.role === 'deleted') {
+    onEntryDeleted()
+  }
 
   await closeSlidingItems()
+  modal.close()
 }
 
 const onEntryDeleted = async () => {
   emit('refetch')
 
-  await onDismissModal(modalDelete, { resetTimeout: 500 })
-  await presentToast({ message: 'Registro deletado!', color: 'success' })
+  presentToast({ message: 'Registro deletado!', color: 'success' })
 }
 </script>
 
@@ -81,21 +83,20 @@ const onEntryDeleted = async () => {
     <EntryPaymentModal
       :is-open="modalPayment.isOpen"
       :entry="modalPayment.data"
-      @did-dismiss="onDismissModal(modalPayment)"
+      @did-dismiss="onDismissModal($event, modalPayment)"
     />
 
     <EntryDeleteModal
       :is-open="modalDelete.isOpen"
       :entry="modalDelete.data"
-      @deleted="onEntryDeleted"
-      @did-dismiss="onDismissModal(modalDelete)"
+      @did-dismiss="onDismissModal($event, modalDelete)"
     />
 
     <EntryInfoModal
       v-if="modalInfo.data"
       :is-open="modalInfo.isOpen"
       :entry="modalInfo.data"
-      @did-dismiss="onDismissModal(modalInfo)"
+      @did-dismiss="onDismissModal($event, modalInfo)"
     />
   </IonList>
 </template>

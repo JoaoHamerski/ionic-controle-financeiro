@@ -10,8 +10,6 @@ import { useDatabaseStore } from '@/stores/database-store'
 import { EntryRecordHome } from '../types'
 import EntryDeleteModalInfo from './EntryDeleteModalInfo.vue'
 
-const emit = defineEmits(['deleted'])
-
 const props = defineProps<{
   entry: EntryRecordHome | null
 }>()
@@ -21,7 +19,7 @@ const { knex } = useDatabaseStore()
 
 const onConfirmDelete = async () => {
   await deleteEntry()
-  emit('deleted')
+  modal.value?.$el.dismiss(null, 'deleted')
 }
 
 const deleteEntry = async () => {
@@ -47,8 +45,6 @@ const deleteEntry = async () => {
       <EntryDeleteModalInfo
         v-if="entry"
         :entry="entry"
-        @confirm="onConfirmDelete"
-        @cancel="modal?.$el.dismiss()"
       />
 
       <IonGrid>
@@ -59,7 +55,7 @@ const deleteEntry = async () => {
               fill="clear"
               shape="round"
               color="dark"
-              @click="modal?.$el.dismiss()"
+              @click="modal?.$el.dismiss(null, 'cancel')"
             >
               Cancelar
             </IonButton>
