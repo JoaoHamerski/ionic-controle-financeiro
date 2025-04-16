@@ -13,7 +13,7 @@ import EntryDeleteModalInfo from './EntryDeleteModalInfo.vue'
 const emit = defineEmits(['deleted'])
 
 const props = defineProps<{
-  entry: EntryRecordHome
+  entry: EntryRecordHome | null
 }>()
 
 const modal = useTemplateRef('modal')
@@ -25,7 +25,7 @@ const onConfirmDelete = async () => {
 }
 
 const deleteEntry = async () => {
-  const builder = knex.table('entries').where('id', '=', props.entry.id).limit(1).delete()
+  const builder = knex.table('entries').where('id', '=', props.entry!.id).limit(1).delete()
 
   await dbStatement(builder)
 }
@@ -43,7 +43,9 @@ const deleteEntry = async () => {
         :icon="PhTrash"
         class="text-[var(--ion-color-danger-shade)]"
       />
+
       <EntryDeleteModalInfo
+        v-if="entry"
         :entry="entry"
         @confirm="onConfirmDelete"
         @cancel="modal?.$el.dismiss()"

@@ -2,7 +2,7 @@
 import { IonItemSliding, IonList } from '@ionic/vue'
 import { reactive, useTemplateRef } from 'vue'
 
-import { useModal } from '@/composables/use-modal'
+import { ModalCloseOptions, useModal } from '@/composables/use-modal'
 import { presentToast } from '@/support/toast'
 
 import EntryDeleteModal from '../_partials/EntryDeleteModal.vue'
@@ -36,14 +36,16 @@ const closeSlidingItems = async () => {
   await list.value.$el.closeSlidingItems()
 }
 
-const onDismissModal = async (modal: any) => {
-  modal.close()
+const onDismissModal = async (modal: any, closeOptions: ModalCloseOptions = {}) => {
+  modal.close(closeOptions)
+
   await closeSlidingItems()
 }
 
 const onEntryDeleted = async () => {
   emit('refetch')
-  await onDismissModal(modalDelete)
+
+  await onDismissModal(modalDelete, { resetTimeout: 500 })
   await presentToast({ message: 'Registro deletado!', color: 'success' })
 }
 </script>
@@ -62,7 +64,6 @@ const onEntryDeleted = async () => {
           :entry="entry"
           @entry-click="modalInfo.open(entry)"
         />
-
         <EntriesListItemDragOptions
           :entry="entry"
           @pay="modalPayment.open(entry)"
@@ -84,7 +85,6 @@ const onEntryDeleted = async () => {
     />
 
     <EntryDeleteModal
-      v-if="modalDelete.data"
       :is-open="modalDelete.isOpen"
       :entry="modalDelete.data"
       @deleted="onEntryDeleted"

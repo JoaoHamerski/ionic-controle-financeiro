@@ -1,5 +1,10 @@
 import { computed, ref } from 'vue'
 
+export type ModalCloseOptions = {
+  reset?: boolean
+  resetTimeout?: number
+}
+
 export const useModal = <T>() => {
   const modal = ref<{ isOpen: boolean; data: T | null }>({
     isOpen: false,
@@ -16,10 +21,19 @@ export const useModal = <T>() => {
     }
   }
 
-  const close = () => {
-    modal.value = {
-      isOpen: false,
-      data: null,
+  const close = (options: ModalCloseOptions = { reset: true }) => {
+    modal.value.isOpen = false
+
+    if (options.reset === true && options.resetTimeout) {
+      setTimeout(() => {
+        modal.value.data = null
+      }, options.resetTimeout)
+
+      return
+    }
+
+    if (options.reset === true) {
+      modal.value.data = null
     }
   }
 
