@@ -1,4 +1,5 @@
 :root {
+  --transition-duration-sm: .15s;
   --transition-duration: 0.25s;
   --transition-duration-lg: 0.5s
 }
@@ -9,10 +10,18 @@
   transition: opacity var(--transition-duration) ease;
 }
 
+.fade-fast-enter-active,
+.fade-fast-leave-active {
+  transition: opacity var(--transition-duration-sm) ease;
+}
+
 .fade-enter-from,
-.fade-leave-to {
+.fade-leave-to,
+.fade-fast-enter-from,
+.fade-fast-leave-to {
   opacity: 0;
 }
+
 
 /* Standard smooth transition for lists */
 .list-move,

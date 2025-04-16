@@ -101,7 +101,7 @@ const fetchTotalRecords = async () => {
 
     <IonContent>
       <Transition
-        name="fade"
+        name="fade-fast"
         mode="out-in"
       >
         <EntriesList
