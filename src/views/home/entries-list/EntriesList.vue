@@ -88,7 +88,7 @@ const onEntryDeleted = async () => {
       :is-open="modalDelete.isOpen"
       :entry="modalDelete.data"
       @deleted="onEntryDeleted"
-      @canceled="onDismissModal(modalDelete)"
+      @did-dismiss="onDismissModal(modalDelete)"
     />
 
     <EntryInfoModal

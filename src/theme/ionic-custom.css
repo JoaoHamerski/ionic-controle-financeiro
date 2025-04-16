@@ -15,8 +15,8 @@
     }
 
     ion-modal.modal-dialog {
-        --width: fit-content;
-        --min-width: 250px;
+        --width: 90%;
+        --min-width: 90%;
         --max-width: 90%;
         --border-radius: 6px;
         --height: fit-content;
