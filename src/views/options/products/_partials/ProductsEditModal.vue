@@ -7,7 +7,7 @@ import { presentToast } from '@/support/toast'
 import { ProductRecord } from '../ProductsPage.vue'
 import ProductForm from './ProductsForm.vue'
 
-const emit = defineEmits(['submit'])
+const emit = defineEmits(['submitted'])
 
 defineProps<{
   product?: ProductRecord
@@ -21,7 +21,7 @@ const closeModal = () => {
 
 const onFormSubmit = () => {
   closeModal()
-  emit('submit')
+  emit('submitted')
   presentToast({ message: 'Produto atualizado', color: 'success' })
 }
 </script>

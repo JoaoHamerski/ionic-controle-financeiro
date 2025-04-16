@@ -8,7 +8,7 @@ import { CustomerRecord } from '../CustomersPage.vue'
 import CustomersEditModal from './CustomersEditModal.vue'
 import CustomersListItem from './CustomersListItem.vue'
 
-const emit = defineEmits(['submit'])
+const emit = defineEmits(['submitted'])
 
 defineProps<{
   customers: CustomerRecord[]
@@ -43,7 +43,7 @@ const onSubmit = (payload: { isEdit: boolean }) => {
     presentToast({ message: 'Cliente cadastrado', color: 'success' })
   }
 
-  emit('submit')
+  emit('submitted')
 }
 </script>
 
@@ -60,7 +60,7 @@ const onSubmit = (payload: { isEdit: boolean }) => {
       :is-open="editCustomerModal.isOpen"
       :customer="editCustomerModal.customer"
       @did-dismiss="resetModal"
-      @submit="onSubmit"
+      @submitted="onSubmit"
     />
   </IonList>
 </template>

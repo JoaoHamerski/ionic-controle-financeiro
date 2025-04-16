@@ -43,7 +43,7 @@ type EntryFormFields = {
 
 const { knex } = useDatabaseStore()
 
-const emit = defineEmits(['submit'])
+const emit = defineEmits(['submitted'])
 
 const form = useForm<EntryFormFields, keyof EntryFormFields>({
   type: 'inflow',
@@ -125,7 +125,7 @@ const submit = async () => {
   }
 
   await insert()
-  emit('submit')
+  emit('submitted')
 }
 
 const insert = async () => {

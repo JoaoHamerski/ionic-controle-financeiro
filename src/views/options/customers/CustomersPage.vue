@@ -39,7 +39,7 @@ const fetch = async () => {
       <CustomersList
         v-if="customers.length"
         :customers="customers"
-        @submit="fetch"
+        @submitted="fetch"
       />
       <AppEmptyResult v-else />
     </IonContent>

@@ -8,7 +8,7 @@ import AppInput from '@/components/AppInput.vue'
 import { useBackup } from '@/composables/use-backup'
 import { useForm } from '@/composables/use-form'
 
-const emit = defineEmits(['submit'])
+const emit = defineEmits(['submitted'])
 const modal = useTemplateRef('modal')
 
 const { getBackupFilename } = useBackup()
@@ -30,7 +30,7 @@ const onFileNameSubmit = async () => {
     return
   }
 
-  emit('submit', { filename: filename.value })
+  emit('submitted', { filename: filename.value })
 }
 
 const onModalWillPresent = async () => {

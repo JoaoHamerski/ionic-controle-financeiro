@@ -8,13 +8,13 @@ import { presentToast } from '@/support/toast'
 
 import EntriesForm from './EntriesForm.vue'
 
-const emit = defineEmits(['submit'])
+const emit = defineEmits(['submitted'])
 const modal = ref()
 
 const onFormSubmit = () => {
   modal.value.$el.dismiss()
 
-  emit('submit')
+  emit('submitted')
   presentToast({ message: 'Entrada registrada', color: 'success' })
 }
 </script>

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { IonButton, IonButtons, IonContent, IonHeader, IonModal, IonToolbar } from '@ionic/vue'
-import { PhArrowLeft } from '@phosphor-icons/vue'
+import { IonModal } from '@ionic/vue'
+import { PhUserCircle } from '@phosphor-icons/vue'
 import { useTemplateRef } from 'vue'
 
-import AppIcon from '@/components/AppIcon.vue'
+import AppModalHeader from '@/components/AppModalHeader.vue'
 import { Customer } from '@/types/models'
 
 import CustomerForm from './CustomersForm.vue'
 
-defineEmits(['submit'])
+defineEmits(['submitted'])
 
 defineProps<{
   customer?: Customer
@@ -18,29 +18,21 @@ const modal = useTemplateRef('modal')
 </script>
 
 <template>
-  <IonModal ref="modal">
-    <IonHeader>
-      <IonToolbar color="primary">
-        <IonButtons>
-          <IonButton
-            slot="start"
-            @click="modal?.$el.dismiss()"
-          >
-            <AppIcon
-              slot="icon-only"
-              :icon="PhArrowLeft"
-              size="26"
-              weight="bold"
-            />
-          </IonButton>
-        </IonButtons>
-      </IonToolbar>
-    </IonHeader>
-    <IonContent class="ion-padding">
+  <IonModal
+    ref="modal"
+    class="modal-dialog min-w-[90%]"
+  >
+    <div class="ion-padding">
+      <AppModalHeader
+        title="Alterar dados do cliente"
+        :icon="PhUserCircle"
+        class="text-[var(--ion-color-primary-shade)]"
+      />
       <CustomerForm
         :customer="customer"
-        @submit="$emit('submit', $event)"
+        @submitted="$emit('submitted', $event)"
+        @cancel="modal?.$el.dismiss()"
       />
-    </IonContent>
+    </div>
   </IonModal>
 </template>

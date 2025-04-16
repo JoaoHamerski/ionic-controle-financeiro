@@ -11,7 +11,7 @@ import { ProductRecord } from '../ProductsPage.vue'
 
 const { knex } = useDatabaseStore()
 
-const emit = defineEmits(['submit'])
+const emit = defineEmits(['submitted'])
 
 const props = defineProps<{
   product?: ProductRecord
@@ -48,7 +48,7 @@ const submit = async () => {
 
   await dbStatement(builder)
 
-  emit('submit')
+  emit('submitted')
 }
 </script>
 
