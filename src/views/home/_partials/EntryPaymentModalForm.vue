@@ -14,18 +14,19 @@ const form = useForm({
   date: DateTime.now().toISODate(),
 })
 
-const submit = () => {}
+const submit = () => {
+  emit('submitted')
+}
 </script>
 
 <template>
   <form @submit.prevent="submit">
     <IonGrid>
-      <IonRow>
+      <IonRow class="ion-margin-bottom">
         <IonCol>
           <AppInput
             v-model="form.data.value"
             v-maskito="currencyBrlMask"
-            class="mb-10"
             name="value"
             label="Valor"
             placeholder="R$ "

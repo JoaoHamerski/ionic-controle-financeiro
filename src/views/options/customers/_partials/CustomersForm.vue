@@ -114,7 +114,6 @@ const update = async ({ name, phone }: FormRecordData) => {
             v-maskito="phoneDynamicMask"
             :error="form.errors.phoneRaw"
             name="phoneRaw"
-            type="text"
             inputmode="numeric"
             label="Celular (opcional)"
             helper-text="Informe para ter a opção de abrir no WhatsApp"

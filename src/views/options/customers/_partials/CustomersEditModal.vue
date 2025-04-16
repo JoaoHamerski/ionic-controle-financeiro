@@ -20,7 +20,7 @@ const modal = useTemplateRef('modal')
 <template>
   <IonModal
     ref="modal"
-    class="modal-dialog min-w-[90%]"
+    class="modal-dialog"
   >
     <div class="ion-padding">
       <AppModalHeader
@@ -28,6 +28,7 @@ const modal = useTemplateRef('modal')
         :icon="PhUserCircle"
         class="text-[var(--ion-color-primary-shade)]"
       />
+
       <CustomerForm
         :customer="customer"
         @submitted="$emit('submitted', $event)"

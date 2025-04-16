@@ -5,7 +5,12 @@ import { useTemplateRef } from 'vue'
 
 import AppModalHeader from '@/components/AppModalHeader.vue'
 
+import { EntryRecordHome } from '../types'
 import EntryPaymentModalForm from './EntryPaymentModalForm.vue'
+
+defineProps<{
+  entry: EntryRecordHome | null
+}>()
 
 const modal = useTemplateRef('modal')
 </script>
@@ -21,6 +26,10 @@ const modal = useTemplateRef('modal')
         title="Novo pagamento"
         class="text-[var(--ion-color-success-shade)]"
       />
+
+      <div v-if="entry">
+        {{ entry }}
+      </div>
 
       <EntryPaymentModalForm @cancel="modal?.$el.dismiss()" />
     </div>
