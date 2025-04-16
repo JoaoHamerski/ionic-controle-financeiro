@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IonButton, IonModal } from '@ionic/vue'
+import { IonButton, IonCol, IonGrid, IonModal, IonRow } from '@ionic/vue'
 import { maskito as vMaskito } from '@maskito/vue'
 import { PhCurrencyCircleDollar } from '@phosphor-icons/vue'
 import { useTemplateRef } from 'vue'
@@ -27,40 +27,53 @@ const form = useForm({
           title="Novo pagamento"
           class="text-[var(--ion-color-success-shade)]"
         />
-        <AppInput
-          v-model="form.data.value"
-          v-maskito="currencyBrlMask"
-          class="mb-10"
-          name="value"
-          label="Valor"
-          placeholder="R$ "
-          inputmode="numeric"
-        >
-          <IonButton
-            slot="end"
-            shape="round"
-            fill="clear"
-          >
-            Resto
-          </IonButton>
-        </AppInput>
 
-        <div class="flex">
-          <IonButton
-            class="w-full min-h-12"
-            shape="round"
-            fill="clear"
-            @click="modal?.$el.dismiss()"
-          >
-            Cancelar
-          </IonButton>
-          <IonButton
-            class="w-full min-h-12"
-            shape="round"
-          >
-            Pagar
-          </IonButton>
-        </div>
+        <IonGrid>
+          <IonRow>
+            <IonCol>
+              <AppInput
+                v-model="form.data.value"
+                v-maskito="currencyBrlMask"
+                class="mb-10"
+                name="value"
+                label="Valor"
+                placeholder="R$ "
+                inputmode="numeric"
+              >
+                <IonButton
+                  slot="end"
+                  shape="round"
+                  fill="clear"
+                >
+                  Resto
+                </IonButton>
+              </AppInput>
+            </IonCol>
+          </IonRow>
+
+          <IonRow>
+            <IonCol>
+              <IonButton
+                class="w-full min-h-12"
+                shape="round"
+                fill="clear"
+                color="dark"
+                @click="modal?.$el.dismiss()"
+              >
+                Cancelar
+              </IonButton>
+            </IonCol>
+            <IonCol>
+              <IonButton
+                class="w-full min-h-12"
+                shape="round"
+                color="success"
+              >
+                Pagar
+              </IonButton>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
       </div>
     </form>
   </IonModal>

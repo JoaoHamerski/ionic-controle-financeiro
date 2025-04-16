@@ -20,7 +20,7 @@ defineProps<{
           class="w-full"
           fill="clear"
           shape="round"
-          color="danger"
+          color="dark"
           @click="$emit('cancel')"
         >
           Cancelar
