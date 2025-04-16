@@ -163,7 +163,7 @@ const insert = async () => {
       <IonGrid class="ion-margin-bottom">
         <IonRow class="ion-margin-bottom">
           <IonCol class="ion-text-center">
-            <h3>Nova venda ou despesa</h3>
+            <h3>Novo registro</h3>
           </IonCol>
         </IonRow>
         <IonRow class="ion-margin-bottom">
@@ -180,7 +180,6 @@ const insert = async () => {
             </AppSelect>
           </IonCol>
         </IonRow>
-
         <IonRow class="ion-margin-bottom">
           <IonCol size="6">
             <AppInput
@@ -232,7 +231,6 @@ const insert = async () => {
             </AppInput>
           </IonCol>
         </IonRow>
-
         <IonRow
           v-if="form.data.type === 'inflow'"
           class="ion-margin-bottom"
@@ -295,7 +293,6 @@ const insert = async () => {
             />
           </IonCol>
         </IonRow>
-
         <IonRow
           v-if="form.data.type === 'inflow'"
           :style="{ textAlign: 'end' }"
