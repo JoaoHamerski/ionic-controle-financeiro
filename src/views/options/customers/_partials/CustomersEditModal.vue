@@ -11,7 +11,7 @@ import CustomerForm from './CustomersForm.vue'
 defineEmits(['submitted'])
 
 defineProps<{
-  customer?: Customer
+  customer: Customer | null
 }>()
 
 const modal = useTemplateRef('modal')

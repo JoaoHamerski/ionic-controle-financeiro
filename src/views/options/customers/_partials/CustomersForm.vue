@@ -20,7 +20,7 @@ type FormRecordData = Pick<typeof form.data, 'name' | 'phone'>
 const emit = defineEmits(['submitted', 'cancel'])
 
 const props = defineProps<{
-  customer?: Customer
+  customer: Customer | null
 }>()
 
 const { knex } = useDatabaseStore()

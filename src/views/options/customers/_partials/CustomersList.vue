@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { IonList } from '@ionic/vue'
-import { ref } from 'vue'
+import { reactive } from 'vue'
 
+import { useModal } from '@/composables/use-modal'
 import { presentToast } from '@/support/toast'
 
 import { CustomerRecord } from '../CustomersPage.vue'
@@ -14,28 +15,10 @@ defineProps<{
   customers: CustomerRecord[]
 }>()
 
-const editCustomerModal = ref<{
-  isOpen: boolean
-  customer?: CustomerRecord
-}>({
-  isOpen: false,
-  customer: undefined,
-})
-
-const onEdit = ({ customer }: { customer: CustomerRecord }) => {
-  editCustomerModal.value.isOpen = true
-  editCustomerModal.value.customer = customer
-}
-
-const resetModal = () => {
-  editCustomerModal.value = {
-    isOpen: false,
-    customer: undefined,
-  }
-}
+const modalCustomerEdit = reactive(useModal<CustomerRecord>())
 
 const onSubmit = (payload: { isEdit: boolean }) => {
-  resetModal()
+  modalCustomerEdit.close()
 
   if (payload.isEdit) {
     presentToast({ message: 'Cliente atualizado ', color: 'success' })
@@ -53,13 +36,13 @@ const onSubmit = (payload: { isEdit: boolean }) => {
       v-for="customer in customers"
       :key="customer.id"
       :customer="customer"
-      @edit="onEdit"
+      @edit="modalCustomerEdit.open(customer)"
     />
 
     <CustomersEditModal
-      :is-open="editCustomerModal.isOpen"
-      :customer="editCustomerModal.customer"
-      @did-dismiss="resetModal"
+      :is-open="modalCustomerEdit.isOpen"
+      :customer="modalCustomerEdit.data"
+      @did-dismiss="modalCustomerEdit.close()"
       @submitted="onSubmit"
     />
   </IonList>
