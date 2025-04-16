@@ -3,8 +3,8 @@ import { inject } from 'vue'
 
 import { formatCurrencyBRL } from '@/support/helpers'
 
-import { EntryRecordHome } from '../types'
 import { entryInjectionKey } from '../injection-key'
+import { EntryRecordHome } from '../types'
 
 const entry = inject(entryInjectionKey) as EntryRecordHome
 </script>

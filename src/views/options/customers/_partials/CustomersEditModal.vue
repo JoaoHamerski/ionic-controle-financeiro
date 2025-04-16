@@ -26,7 +26,7 @@ const modal = useTemplateRef('modal')
       <AppModalHeader
         title="Alterar dados do cliente"
         :icon="PhUserCircle"
-        class="text-[var(--ion-color-primary-shade)]"
+        class="text-[var(--ion-color-primary)]"
       />
 
       <CustomerForm

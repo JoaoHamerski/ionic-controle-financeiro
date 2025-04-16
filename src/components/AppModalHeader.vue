@@ -4,11 +4,12 @@ import AppIcon from './AppIcon.vue'
 defineProps<{
   icon: any
   title: string
+  subtitle?: string
 }>()
 </script>
 
 <template>
-  <div class="mb-10 text-center">
+  <div class="mb-8 text-center">
     <AppIcon
       :icon="icon"
       weight="fill"
@@ -17,5 +18,11 @@ defineProps<{
     <h3 style="font-weight: 600">
       {{ title }}
     </h3>
+    <div
+      v-if="subtitle"
+      class="text-sm text-[var(--ion-color-medium)]"
+    >
+      {{ subtitle }}
+    </div>
   </div>
 </template>

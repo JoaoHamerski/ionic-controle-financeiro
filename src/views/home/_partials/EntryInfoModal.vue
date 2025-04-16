@@ -44,6 +44,7 @@ provide(isInflowInjectionKey, isInflow.value)
         <IonButton
           class="w-full"
           fill="clear"
+          shape="round"
           @click="modal?.$el.dismiss()"
         >
           Fechar

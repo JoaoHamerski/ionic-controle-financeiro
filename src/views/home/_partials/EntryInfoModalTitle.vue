@@ -8,7 +8,8 @@ const isInflow = inject(isInflowInjectionKey) as boolean
 
 <template>
   <h3
-    class="ion-text-center rounded-2xl py-1"
+    style="margin-top: 0 !important"
+    class="ion-text-center rounded py-3"
     :class="
       isInflow
         ? 'bg-[var(--ion-color-success)]/25 text-[var(--ion-color-success-shade)]'

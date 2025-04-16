@@ -1,40 +1,31 @@
 <script setup lang="ts">
-import { IonButton, IonCol, IonGrid, IonRow } from '@ionic/vue'
+import { IonCol, IonGrid, IonRow } from '@ionic/vue'
+import { provide } from 'vue'
+import { computed } from 'vue'
 
+import { entryInjectionKey, isInflowInjectionKey } from '../injection-key'
 import { EntryRecordHome } from '../types'
+import EntryInfoModalData from './EntryInfoModalData.vue'
+import EntryInfoModalProduct from './EntryInfoModalProduct.vue'
 
 defineEmits(['confirm', 'cancel'])
-defineProps<{
+
+const props = defineProps<{
   entry: EntryRecordHome
 }>()
+
+const isInflow = computed(() => props.entry.entry_total > 0)
+
+provide(entryInjectionKey, props.entry)
+provide(isInflowInjectionKey, isInflow.value)
 </script>
 
 <template>
   <IonGrid>
-    <IonRow class="ion-margin-bottom">
-      <IonCol>{{ entry }}</IonCol>
-    </IonRow>
     <IonRow>
       <IonCol>
-        <IonButton
-          class="w-full"
-          fill="clear"
-          shape="round"
-          color="dark"
-          @click="$emit('cancel')"
-        >
-          Cancelar
-        </IonButton>
-      </IonCol>
-      <IonCol>
-        <IonButton
-          class="w-full"
-          shape="round"
-          color="danger"
-          @click="$emit('confirm')"
-        >
-          Excluir
-        </IonButton>
+        <EntryInfoModalProduct class="mb-3" />
+        <EntryInfoModalData class="mb-4" />
       </IonCol>
     </IonRow>
   </IonGrid>

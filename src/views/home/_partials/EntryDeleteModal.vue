@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IonModal } from '@ionic/vue'
+import { IonButton, IonCol, IonGrid, IonModal, IonRow } from '@ionic/vue'
 import { PhTrash } from '@phosphor-icons/vue'
 import { useTemplateRef } from 'vue'
 
@@ -39,6 +39,7 @@ const deleteEntry = async () => {
     <div class="ion-padding">
       <AppModalHeader
         title="Você tem certeza?"
+        subtitle="Os pagamentos também serão excluídos"
         :icon="PhTrash"
         class="text-[var(--ion-color-danger-shade)]"
       />
@@ -47,6 +48,32 @@ const deleteEntry = async () => {
         @confirm="onConfirmDelete"
         @cancel="modal?.$el.dismiss()"
       />
+
+      <IonGrid>
+        <IonRow>
+          <IonCol>
+            <IonButton
+              class="w-full"
+              fill="clear"
+              shape="round"
+              color="dark"
+              @click="modal?.$el.dismiss()"
+            >
+              Cancelar
+            </IonButton>
+          </IonCol>
+          <IonCol>
+            <IonButton
+              class="w-full"
+              shape="round"
+              color="danger"
+              @click="onConfirmDelete"
+            >
+              Excluir
+            </IonButton>
+          </IonCol>
+        </IonRow>
+      </IonGrid>
     </div>
   </IonModal>
 </template>
