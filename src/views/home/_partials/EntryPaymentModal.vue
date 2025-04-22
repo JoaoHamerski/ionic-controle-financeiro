@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { IonModal } from '@ionic/vue'
-import { PhCurrencyCircleDollar, PhCurrencyDollar } from '@phosphor-icons/vue'
+import { PhCurrencyCircleDollar } from '@phosphor-icons/vue'
 import { useTemplateRef } from 'vue'
 
-import AppIcon from '@/components/AppIcon.vue'
 import AppModalHeader from '@/components/AppModalHeader.vue'
 import { formatCurrencyBRL } from '@/support/helpers'
 
@@ -36,18 +35,17 @@ const modal = useTemplateRef('modal')
         <div
           class="flex text-lg text-[var(--ion-color-primary)] items-center justify-center text-center font-medium mb-2"
         >
-          <AppIcon
-            :icon="PhCurrencyDollar"
-            weight="fill"
-            class="mr-1"
-          />
-
           <b>{{ formatCurrencyBRL(entry.entry_total - entry.total_paid!) }}</b>
           <span>&nbsp;a ser pago</span>
         </div>
       </template>
 
-      <EntryPaymentModalForm @cancel="modal?.$el.dismiss()" />
+      <EntryPaymentModalForm
+        v-if="entry"
+        :entry="entry"
+        @submitted="modal?.$el.dismiss(null, 'paid')"
+        @cancel="modal?.$el.dismiss()"
+      />
     </div>
   </IonModal>
 </template>

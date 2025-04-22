@@ -125,12 +125,6 @@ const seedPayments = async (knex: Knex) => {
         id: id++,
         entry_id: entry.id,
         value,
-        created_at: faker.date
-          .between({
-            from: date.minus({ days: 50 }).toISO()!,
-            to: date.toISO()!,
-          })
-          .toISOString(),
       })),
     )
   })

@@ -27,5 +27,6 @@ export type Payment = {
   id: number
   entry_id: number
   value: number
+  date: string
   created_at: string
 }

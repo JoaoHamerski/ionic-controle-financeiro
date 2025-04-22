@@ -41,6 +41,10 @@ const onDismissModal = async (event: CustomEvent, modal: any) => {
     onEntryDeleted()
   }
 
+  if (event.detail.role === 'paid') {
+    onPaymentRegistered()
+  }
+
   await closeSlidingItems()
   modal.close()
 }
@@ -49,6 +53,11 @@ const onEntryDeleted = async () => {
   emit('refetch')
 
   presentToast({ message: 'Registro deletado!', color: 'success' })
+}
+
+const onPaymentRegistered = () => {
+  emit('refetch')
+  presentToast({ message: 'Pagamento registrado!', color: 'success' })
 }
 </script>
 

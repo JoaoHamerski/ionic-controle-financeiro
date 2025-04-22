@@ -118,7 +118,7 @@ const onPaymentsClick = async () => {
           >
             <IonLabel>
               <h4>{{ formatCurrencyBRL(payment.value) }}</h4>
-              <p>{{ DateTime.fromISO(payment.created_at).toFormat('dd/MM/yyyy') }}</p>
+              <p>{{ DateTime.fromSQL(payment.created_at).toFormat('dd/MM/yyyy') }}</p>
             </IonLabel>
           </IonItem>
         </IonList>
