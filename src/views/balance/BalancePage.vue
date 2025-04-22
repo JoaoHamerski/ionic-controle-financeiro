@@ -83,12 +83,11 @@ const fetchPayments = async (startDate: DateTime, endDate: DateTime) => {
   const paymentsBuilder = knex
     .select('*')
     .from('payments')
-    .where('created_at', '>=', startDate.toISO())
-    .where('created_at', '<=', endDate.toISO())
+    .where('created_at', '>=', startDate.toSQL())
+    .where('created_at', '<=', endDate.toSQL())
 
   const data = await dbSelect(paymentsBuilder)
 
-  console.log(data)
   paymentsData.value = groupTotalByDay(data, true)
 }
 
@@ -110,7 +109,7 @@ const getStartDate = (): DateTime => {
 const groupTotalByDay = (records: any[], isPayment: boolean = false) => {
   const recordsByDate = !isPayment
     ? groupBy(records, 'date')
-    : groupBy(records, (entry) => entry.created_at.split('T')[0])
+    : groupBy(records, (record) => record.created_at.split(' ')[0])
 
   const startDate = getStartDate()
 
