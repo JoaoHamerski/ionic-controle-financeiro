@@ -25,26 +25,28 @@ const props = defineProps<{
 
 const isLoading = ref(false)
 
-const remaining = computed(() => props.entry.entry_total - (props.entry.total_paid || 0))
+const remaining = computed(
+  () => +(props.entry.entry_total - (props.entry.total_paid || 0)).toFixed(2),
+)
 
 const form = useForm(
   {
     value: 'R$ ',
-    value_raw: '',
+    value_raw: 0,
     date: DateTime.now().toISODate(),
   },
   {
     value_raw: {
       maxValue: helpers.withMessage(
         `O valor deve ser menor que o resto (${formatCurrencyBRL(remaining.value)})`,
-        maxValue(remaining),
+        maxValue(remaining.value),
       ),
     },
   },
 )
 
 const submit = async () => {
-  form.data.value_raw = parseCurrencyBRL(form.data.value)
+  form.data.value_raw = +parseCurrencyBRL(form.data.value)
 
   if (!(await form.validate())) {
     return
@@ -70,7 +72,6 @@ const registerPayment = async () => {
 }
 
 const onRemainingClick = () => {
-  form.data.value_raw = `${remaining.value}`
   form.data.value = `${formatCurrencyBRL(remaining.value)}`
 }
 </script>
