@@ -57,6 +57,7 @@ const onEntryDeleted = async () => {
 
 const onPaymentRegistered = () => {
   emit('refetch')
+
   presentToast({ message: 'Pagamento registrado!', color: 'success' })
 }
 </script>
