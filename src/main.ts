@@ -30,7 +30,7 @@ router.isReady().then(async () => {
   await initDatabase()
 
   if (import.meta.env.DEV) {
-    // await seedDatabase()
+    await seedDatabase()
   }
 
   app.mount('#app')
