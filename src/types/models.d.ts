@@ -1,7 +1,7 @@
 export type Customer = {
   id: number
   name: string
-  phone: string | null | undefined
+  phone: string | null
   created_at: string
 }
 
