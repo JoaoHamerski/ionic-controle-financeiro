@@ -27,11 +27,18 @@ provide(entryInjectionKey, props.entry)
     <IonLabel>
       <div style="display: flex; justify-content: space-between">
         <div style="width: 60%">
-          <EntriesListItemPrice />
-          <div class="entry-details-list">
-            <EntriesListItemCustomer v-if="entry.entry_total > 0" />
-            <EntriesListItemDate />
-            <EntriesListItemNote v-if="entry.entry_note" />
+          <EntriesListItemPrice class="flex items-center mb-1" />
+
+          <div class="flex flex-col text-[.8rem] text-[var(--ion-color-medium)]">
+            <EntriesListItemCustomer
+              v-if="entry.entry_total > 0"
+              class="flex items-center mb-1"
+            />
+            <EntriesListItemDate class="flex items-center mb-1" />
+            <EntriesListItemNote
+              v-if="entry.entry_note"
+              class="flex items-center mb-1"
+            />
           </div>
         </div>
         <EntriesListItemProduct />
@@ -39,18 +46,3 @@ provide(entryInjectionKey, props.entry)
     </IonLabel>
   </IonItem>
 </template>
-
-<style scoped>
-.entry-details-list {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.8rem;
-  color: var(--ion-color-medium);
-}
-
-.entry-details-list div {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.25rem;
-}
-</style>
