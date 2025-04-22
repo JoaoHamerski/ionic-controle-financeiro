@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { IonButton, IonModal } from '@ionic/vue'
-import { computed, provide } from 'vue'
+import { provide } from 'vue'
 import { useTemplateRef } from 'vue'
+import { computed } from 'vue'
 
-import { entryInjectionKey, isInflowInjectionKey } from '../injection-key'
+import { entryInjectionKey } from '../injection-key'
 import { EntryRecordHome } from '../types'
-import EntryInfoModalData from './EntryInfoModalData.vue'
+import EntryInfo from './EntryInfo.vue'
 import EntryInfoModalPayments from './EntryInfoModalPayments.vue'
-import EntryInfoModalProduct from './EntryInfoModalProduct.vue'
 import EntryInfoModalTitle from './EntryInfoModalTitle.vue'
 
 const props = defineProps<{
@@ -15,10 +15,9 @@ const props = defineProps<{
 }>()
 
 const modal = useTemplateRef('modal')
-const isInflow = computed(() => props.entry.entry_total > 0)
 
+const isInflow = computed(() => props.entry.entry_total > 0)
 provide(entryInjectionKey, props.entry)
-provide(isInflowInjectionKey, isInflow.value)
 </script>
 
 <template>
@@ -31,13 +30,12 @@ provide(isInflowInjectionKey, isInflow.value)
       class="ion-padding"
     >
       <div>
-        <EntryInfoModalTitle />
-        <EntryInfoModalProduct class="mb-3" />
+        <EntryInfoModalTitle :is-inflow="isInflow" />
 
-        <EntryInfoModalData class="mb-4" />
+        <EntryInfo :entry="entry" />
 
         <EntryInfoModalPayments
-          v-if="entry.entry_total > 0"
+          v-if="isInflow"
           style="margin-top: 1rem"
         />
 

@@ -8,7 +8,7 @@ import { dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
 
 import { EntryRecordHome } from '../types'
-import EntryDeleteModalInfo from './EntryDeleteModalInfo.vue'
+import EntryInfo from './EntryInfo.vue'
 
 const props = defineProps<{
   entry: EntryRecordHome | null
@@ -42,7 +42,7 @@ const deleteEntry = async () => {
         class="text-[var(--ion-color-danger-shade)]"
       />
 
-      <EntryDeleteModalInfo
+      <EntryInfo
         v-if="entry"
         :entry="entry"
       />

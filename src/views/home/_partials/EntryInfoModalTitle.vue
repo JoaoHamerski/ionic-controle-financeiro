@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { inject } from 'vue'
-
-import { isInflowInjectionKey } from '../injection-key'
-
-const isInflow = inject(isInflowInjectionKey) as boolean
+defineProps<{
+  isInflow: boolean
+}>()
 </script>
 
 <template>
