@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { IonItem, IonLabel } from '@ionic/vue'
-import { provide } from 'vue'
 
-import { entryInjectionKey } from '../injection-key'
 import { EntryRecordHome } from '../types'
 import EntriesListItemCustomer from './EntriesListItemCustomer.vue'
 import EntriesListItemDate from './EntriesListItemDate.vue'
@@ -12,11 +10,9 @@ import EntriesListItemProduct from './EntriesListItemProduct.vue'
 
 defineEmits(['entry-click'])
 
-const props = defineProps<{
+defineProps<{
   entry: EntryRecordHome
 }>()
-
-provide(entryInjectionKey, props.entry)
 </script>
 
 <template>
@@ -27,21 +23,29 @@ provide(entryInjectionKey, props.entry)
     <IonLabel>
       <div style="display: flex; justify-content: space-between">
         <div style="width: 60%">
-          <EntriesListItemPrice class="flex items-center mb-1" />
+          <EntriesListItemPrice
+            :entry="entry"
+            class="flex items-center mb-1"
+          />
 
           <div class="flex flex-col text-[.8rem] text-[var(--ion-color-medium)]">
             <EntriesListItemCustomer
               v-if="entry.entry_total > 0"
+              :entry="entry"
               class="flex items-center mb-1"
             />
-            <EntriesListItemDate class="flex items-center mb-1" />
+            <EntriesListItemDate
+              :entry="entry"
+              class="flex items-center mb-1"
+            />
             <EntriesListItemNote
               v-if="entry.entry_note"
+              :entry="entry"
               class="flex items-center mb-1"
             />
           </div>
         </div>
-        <EntriesListItemProduct />
+        <EntriesListItemProduct :entry="entry" />
       </div>
     </IonLabel>
   </IonItem>

@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { PhNote } from '@phosphor-icons/vue'
-import { inject } from 'vue'
 import { computed } from 'vue'
 
 import AppIcon from '@/components/AppIcon.vue'
 import { limit } from '@/support/helpers'
 
 import { EntryRecordHome } from '../types'
-import { entryInjectionKey } from '../injection-key'
 
-const entry = inject(entryInjectionKey) as EntryRecordHome
+const { entry } = defineProps<{
+  entry: EntryRecordHome
+}>()
 
 const note = computed(() => entry.entry_note!)
 </script>

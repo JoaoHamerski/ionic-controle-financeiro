@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { PhCheckCircle, PhClock } from '@phosphor-icons/vue'
 import { computed } from 'vue'
-import { inject } from 'vue'
 
 import AppIcon from '@/components/AppIcon.vue'
 import { formatCurrencyBRL } from '@/support/helpers'
 
-import { entryInjectionKey } from '../injection-key'
 import { EntryRecordHome } from '../types'
 
-const entry = inject(entryInjectionKey) as EntryRecordHome
+const { entry } = defineProps<{
+  entry: EntryRecordHome
+}>()
 
 const isInflow = computed(() => entry.entry_total > 0)
 const isPaid = computed(() => entry.total_paid && entry.total_paid >= entry.entry_total)
@@ -18,7 +18,7 @@ const isPaid = computed(() => entry.total_paid && entry.total_paid >= entry.entr
 <template>
   <h2 class="currency">
     <span
-      style="margin-right: 0.25rem"
+      class="mr-1"
       :style="{
         color: isInflow ? 'var(--ion-color-success-shade)' : 'var(--ion-color-danger-shade)',
       }"
