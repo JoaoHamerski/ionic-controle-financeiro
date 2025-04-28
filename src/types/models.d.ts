@@ -1,4 +1,4 @@
-import { PickPartial } from './helpers'
+import { MakePartial } from './helpers'
 
 export type Customer = {
   id: number
@@ -7,7 +7,7 @@ export type Customer = {
   created_at: string
 }
 
-export type CustomerInsert = PickPartial<Customer, 'id' | 'created_at'>
+export type CustomerInsert = MakePartial<Customer, 'id' | 'created_at'>
 
 export type Product = {
   id: number
@@ -15,7 +15,7 @@ export type Product = {
   created_at: string
 }
 
-export type ProductInsert = PickPartial<Product, 'id' | 'created_at'>
+export type ProductInsert = MakePartial<Product, 'id' | 'created_at'>
 
 export type Entry = {
   id: number
@@ -29,7 +29,7 @@ export type Entry = {
   created_at: string
 }
 
-export type EntryInsert = PickPartial<Entry, 'id' | 'created_at'>
+export type EntryInsert = MakePartial<Entry, 'id' | 'created_at'>
 
 export type Payment = {
   id: number

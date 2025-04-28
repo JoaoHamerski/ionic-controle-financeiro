@@ -4,16 +4,15 @@ import { CustomerInsert } from '@/types/models'
 
 import { parseChances } from '.'
 
-type CustomerFactoryOptions = {
+export type CustomerFactoryOptions = {
   data: Partial<CustomerInsert>
-  chance: Record<'a' | 'b', string>
   chances: {
     hasPhone: number
     isNameLowercased: number
   }
 }
 
-type MakeCustomerFn = (options?: Partial<CustomerFactoryOptions>) => CustomerInsert
+export type MakeCustomerFn = (options?: Partial<CustomerFactoryOptions>) => CustomerInsert
 
 export const makeCustomer: MakeCustomerFn = (options = {}) => {
   const DEFAULT_CHANCES: CustomerFactoryOptions['chances'] = {
