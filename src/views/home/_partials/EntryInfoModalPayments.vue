@@ -34,7 +34,7 @@ const fetchPayments = async () => {
     .select('*')
     .from('payments')
     .where('entry_id', '=', entry.id)
-    .orderBy('created_at', 'desc')
+    .orderBy('date', 'desc')
 
   payments.value = await dbSelect(builder)
   isFetched.value = true
@@ -118,7 +118,7 @@ const onPaymentsClick = async () => {
           >
             <IonLabel>
               <h4>{{ formatCurrencyBRL(payment.value) }}</h4>
-              <p>{{ DateTime.fromSQL(payment.created_at).toFormat('dd/MM/yyyy') }}</p>
+              <p>{{ DateTime.fromISO(payment.date).toFormat('dd/MM/yyyy') }}</p>
             </IonLabel>
           </IonItem>
         </IonList>

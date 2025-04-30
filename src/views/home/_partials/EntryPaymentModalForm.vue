@@ -65,6 +65,7 @@ const registerPayment = async () => {
     .insert({
       entry_id: props.entry.id,
       value: form.data.value_raw,
+      date: form.data.date,
     })
     .into('payments')
 

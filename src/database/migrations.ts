@@ -25,11 +25,12 @@ export default [
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE SET NULL,
         FOREIGN KEY (product_id) REFERENCES products(id)  ON DELETE SET NULL
-    );`,
+      );`,
       `CREATE TABLE IF NOT EXISTS payments (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         entry_id INTEGER,
         value DECIMAL(10, 2),
+        date DATE DEFAULT CURRENT_DATE,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (entry_id) REFERENCES entries(id) ON DELETE CASCADE
       );

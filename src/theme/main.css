@@ -5,6 +5,7 @@
 @import "./transitions.css";
 @import "./ionic-custom.css";
 
+
 @layer base {
   * {
     font-family: 'Inter' !important;

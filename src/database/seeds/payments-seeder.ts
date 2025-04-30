@@ -33,11 +33,14 @@ export const seedPayments = async (knex: Knex) => {
       partials = partials.slice(0, +(partials.length / 2).toFixed(0))
     }
 
+    const created_at = DateTime.fromJSDate(paidAt)
+
     payments.push(
       ...partials.map((value) => ({
         value,
         entry_id: entry.id,
-        created_at: DateTime.fromJSDate(paidAt).toSQL(),
+        date: created_at.toSQLDate(),
+        created_at: created_at.toSQL(),
       })),
     )
   }
