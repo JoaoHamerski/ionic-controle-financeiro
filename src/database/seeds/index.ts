@@ -1,8 +1,9 @@
 import { SQLiteDBConnection } from '@capacitor-community/sqlite'
 import { Knex } from 'knex'
 
-import { seedCustomers } from './customer-seeder'
+import { seedCustomers } from './customers-seeder'
 import { seedEntries } from './entries-seeder'
+import { seedPayments } from './payments-seeder'
 import { seedProducts } from './products-seeder'
 
 export const truncateAllTables = async (database: SQLiteDBConnection) => {
@@ -17,4 +18,5 @@ export const seedDatabase = async (knex: Knex) => {
   await seedCustomers(knex)
   await seedProducts(knex)
   await seedEntries(knex)
+  await seedPayments(knex)
 }
