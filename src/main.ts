@@ -11,7 +11,7 @@ import { createApp } from 'vue'
 import { plugin as VueTippy } from 'vue-tippy'
 
 import App from './App.vue'
-import { seedDatabase } from './database/seed'
+import { seedDatabase, truncateAllTables } from './database/seeds'
 import router from './router'
 import { useDatabaseStore } from './stores/database-store'
 
@@ -23,14 +23,15 @@ const pinia = createPinia()
 const app = createApp(App).use(IonicVue).use(router).use(pinia).use(autoAnimatePlugin).use(VueTippy)
 
 router.isReady().then(async () => {
-  const { initDatabase } = useDatabaseStore()
+  const databaseStore = useDatabaseStore()
 
   SafeAreaController.injectCSSVariables()
 
-  await initDatabase()
+  await databaseStore.initDatabase()
 
   if (import.meta.env.DEV) {
-    await seedDatabase()
+    await truncateAllTables(databaseStore.database)
+    await seedDatabase(databaseStore.knex)
   }
 
   app.mount('#app')

@@ -18,10 +18,7 @@ defineProps<{
   <IonItem>
     <IonLabel>
       <div>{{ product.name }}</div>
-      <div
-        v-if="product.total_sold"
-        :style="{ fontSize: '.75rem', color: 'var(--ion-color-medium)' }"
-      >
+      <div :style="{ fontSize: '.75rem', color: 'var(--ion-color-medium)' }">
         Total vendido: {{ formatCurrencyBRL(product.total_sold) }}
       </div>
     </IonLabel>

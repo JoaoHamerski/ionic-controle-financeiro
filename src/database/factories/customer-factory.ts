@@ -26,8 +26,8 @@ export const makeCustomer: MakeCustomerFn = (options = {}) => {
   const phone = () => faker.string.numeric({ length: { min: 10, max: 11 } })
 
   return {
-    name: chances.hasPhone ? name.toLowerCase() : name,
-    phone: chances.isNameLowercased ? phone() : null,
+    name: chances.isNameLowercased ? name.toLowerCase() : name,
+    phone: chances.hasPhone ? phone() : null,
     ...(options.data || {}),
   }
 }

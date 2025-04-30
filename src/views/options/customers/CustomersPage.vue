@@ -13,6 +13,7 @@ import CustomersList from './_partials/CustomersList.vue'
 export type CustomerRecord = Customer & {
   total_spent: number
 }
+
 const { knex } = useDatabaseStore()
 const customers = ref<CustomerRecord[]>([])
 
@@ -25,7 +26,7 @@ const fetch = async () => {
     .select(['customers.*'])
     .sum('entries.value AS total_spent')
     .from('customers')
-    .join('entries', 'customers.id', 'entries.customer_id')
+    .leftJoin('entries', 'customers.id', 'entries.customer_id')
     .orderByRaw('name COLLATE NOCASE ASC')
     .groupBy('customers.id')
 

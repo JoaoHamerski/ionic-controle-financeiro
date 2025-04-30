@@ -26,8 +26,9 @@ const fetch = async () => {
     .select(['products.*'])
     .sum('entries.value AS total_sold')
     .from('products')
-    .join('entries', 'products.id', 'entries.product_id')
-    .where('entries.value', '>', 0)
+    .leftJoin('entries', function () {
+      this.on('products.id', '=', 'entries.product_id').andOn('entries.value', '>', 0)
+    })
     .orderByRaw('name COLLATE NOCASE ASC')
     .groupBy('products.id')
 
