@@ -96,7 +96,10 @@ const isTabActive = (tab: TabItem) => tab.name == activeTabName.value
 }
 
 ion-tab-bar {
-  padding: 0.2rem 0;
+  padding-bottom: 0.2rem;
+  padding-top: 0.2rem;
+  box-shadow: 0 0 25px 20px white;
+  --border: none;
 }
 
 ion-tab-button {
