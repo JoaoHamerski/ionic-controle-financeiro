@@ -7,10 +7,11 @@ import { dbSelect, dbStatement } from '@/services/db-service'
 import { makeEntry } from '../factories/entry-factory'
 
 export const seedEntries = async (knex: Knex) => {
+  const QUANTITY = faker.number.int({ min: 100, max: 500 })
   const productIds = map(await dbSelect(knex.select('id').from('products')), 'id')
   const customerIds = map(await dbSelect(knex.select('id').from('customers')), 'id')
 
-  const entries = Array(100)
+  const entries = Array(QUANTITY)
     .fill(0)
     .map(() =>
       makeEntry({
