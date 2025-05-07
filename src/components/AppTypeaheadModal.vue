@@ -118,10 +118,3 @@ const onModalDidDismiss = () => {
     </IonContent>
   </IonModal>
 </template>
-
-<style scoped>
-ion-toolbar ion-button {
-  --padding-top: 15px;
-  --padding-bottom: 15px;
-}
-</style>

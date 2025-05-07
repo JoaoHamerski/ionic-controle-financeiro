@@ -18,6 +18,7 @@ const COLOR_CLASSES = [
 
 const props = withDefaults(
   defineProps<{
+    title: string
     color?: 'primary' | 'success'
     icon: any
   }>(),
@@ -37,7 +38,7 @@ const colorClass = computed(() => COLOR_CLASSES.find(({ name }) => name === prop
         :class="colorClass?.titleClass"
         style="font-weight: 600"
       >
-        TIPO DE REGISTRO
+        {{ title }}
       </h4>
     </div>
     <div class="text-center my-10">

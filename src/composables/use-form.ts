@@ -15,7 +15,7 @@ export const useForm = <T extends object>(formData: T, rules: any = {}) => {
     const result = await v$.value.$validate()
 
     for (const error of v$.value.$errors) {
-      // @ts-expect-error Idk what is wrong with this TS shit
+      // @ts-expect-error Idk what is wrong with this TS bullshit
       errors[error.$property] = error.$message
     }
 
@@ -23,7 +23,7 @@ export const useForm = <T extends object>(formData: T, rules: any = {}) => {
   }
 
   const clearError = async (field: string) => {
-    // @ts-expect-error Idk what is wrong with this TS shit
+    // @ts-expect-error Idk what is wrong with this TS bullshit
     delete errors[field]
   }
 

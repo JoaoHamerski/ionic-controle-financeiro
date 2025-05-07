@@ -53,7 +53,7 @@ const selectProduct = (product: Product) => {
     item-prop="name"
     :input-attrs="{
       label: 'Produto',
-      placeholder: 'Digite o nome...',
+      placeholder: 'Busque pelo nome...',
       helperText: 'Ou digite o nome para cadastrar',
     }"
     @select="selectProduct"

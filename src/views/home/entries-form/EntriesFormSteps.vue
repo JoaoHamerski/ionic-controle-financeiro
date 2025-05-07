@@ -5,7 +5,7 @@ const props = defineProps<{
   activeStep: number
 }>()
 
-const isStepActive = (step: number) => step === props.activeStep + 1
+const isStepActive = (step: number) => step === props.activeStep
 </script>
 
 <template>

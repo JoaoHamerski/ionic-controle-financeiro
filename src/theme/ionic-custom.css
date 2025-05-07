@@ -1,9 +1,9 @@
 @layer base {
     ion-button {
         --box-shadow: none;
-        /* --border-width: 0; */
         --padding-bottom: 15px;
         --padding-top: 15px;
+        --transition: background .25s;
     }
 
     ion-fab-button {

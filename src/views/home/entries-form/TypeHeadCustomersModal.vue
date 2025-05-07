@@ -54,7 +54,7 @@ const selectCustomer = (customer: Customer) => {
     item-prop="name"
     :input-attrs="{
       label: 'Cliente',
-      placeholder: 'Digite o nome...',
+      placeholder: 'Busque pelo nome...',
       helperText: 'Ou digite o nome para cadastrar',
     }"
     @select="selectCustomer"

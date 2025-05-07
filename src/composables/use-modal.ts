@@ -9,7 +9,7 @@ export const useModal = <T>() => {
   const isOpen = computed(() => modal.value.isOpen)
   const data = computed(() => modal.value.data)
 
-  const open = (data: T) => {
+  const open = (data: T | null = null) => {
     modal.value = {
       isOpen: true,
       data,
