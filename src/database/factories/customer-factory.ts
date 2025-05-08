@@ -7,8 +7,8 @@ import { parseChances } from '.'
 export type CustomerFactoryOptions = {
   data: Partial<CustomerInsert>
   chances: {
-    hasPhone: number
-    isNameLowercased: number
+    hasPhone?: number
+    isNameLowercased?: number
   }
 }
 

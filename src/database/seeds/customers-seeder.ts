@@ -10,7 +10,7 @@ export const seedCustomers = async (knex: Knex) => {
   const QUANTITY = faker.number.int({ min: 50, max: 100 })
   const customers: CustomerInsert[] = Array(QUANTITY)
     .fill(0)
-    .map(() => makeCustomer())
+    .map(() => makeCustomer({ chances: { hasPhone: 0.7 } }))
 
   await dbStatement(knex.insert(customers).into('customers'))
 }
