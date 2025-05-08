@@ -15,6 +15,7 @@ const isStepActive = (step: number) => step === props.activeStep
       :key="step"
       shape="round"
       class="size-10"
+      :disabled="step > activeStep"
       :fill="isStepActive(step) ? 'solid' : 'clear'"
     >
       <span slot="icon-only">{{ step }}</span>
