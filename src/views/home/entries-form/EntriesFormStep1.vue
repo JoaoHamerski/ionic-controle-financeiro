@@ -32,7 +32,7 @@ watch(
       </template>
     </EntriesFormStepHeader>
 
-    <div>
+    <div class="px-2">
       <IonButton
         size="large"
         class="w-full"

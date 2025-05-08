@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { IonSelectOption } from '@ionic/vue'
-import { PhPackage, PhTrendDown } from '@phosphor-icons/vue'
+import { PhPackage } from '@phosphor-icons/vue'
 import { computed, inject, watch } from 'vue'
 
 import AppSelect from '@/components/AppSelect.vue'
@@ -24,13 +24,9 @@ const componentProps = computed(() =>
   form.data.type === 'inflow'
     ? {
         title: 'PRODUTO E CLIENTE',
-        icon: PhPackage,
-        subtitle: 'Informe o produto e cliente',
       }
     : {
         title: 'PRODUTO',
-        icon: PhTrendDown,
-        subtitle: 'Informe o produto',
       },
 )
 
@@ -57,15 +53,11 @@ watch(
     <EntriesFormStepHeader
       :title="componentProps.title"
       color="primary"
-      :icon="componentProps.icon"
-    >
-      <template #subtitle>
-        {{ componentProps.subtitle }}
-      </template>
-    </EntriesFormStepHeader>
+      :icon="PhPackage"
+    />
 
     <form>
-      <div>
+      <div class="px-2">
         <AppSelect
           label="Selecione o produto"
           name="product"

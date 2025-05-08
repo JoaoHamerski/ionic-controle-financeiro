@@ -14,7 +14,7 @@ export const formatCurrencyBRL = (value: string | number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(+value)
 
 export const parseCurrencyBRL = (value: string) => {
-  return value.replaceAll('.', '').replaceAll(',', '.').replaceAll('R$', '')
+  return +value.replaceAll('.', '').replaceAll(',', '.').replaceAll('R$', '')
 }
 
 export const titleCase = (value: string, except: string[] = ['de', 'da', 'dos', 'do', 'das']) =>

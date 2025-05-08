@@ -14,6 +14,8 @@ export const useForm = <T extends object>(formData: T, rules: any = {}) => {
     const v$ = useVuelidate(localRules.value, formData)
     const result = await v$.value.$validate()
 
+    clearError('*')
+
     for (const error of v$.value.$errors) {
       // @ts-expect-error Idk what is wrong with this TS bullshit
       errors[error.$property] = error.$message
@@ -22,7 +24,15 @@ export const useForm = <T extends object>(formData: T, rules: any = {}) => {
     return result
   }
 
-  const clearError = async (field: string) => {
+  const clearError = async (field: string | '*') => {
+    if (field === '*') {
+      for (const key in errors) {
+        // @ts-expect-error Idk what is wrong with this TS bullshit
+        delete errors[key]
+      }
+
+      return
+    }
     // @ts-expect-error Idk what is wrong with this TS bullshit
     delete errors[field]
   }

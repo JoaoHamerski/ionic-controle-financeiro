@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { IonButton } from '@ionic/vue'
-import { PhArrowCircleLeft, PhArrowCircleRight } from '@phosphor-icons/vue'
-import { isEmpty } from 'lodash'
-import { ref } from 'vue'
-import { markRaw } from 'vue'
-import { provide } from 'vue'
+import { PhArrowCircleLeft, PhArrowCircleRight, PhCheckCircle } from '@phosphor-icons/vue'
+import { helpers, required, requiredIf } from '@vuelidate/validators'
+import { markRaw, provide, ref } from 'vue'
+import { computed } from 'vue'
 
 import AppIcon from '@/components/AppIcon.vue'
 import { useForm } from '@/composables/use-form'
@@ -15,6 +14,7 @@ import { entryFormInjectionKey } from '../injection-key'
 import EntriesFormStep1 from './EntriesFormStep1.vue'
 import EntriesFormStep2 from './EntriesFormStep2.vue'
 import EntriesFormStep3 from './EntriesFormStep3.vue'
+import EntriesFormStep4 from './EntriesFormStep4.vue'
 import EntriesFormSteps from './EntriesFormSteps.vue'
 
 export type EntryForm = typeof form
@@ -23,6 +23,7 @@ const steps = ref([
   { step: 1, component: markRaw(EntriesFormStep1) },
   { step: 2, component: markRaw(EntriesFormStep2) },
   { step: 3, component: markRaw(EntriesFormStep3) },
+  { step: 4, component: markRaw(EntriesFormStep4) },
 ])
 
 const activeStep = ref(1)
@@ -31,30 +32,56 @@ const form = useForm<{
   type: 'inflow' | 'outflow' | ''
   product: Product | null
   customer: Customer | null
-}>({
-  type: '',
-  product: null,
-  customer: null,
-})
+  price: string
+  quantity: number
+}>(
+  {
+    type: '',
+    product: null,
+    customer: null,
+    price: '',
+    quantity: 1,
+  },
+  () => ({
+    type: { required: helpers.withMessage('Por favor, selecione um tipo', required) },
+    product: { required: helpers.withMessage('Por favor, selecione um produto', required) },
+    customer: {
+      requiredIf: helpers.withMessage(
+        'Por favor, selecione um cliente',
+        requiredIf(form.data.type === 'inflow'),
+      ),
+    },
+    price: { required: helpers.withMessage('Informe um preço', required) },
+    quantity: { required: helpers.withMessage('Informe a quantidade', required) },
+  }),
+)
 
-provide(entryFormInjectionKey, form)
+const isLastStep = computed(() => steps.value.length === activeStep.value)
 
 const nextStep = async () => {
-  if (activeStep.value === 1 && !validateStep1()) {
-    await presentToast({ color: 'danger', message: 'Por favor, selecione um tipo' })
+  await form.validate()
+
+  if (activeStep.value === 1 && form.errors.type) {
+    await presentToast({ color: 'danger', message: form.errors.type })
     return
   }
 
-  activeStep.value++
-}
-
-const validateStep1 = () => {
-  if (isEmpty(form.data.type)) {
-    return false
+  if (activeStep.value === 2 && (form.errors.product || form.errors.customer)) {
+    await presentToast({ color: 'danger', message: form.errors.product || form.errors.customer })
+    return
   }
 
-  return true
+  if (activeStep.value === 3 && (form.errors.price || form.errors.quantity)) {
+    await presentToast({ color: 'danger', message: form.errors.price || form.errors.quantity })
+    return
+  }
+
+  if (!isLastStep.value) {
+    activeStep.value++
+  }
 }
+
+provide(entryFormInjectionKey, form)
 </script>
 
 <template>
@@ -99,12 +126,12 @@ const validateStep1 = () => {
       >
         <AppIcon
           slot="end"
-          :icon="PhArrowCircleRight"
+          :icon="isLastStep ? PhCheckCircle : PhArrowCircleRight"
           size="24"
           weight="fill"
           class="ml-2"
         />
-        Próximo
+        {{ isLastStep ? 'Concluir' : 'Próximo' }}
       </IonButton>
     </div>
   </div>
