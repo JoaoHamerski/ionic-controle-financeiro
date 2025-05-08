@@ -124,7 +124,7 @@ const fetchTotalRecords = async () => {
 
     <EntriesCreateModal
       :is-open="isCreateEntryModalOpen"
-      @submit="fetch(true)"
+      @submitted="fetch(true)"
       @did-dismiss="isCreateEntryModalOpen = false"
     />
   </IonPage>

@@ -7,6 +7,9 @@ import { computed } from 'vue'
 
 import AppIcon from '@/components/AppIcon.vue'
 import { useForm } from '@/composables/use-form'
+import { dbStatement } from '@/services/db-service'
+import { useDatabaseStore } from '@/stores/database-store'
+import { parseCurrencyBRL } from '@/support/helpers'
 import { presentToast } from '@/support/toast'
 import { Customer, Product } from '@/types/models'
 
@@ -18,6 +21,10 @@ import EntriesFormStep4 from './EntriesFormStep4.vue'
 import EntriesFormSteps from './EntriesFormSteps.vue'
 
 export type EntryForm = typeof form
+
+const emit = defineEmits(['submitted'])
+
+const { knex } = useDatabaseStore()
 
 const steps = ref([
   { step: 1, component: markRaw(EntriesFormStep1) },
@@ -76,9 +83,29 @@ const nextStep = async () => {
     return
   }
 
+  if (isLastStep.value) {
+    await submit()
+  }
+
   if (!isLastStep.value) {
     activeStep.value++
   }
+}
+
+const submit = async () => {
+  const total = +(parseCurrencyBRL(form.data.price) * form.data.quantity).toFixed(2)
+  const builder = knex
+    .insert({
+      customer_id: form.data.customer?.id || null,
+      product_id: form.data.product?.id || null,
+      value: parseCurrencyBRL(form.data.price),
+      quantity: form.data.quantity,
+      total,
+    })
+    .into('entries')
+
+  await dbStatement(builder)
+  emit('submitted')
 }
 
 provide(entryFormInjectionKey, form)
@@ -131,7 +158,7 @@ provide(entryFormInjectionKey, form)
           weight="fill"
           class="ml-2"
         />
-        {{ isLastStep ? 'Concluir' : 'Próximo' }}
+        {{ isLastStep ? 'Confirmar' : 'Próximo' }}
       </IonButton>
     </div>
   </div>

@@ -4,9 +4,18 @@ import { PhArrowLeft } from '@phosphor-icons/vue'
 import { ref } from 'vue'
 
 import AppIcon from '@/components/AppIcon.vue'
+import { presentToast } from '@/support/toast'
 
 import EntriesForm from './EntriesForm.vue'
+
+const emit = defineEmits(['submitted'])
 const modal = ref()
+
+const onSubmitted = async () => {
+  modal.value.$el.dismiss()
+  emit('submitted')
+  await presentToast({ color: 'success', message: 'Entrada registrada!' })
+}
 </script>
 
 <template>
@@ -27,7 +36,7 @@ const modal = ref()
     </IonHeader>
 
     <IonContent class="ion-padding">
-      <EntriesForm />
+      <EntriesForm @submitted="onSubmitted" />
     </IonContent>
   </IonModal>
 </template>
