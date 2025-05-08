@@ -49,18 +49,19 @@ const form = useForm<{
     price: '',
     quantity: 1,
   },
-  () => ({
+  {
     type: { required: helpers.withMessage('Por favor, selecione um tipo', required) },
     product: { required: helpers.withMessage('Por favor, selecione um produto', required) },
     customer: {
-      requiredIf: helpers.withMessage(
-        'Por favor, selecione um cliente',
-        requiredIf(form.data.type === 'inflow'),
-      ),
+      requiredIf: () =>
+        helpers.withMessage(
+          'Por favor, selecione um cliente',
+          requiredIf(() => form.data.type === 'inflow'),
+        ),
     },
     price: { required: helpers.withMessage('Informe um preço', required) },
     quantity: { required: helpers.withMessage('Informe a quantidade', required) },
-  }),
+  },
 )
 
 const isLastStep = computed(() => steps.value.length === activeStep.value)
@@ -100,7 +101,7 @@ const submit = async () => {
       product_id: form.data.product?.id || null,
       value: parseCurrencyBRL(form.data.price),
       quantity: form.data.quantity,
-      total,
+      total: form.data.type === 'inflow' ? total : -total,
     })
     .into('entries')
 
