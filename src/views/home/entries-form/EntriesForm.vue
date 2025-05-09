@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { IonButton } from '@ionic/vue'
-import { PhArrowCircleLeft, PhArrowCircleRight, PhCheckCircle } from '@phosphor-icons/vue'
 import { helpers, required, requiredIf } from '@vuelidate/validators'
 import { markRaw, provide, ref } from 'vue'
 import { computed } from 'vue'
+import { onMounted } from 'vue'
 
-import AppIcon from '@/components/AppIcon.vue'
 import { useForm } from '@/composables/use-form'
 import { dbStatement } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
@@ -14,6 +12,7 @@ import { presentToast } from '@/support/toast'
 import { Customer, Product } from '@/types/models'
 
 import { entryFormInjectionKey } from '../injection-key'
+import EntriesFormBottom from './EntriesFormBottom.vue'
 import EntriesFormStep1 from './EntriesFormStep1.vue'
 import EntriesFormStep2 from './EntriesFormStep2.vue'
 import EntriesFormStep3 from './EntriesFormStep3.vue'
@@ -21,6 +20,14 @@ import EntriesFormStep4 from './EntriesFormStep4.vue'
 import EntriesFormSteps from './EntriesFormSteps.vue'
 
 export type EntryForm = typeof form
+
+type EntryFormData = {
+  type: 'inflow' | 'outflow' | ''
+  product: Product | null
+  customer: Customer | null
+  price: string
+  quantity: number
+}
 
 const emit = defineEmits(['submitted'])
 
@@ -35,34 +42,28 @@ const steps = ref([
 
 const activeStep = ref(1)
 
-const form = useForm<{
-  type: 'inflow' | 'outflow' | ''
-  product: Product | null
-  customer: Customer | null
-  price: string
-  quantity: number
-}>(
-  {
-    type: '',
-    product: null,
-    customer: null,
-    price: '',
-    quantity: 1,
-  },
-  {
+const form = useForm<EntryFormData>({
+  type: '',
+  product: null,
+  customer: null,
+  price: '',
+  quantity: 1,
+})
+
+onMounted(() => {
+  form.setRules({
     type: { required: helpers.withMessage('Por favor, selecione um tipo', required) },
     product: { required: helpers.withMessage('Por favor, selecione um produto', required) },
     customer: {
-      requiredIf: () =>
-        helpers.withMessage(
-          'Por favor, selecione um cliente',
-          requiredIf(() => form.data.type === 'inflow'),
-        ),
+      requiredIf: helpers.withMessage(
+        'Por favor, selecione um cliente',
+        requiredIf(() => form.data.type === 'inflow'),
+      ),
     },
     price: { required: helpers.withMessage('Informe um preço', required) },
     quantity: { required: helpers.withMessage('Informe a quantidade', required) },
-  },
-)
+  })
+})
 
 const isLastStep = computed(() => steps.value.length === activeStep.value)
 
@@ -119,48 +120,31 @@ provide(entryFormInjectionKey, form)
       :active-step="activeStep"
     />
 
-    <template
-      v-for="step in steps"
-      :key="step.step"
+    <Transition
+      mode="out-in"
+      enter-active-class="transition-all"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
     >
-      <Component
-        :is="step.component"
-        v-if="step.step === activeStep"
-        v-model="form"
-      />
-    </template>
+      <div :key="activeStep">
+        <template
+          v-for="step in steps"
+          :key="step.step"
+        >
+          <Component
+            :is="step.component"
+            v-if="step.step === activeStep"
+            v-model="form"
+          />
+        </template>
+      </div>
+    </Transition>
 
-    <div class="flex mt-auto">
-      <IonButton
-        class="w-full"
-        shape="round"
-        fill="clear"
-        :disabled="activeStep === 1"
-        @click="activeStep--"
-      >
-        <AppIcon
-          slot="start"
-          :icon="PhArrowCircleLeft"
-          size="24"
-          weight="fill"
-          class="mr-2"
-        />
-        Anterior
-      </IonButton>
-      <IonButton
-        class="w-full"
-        shape="round"
-        @click="nextStep"
-      >
-        <AppIcon
-          slot="end"
-          :icon="isLastStep ? PhCheckCircle : PhArrowCircleRight"
-          size="24"
-          weight="fill"
-          class="ml-2"
-        />
-        {{ isLastStep ? 'Confirmar' : 'Próximo' }}
-      </IonButton>
-    </div>
+    <EntriesFormBottom
+      :active-step="activeStep"
+      :is-last-step="isLastStep"
+      @previous-click="activeStep--"
+      @next-click="nextStep"
+    />
   </div>
 </template>
