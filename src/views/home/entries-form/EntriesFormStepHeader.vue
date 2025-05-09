@@ -3,16 +3,26 @@ import { computed } from 'vue'
 
 import AppIcon from '@/components/AppIcon.vue'
 
-const COLOR_CLASSES = [
+const STYLES = [
   {
     name: 'primary',
-    titleClass: 'bg-[var(--ion-color-primary)]/25 text-[var(--ion-color-primary-shade)]',
-    iconClass: 'text-[var(--ion-color-primary)]',
+    title: {
+      backgroundColor: 'rgba(var(--ion-color-primary-rgb), 0.25)',
+      color: 'var(--ion-color-primary-shade)',
+    },
+    icon: {
+      color: 'var(--ion-color-primary)',
+    },
   },
   {
     name: 'success',
-    titleClass: 'bg-[var(--ion-color-success)]/25 text-[var(--ion-color-success-shade)]',
-    iconClass: 'text-[var(--ion-color-success)]',
+    title: {
+      backgroundColor: 'rgba(var(--ion-color-success-rgb), 0.25)',
+      color: 'var(--ion-color-success-shade)',
+    },
+    icon: {
+      color: 'var(--ion-color-success)',
+    },
   },
 ]
 
@@ -27,7 +37,7 @@ const props = withDefaults(
   },
 )
 
-const colorClass = computed(() => COLOR_CLASSES.find(({ name }) => name === props.color))
+const style = computed(() => STYLES.find(({ name }) => name === props.color))
 </script>
 
 <template>
@@ -35,8 +45,7 @@ const colorClass = computed(() => COLOR_CLASSES.find(({ name }) => name === prop
     <div>
       <h4
         class="text-center rounded-full py-3"
-        :class="colorClass?.titleClass"
-        style="font-weight: 600"
+        :style="{ ...(style?.title || {}), fontWeight: 600 }"
       >
         {{ title }}
       </h4>
@@ -45,7 +54,7 @@ const colorClass = computed(() => COLOR_CLASSES.find(({ name }) => name === prop
       <AppIcon
         :icon="icon"
         size="90"
-        :class="colorClass?.iconClass"
+        :style="{ ...(style?.icon || {}) }"
         weight="fill"
       />
     </div>
