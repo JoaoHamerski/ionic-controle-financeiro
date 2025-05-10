@@ -34,10 +34,6 @@ const TABS: TabItem[] = [
   },
 ]
 
-const theme = ref({
-  transitionDuration: '.25s',
-})
-
 const bar = ref()
 
 const activeTabName = computed(() => bar.value?.tabState?.activeTab)
@@ -53,6 +49,7 @@ const isTabActive = (tab: TabItem) => tab.name == activeTabName.value
       <IonTabBar
         slot="bottom"
         ref="bar"
+        :class="isTabActive(TABS[0]) ? 'bottom-shadow' : ''"
       >
         <IonTabButton
           v-for="tab in TABS"
@@ -61,15 +58,15 @@ const isTabActive = (tab: TabItem) => tab.name == activeTabName.value
           :href="tab.href"
         >
           <AppIcon
-            class="icon"
+            class="tab-icon"
             :weight="isTabActive(tab) ? 'fill' : 'regular'"
             :icon="tab.icon"
             size="26"
           />
 
           <IonLabel
-            class="label"
-            :class="isTabActive(tab) ? 'label-active' : ''"
+            class="tab-label"
+            :class="isTabActive(tab) ? 'tab-label-active' : ''"
           >
             {{ tab.label }}
           </IonLabel>
@@ -80,25 +77,28 @@ const isTabActive = (tab: TabItem) => tab.name == activeTabName.value
 </template>
 
 <style scoped>
-.icon {
-  transition: all v-bind('theme.transitionDuration');
+.tab-icon {
+  transition: all var(--transition-duration);
 }
 
-.label {
+.tab-label {
   padding: 0.25rem 0.75rem;
-  transition: all v-bind('theme.transitionDuration');
+  transition: all var(--transition-duration);
   border-radius: 1rem;
 }
 
-.label-active {
+.tab-label-active {
   background-color: rgba(var(--ion-color-primary-rgb), 0.2);
   font-weight: 600;
+}
+
+ion-tab-bar.bottom-shadow {
+  box-shadow: 0 0 25px 20px white;
 }
 
 ion-tab-bar {
   padding-bottom: 0.2rem;
   padding-top: 0.2rem;
-  box-shadow: 0 0 25px 20px white;
   --border: none;
 }
 
@@ -106,8 +106,8 @@ ion-tab-button {
   --ripple-color: transparent;
 }
 
-ion-tab-button:active .label,
-ion-tab-button:active .icon {
+ion-tab-button:active .tab-label,
+ion-tab-button:active .tab-icon {
   color: var(--ion-color-primary-shade);
 }
 </style>

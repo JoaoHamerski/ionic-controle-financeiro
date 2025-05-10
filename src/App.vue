@@ -2,10 +2,7 @@
 import { App } from '@capacitor/app'
 import { Preferences } from '@capacitor/preferences'
 import { IonApp, IonRouterOutlet, useBackButton } from '@ionic/vue'
-import { Database } from 'sqlite3'
-import { onMounted } from 'vue'
-import { ref } from 'vue'
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 import { PREFERENCES } from './support/preferences-keys'

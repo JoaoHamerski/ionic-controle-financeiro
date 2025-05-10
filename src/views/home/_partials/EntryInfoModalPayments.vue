@@ -105,7 +105,7 @@ const onPaymentsClick = async () => {
       class="max-h-[200px] overflow-auto"
     >
       <div
-        class="height-animated"
+        class="height-animated relative"
         :class="{
           'height-animated-active': isPaymentsExpanded,
         }"
