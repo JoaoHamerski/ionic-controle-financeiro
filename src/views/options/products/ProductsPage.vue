@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { IonContent, onIonViewWillEnter } from '@ionic/vue'
+import { IonContent, onIonViewDidEnter } from '@ionic/vue'
 import { ref } from 'vue'
 
+import AppCenteredSpinner from '@/components/AppCenteredSpinner.vue'
 import AppEmptyResult from '@/components/AppEmptyResult.vue'
 import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
@@ -15,10 +16,13 @@ export type ProductRecord = Product & {
 }
 
 const { knex } = useDatabaseStore()
-const products = ref<ProductRecord[]>([])
 
-onIonViewWillEnter(async () => {
+const products = ref<ProductRecord[]>([])
+const isLoaded = ref(false)
+
+onIonViewDidEnter(async () => {
   await fetch()
+  isLoaded.value = true
 })
 
 const fetch = async () => {
@@ -27,6 +31,7 @@ const fetch = async () => {
     .sum('entries.value AS total_sold')
     .from('products')
     .leftJoin('entries', function () {
+      // @ts-expect-error It expects 0 to be a string, but it won't work properly
       this.on('products.id', '=', 'entries.product_id').andOn('entries.value', '>', 0)
     })
     .orderByRaw('name COLLATE NOCASE ASC')
@@ -39,12 +44,18 @@ const fetch = async () => {
 <template>
   <OptionsPageLayout title="Produtos">
     <IonContent>
-      <ProductsList
-        v-if="products.length"
-        :products="products"
-        @submit="fetch"
-      />
-      <AppEmptyResult v-else />
+      <Transition
+        mode="out-in"
+        name="fade-fast"
+      >
+        <AppCenteredSpinner v-if="!isLoaded" />
+        <ProductsList
+          v-else-if="products.length"
+          :products="products"
+          @submit="fetch"
+        />
+        <AppEmptyResult v-else />
+      </Transition>
     </IonContent>
   </OptionsPageLayout>
 </template>

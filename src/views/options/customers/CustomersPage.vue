@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { IonContent, onIonViewWillEnter } from '@ionic/vue'
+import { IonContent, onIonViewDidEnter } from '@ionic/vue'
 import { ref } from 'vue'
 
+import AppCenteredSpinner from '@/components/AppCenteredSpinner.vue'
 import AppEmptyResult from '@/components/AppEmptyResult.vue'
 import { dbSelect } from '@/services/db-service'
 import { useDatabaseStore } from '@/stores/database-store'
@@ -15,10 +16,14 @@ export type CustomerRecord = Customer & {
 }
 
 const { knex } = useDatabaseStore()
-const customers = ref<CustomerRecord[]>([])
 
-onIonViewWillEnter(async () => {
+const customers = ref<CustomerRecord[]>([])
+const isLoaded = ref(false)
+
+onIonViewDidEnter(async () => {
   await fetch()
+
+  isLoaded.value = true
 })
 
 const fetch = async () => {
@@ -37,12 +42,18 @@ const fetch = async () => {
 <template>
   <OptionsPageLayout title="Clientes">
     <IonContent>
-      <CustomersList
-        v-if="customers.length"
-        :customers="customers"
-        @submitted="fetch"
-      />
-      <AppEmptyResult v-else />
+      <Transition
+        mode="out-in"
+        name="fade-fast"
+      >
+        <AppCenteredSpinner v-if="!isLoaded" />
+        <CustomersList
+          v-else-if="customers.length"
+          :customers="customers"
+          @submitted="fetch"
+        />
+        <AppEmptyResult v-else />
+      </Transition>
     </IonContent>
   </OptionsPageLayout>
 </template>
