@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { PhCalendarDots, PhUser } from '@phosphor-icons/vue'
+import { IonRippleEffect } from '@ionic/vue'
+import { PhCalendarDots, PhUser, PhWhatsappLogo } from '@phosphor-icons/vue'
 import { DateTime } from 'luxon'
 import { computed } from 'vue'
 
@@ -54,6 +55,23 @@ const isInflow = computed(() => props.entry.entry_total > 0)
         class="mr-1"
       />
       {{ titleCase(entry.customer_name) }}
+      <span
+        v-if="entry.customer_phone"
+        class="relative ion-activatable ml-2 size-10 flex items-center justify-center rounded-full overflow-hidden"
+      >
+        <a
+          :href="`https://wa.me/55${entry.customer_phone}`"
+          class="inset-0 absolute"
+        />
+        <IonRippleEffect />
+        <AppIcon
+          slot="icon-only"
+          :icon="PhWhatsappLogo"
+          weight="fill"
+          style="color: var(--ion-color-success-shade)"
+          size="24"
+        />
+      </span>
     </div>
 
     <div class="text-center font-medium text-[var(--ion-color-medium)] mb-2">

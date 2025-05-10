@@ -39,7 +39,7 @@ const onSegmentChange = async (selectedSegment: HomeSegment) => {
 const fetch = async (reset: boolean = false) => {
   const COLUMNS = [
     'entries.id as id',
-    ...(await prefixColumns(['id', 'name'], 'customers', 'customer')),
+    ...(await prefixColumns(['id', 'name', 'phone'], 'customers', 'customer')),
     ...(await prefixColumns(['id', 'name'], 'products', 'product')),
     ...(await prefixColumns('*', 'entries', 'entry')),
     knex.raw('ROUND(SUM(payments.value), 2) AS total_paid'),
