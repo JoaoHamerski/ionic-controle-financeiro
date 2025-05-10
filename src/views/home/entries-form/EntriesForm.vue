@@ -41,6 +41,7 @@ const steps = ref([
 ])
 
 const activeStep = ref(1)
+const previousStep = ref(0)
 
 const form = useForm<EntryFormData>({
   type: '',
@@ -90,6 +91,7 @@ const nextStep = async () => {
   }
 
   if (!isLastStep.value) {
+    previousStep.value = activeStep.value
     activeStep.value++
   }
 }
@@ -122,9 +124,16 @@ provide(entryFormInjectionKey, form)
 
     <Transition
       mode="out-in"
-      enter-active-class="transition-all"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
+      enter-active-class="transition-all duration-250"
+      leave-active-class="transition-all duration-250"
+      :enter-from-class="
+        activeStep > previousStep ? 'translate-x-20 opacity-0' : '-translate-x-20 opacity-0'
+      "
+      :leave-to-class="
+        activeStep > previousStep ? '-translate-x-20 opacity-0' : ' translate-x-20 opacity-0'
+      "
+      leave-from-class="translate-x-0 opacity-100"
+      enter-to-class="translate-x-0 opacity-100"
     >
       <div :key="activeStep">
         <template
@@ -148,3 +157,22 @@ provide(entryFormInjectionKey, form)
     />
   </div>
 </template>
+
+<style>
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fade-in-left {
+  animation-name: fadeInLeft;
+  animation-duration: 0.25s;
+}
+</style>
