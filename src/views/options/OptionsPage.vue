@@ -35,6 +35,7 @@ const ITEMS: OptionItem[] = [
   {
     label: 'Verificar atualizações',
     icon: PhArrowClockwise,
+    description: 'Instale novas versões do app',
     url: '/opcoes/atualizacoes',
   },
 ]
