@@ -22,7 +22,7 @@ defineProps<{
       v-if="entry.entry_quantity > 1"
       style="font-size: 0.7rem; color: var(--ion-color-medium)"
     >
-      ({{ entry.entry_quantity }} x {{ formatCurrencyBRL(entry.entry_value) }})
+      ({{ entry.entry_quantity }} un. de {{ formatCurrencyBRL(entry.entry_value) }})
     </span>
   </div>
 </template>
