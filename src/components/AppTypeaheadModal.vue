@@ -13,6 +13,7 @@ import {
 import { PhArrowLeft } from '@phosphor-icons/vue'
 import { ref } from 'vue'
 
+import AppCenteredSpinner from './AppCenteredSpinner.vue'
 import AppIcon from './AppIcon.vue'
 import AppInput from './AppInput.vue'
 
@@ -28,6 +29,7 @@ defineProps<{
   }
   items: any[]
   itemProp: string | ((item: any) => string)
+  isLoaded: boolean
 }>()
 
 const modal = ref()
@@ -68,53 +70,57 @@ const onModalDidDismiss = () => {
       </IonToolbar>
     </IonHeader>
 
-    <IonContent>
-      <div class="ion-text-center">
-        <h3>{{ title }}</h3>
-      </div>
-
-      <div class="ion-padding">
-        <AppInput
-          v-model="search"
-          v-bind="inputAttrs"
-        />
-      </div>
-
-      <IonList lines="full">
-        <IonItem
-          v-if="!items.length && search"
-          button
-          @click="onCreate"
-        >
-          <IonLabel>{{ search }}</IonLabel>
-          <IonLabel
-            slot="end"
-            color="primary"
-            :style="{ fontWeight: 500 }"
+    <Transition
+      name="fade-fast"
+      mode="out-in"
+    >
+      <IonContent v-if="!isLoaded">
+        <AppCenteredSpinner />
+      </IonContent>
+      <IonContent v-else>
+        <div class="ion-text-center">
+          <h3>{{ title }}</h3>
+        </div>
+        <div class="ion-padding">
+          <AppInput
+            v-model="search"
+            v-bind="inputAttrs"
+          />
+        </div>
+        <IonList lines="full">
+          <IonItem
+            v-if="!items.length && search"
+            button
+            @click="onCreate"
           >
-            Cadastrar e selecionar
-          </IonLabel>
-        </IonItem>
-
-        <IonItem
-          v-for="item in items"
-          :key="item.id"
-          button
-          @click="onSelect(item)"
-        >
-          <IonLabel>
-            {{ typeof itemProp === 'string' ? item[itemProp] : itemProp(item) }}
-          </IonLabel>
-
-          <IonLabel
-            slot="end"
-            color="primary"
-            :style="{ fontWeight: 500 }"
+            <IonLabel>{{ search }}</IonLabel>
+            <IonLabel
+              slot="end"
+              color="primary"
+              :style="{ fontWeight: 500 }"
+            >
+              Cadastrar e selecionar
+            </IonLabel>
+          </IonItem>
+          <IonItem
+            v-for="item in items"
+            :key="item.id"
+            button
+            @click="onSelect(item)"
           >
-            Selecionar
-          </IonLabel>
-        </IonItem>
-      </IonList>
-    </IonContent>
+            <IonLabel>
+              {{ typeof itemProp === 'string' ? item[itemProp] : itemProp(item) }}
+            </IonLabel>
+            <IonLabel
+              slot="end"
+              color="primary"
+              :style="{ fontWeight: 500 }"
+            >
+              Selecionar
+            </IonLabel>
+          </IonItem>
+        </IonList>
+      </IonContent>
+    </Transition>
   </IonModal>
 </template>

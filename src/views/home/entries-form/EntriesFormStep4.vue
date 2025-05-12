@@ -5,6 +5,7 @@ import { inject } from 'vue'
 import { watch } from 'vue'
 
 import AppIcon from '@/components/AppIcon.vue'
+import AppInput from '@/components/AppInput.vue'
 import { formatCurrencyBRL, parseCurrencyBRL } from '@/support/helpers'
 
 import { entryFormInjectionKey } from '../injection-key'
@@ -101,6 +102,14 @@ watch(
           </IonLabel>
         </IonItem>
       </IonList>
+      <div class="mt-5">
+        <AppInput
+          v-model="localForm.data.note"
+          label="Nota (opcional)"
+          helper-text="Adicione uma anotação sobre esse registro"
+          placeholder="Digite a nota..."
+        />
+      </div>
     </div>
   </div>
 </template>

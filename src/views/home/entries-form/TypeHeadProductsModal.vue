@@ -10,13 +10,15 @@ const { knex } = useDatabaseStore()
 
 const emit = defineEmits(['product-selected'])
 const products = ref<Product[]>([])
+const isLoaded = ref<boolean>(false)
 
 const onSearch = (search?: string) => {
   fetch(search)
 }
 
-const onModalWillPresent = async () => {
+const onModalDidPresent = async () => {
   await fetch()
+  isLoaded.value = true
 }
 
 const fetch = async (search?: string) => {
@@ -56,9 +58,10 @@ const selectProduct = (product: Product) => {
       placeholder: 'Busque pelo nome...',
       helperText: 'Ou digite o nome para cadastrar',
     }"
+    :is-loaded="isLoaded"
     @select="selectProduct"
     @create="createProduct"
-    @will-present="onModalWillPresent"
+    @did-present="onModalDidPresent"
     @update:search="onSearch"
   />
 </template>

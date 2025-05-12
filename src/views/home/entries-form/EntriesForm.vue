@@ -27,6 +27,7 @@ type EntryFormData = {
   customer: Customer | null
   price: string
   quantity: number
+  note?: string
 }
 
 const emit = defineEmits(['submitted'])
@@ -105,6 +106,7 @@ const submit = async () => {
       value: parseCurrencyBRL(form.data.price),
       quantity: form.data.quantity,
       total: form.data.type === 'inflow' ? total : -total,
+      note: form.data.note || null,
     })
     .into('entries')
 
