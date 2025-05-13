@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { CapacitorException } from '@capacitor/core'
 import { Directory } from '@capacitor/filesystem'
 import { IonButton, IonModal } from '@ionic/vue'
-import { PhDownloadSimple } from '@phosphor-icons/vue'
+import { PhUploadSimple } from '@phosphor-icons/vue'
 import { helpers, required } from '@vuelidate/validators'
 import { useTemplateRef } from 'vue'
 import { computed } from 'vue'
@@ -24,6 +25,7 @@ const form = useForm<{ filename: string }>(
   },
 )
 
+const error = ref('')
 const backupFilename = ref('')
 const willOverwriteFile = computed(() => form.data.filename === backupFilename.value)
 
@@ -35,6 +37,8 @@ const onModalPresent = async () => {
 }
 
 const onSaveClick = async () => {
+  error.value = ''
+
   if (!(await form.validate())) {
     return
   }
@@ -46,7 +50,9 @@ const onSaveClick = async () => {
 
     emit('backup-saved')
   } catch (e) {
-    console.error('Something went wrong', e)
+    if (e instanceof CapacitorException && e.message === 'FILE_NOTCREATED') {
+      error.value = e.message
+    }
   }
 }
 </script>
@@ -60,7 +66,7 @@ const onSaveClick = async () => {
     <div class="ion-padding">
       <AppModalHeader
         title="Salve seus dados"
-        :icon="PhDownloadSimple"
+        :icon="PhUploadSimple"
         class="text-[var(--ion-color-primary)]"
       >
         <template #subtitle>
@@ -81,6 +87,19 @@ const onSaveClick = async () => {
             <div slot="end">.json</div>
           </AppInput>
         </form>
+      </div>
+
+      <div v-auto-animate>
+        <div
+          v-if="error"
+          class="mb-5 text-[var(--ion-color-danger-shade)] text-sm"
+        >
+          <template v-if="error === 'FILE_NOTCREATED'">
+            Já existe um arquivo com o nome <b>{{ form.data.filename }}.json</b> no diretório
+            <b>{{ Directory.Documents }}</b
+            >. Por favor, escolha outro nome ou remova o arquivo
+          </template>
+        </div>
       </div>
 
       <div class="flex">

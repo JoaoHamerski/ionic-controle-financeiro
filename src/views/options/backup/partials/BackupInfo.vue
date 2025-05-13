@@ -10,14 +10,14 @@ import { humanFileSize } from '@/support/helpers'
 
 import BackupInfoItem from './BackupInfoItem.vue'
 const props = defineProps<{
-  info: StatResult
+  info: Partial<StatResult>
 }>()
 
-const filename = computed(() => last(props.info.uri.split('/')))
+const filename = computed(() => last(props.info.uri?.split('/')))
 
 const humanizedTime = computed(() => {
   const now = DateTime.now()
-  const fileTime = DateTime.fromMillis(props.info.mtime)
+  const fileTime = DateTime.fromMillis(props.info?.mtime || 0)
 
   return humanizeDuration(now.diff(fileTime).toMillis(), {
     language: 'pt',
@@ -37,11 +37,13 @@ const humanizedTime = computed(() => {
     />
 
     <BackupInfoItem
+      v-if="info.size"
       label="Tamanho"
       :text="humanFileSize(info.size)"
     />
 
     <BackupInfoItem
+      v-if="info.mtime"
       label="Feito há"
       :text="humanizedTime"
     />

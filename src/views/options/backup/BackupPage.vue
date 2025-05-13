@@ -9,24 +9,22 @@ import { useModal } from '@/composables/use-modal'
 
 import OptionsInfoHeader from '../_partials/OptionsInfoHeader.vue'
 import OptionsPageLayout from '../_partials/OptionsPageLayout.vue'
+import BackupImportModal from './partials/BackupImportModal.vue'
 import BackupInfo from './partials/BackupInfo.vue'
 import BackupSaveModal from './partials/BackupSaveModal.vue'
 
 const { getBackupFileInfo } = useBackup()
 
+const backupInfo = ref<StatResult | null>()
+const saveBackupModal = useModal()
+const importBackupModal = useModal()
+
 onIonViewWillEnter(() => {
   loadLastBackupInfo()
 })
 
-const backupInfo = ref<StatResult | null>()
-const saveBackupModal = useModal()
-
 const loadLastBackupInfo = async () => {
   backupInfo.value = await getBackupFileInfo()
-}
-
-const onBackupSaved = () => {
-  loadLastBackupInfo()
 }
 </script>
 
@@ -37,7 +35,7 @@ const onBackupSaved = () => {
         <OptionsInfoHeader
           :icon="PhArrowClockwise"
           title="Backup dos dados"
-          description="Salve ou importe os seus dados"
+          description="O arquivo de backup é muito importante, pois é a única forma de recuperar os seus dados caso troque de aparelho ou reinstale o aplicativo"
         />
 
         <BackupInfo
@@ -57,6 +55,7 @@ const onBackupSaved = () => {
           <IonButton
             class="w-full"
             shape="round"
+            @click="importBackupModal.open()"
           >
             Importar
           </IonButton>
@@ -66,8 +65,14 @@ const onBackupSaved = () => {
 
     <BackupSaveModal
       :is-open="saveBackupModal.isOpen.value"
-      @backup-saved="onBackupSaved"
+      @backup-saved="loadLastBackupInfo"
       @did-dismiss="saveBackupModal.close()"
+    />
+
+    <BackupImportModal
+      :is-open="importBackupModal.isOpen.value"
+      @backup-imported="loadLastBackupInfo"
+      @did-dismiss="importBackupModal.close()"
     />
   </OptionsPageLayout>
 </template>
