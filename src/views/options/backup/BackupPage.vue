@@ -9,6 +9,7 @@ import { useModal } from '@/composables/use-modal'
 
 import OptionsInfoHeader from '../_partials/OptionsInfoHeader.vue'
 import OptionsPageLayout from '../_partials/OptionsPageLayout.vue'
+import BackupInfo from './partials/BackupInfo.vue'
 import SaveBackupModal from './partials/SaveBackupModal.vue'
 
 const { getBackupFileInfo } = useBackup()
@@ -24,7 +25,9 @@ const loadLastBackupInfo = async () => {
   backupInfo.value = await getBackupFileInfo()
 }
 
-const onBackupSaved = () => {}
+const onBackupSaved = () => {
+  loadLastBackupInfo()
+}
 </script>
 
 <template>
@@ -36,7 +39,12 @@ const onBackupSaved = () => {}
           title="Backup dos dados"
           description="Salve ou importe os seus dados"
         />
-        <div v-if="backupInfo">Olá mundo</div>
+
+        <BackupInfo
+          v-if="backupInfo"
+          :info="backupInfo"
+        />
+
         <div class="flex mt-auto">
           <IonButton
             class="w-full"

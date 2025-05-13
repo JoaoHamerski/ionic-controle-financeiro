@@ -4,6 +4,8 @@ import { IonButton, IonModal } from '@ionic/vue'
 import { PhDownloadSimple } from '@phosphor-icons/vue'
 import { helpers, required } from '@vuelidate/validators'
 import { useTemplateRef } from 'vue'
+import { computed } from 'vue'
+import { ref } from 'vue'
 
 import AppInput from '@/components/AppInput.vue'
 import AppModalHeader from '@/components/AppModalHeader.vue'
@@ -11,7 +13,7 @@ import { useBackup } from '@/composables/use-backup'
 import { useForm } from '@/composables/use-form'
 import { presentToast } from '@/support/toast'
 
-const { saveBackupFile } = useBackup()
+const { getBackupFilename, saveBackupFile } = useBackup()
 
 const emit = defineEmits(['backup-saved'])
 const modal = useTemplateRef('modal')
@@ -22,6 +24,16 @@ const form = useForm<{ filename: string }>(
   },
 )
 
+const backupFilename = ref('')
+const willOverwriteFile = computed(() => form.data.filename === backupFilename.value)
+
+const onModalPresent = async () => {
+  const filename = (await getBackupFilename()).split('.json')[0]
+
+  backupFilename.value = filename
+  form.data.filename = filename
+}
+
 const onSaveClick = async () => {
   if (!(await form.validate())) {
     return
@@ -29,9 +41,8 @@ const onSaveClick = async () => {
 
   try {
     await saveBackupFile(form.data.filename)
-    await presentToast({ color: 'success', message: 'Arquivo salvo!' })
-
     modal.value?.$el.dismiss()
+    presentToast({ color: 'success', message: 'Backup salvo!' })
 
     emit('backup-saved')
   } catch (e) {
@@ -44,6 +55,7 @@ const onSaveClick = async () => {
   <IonModal
     ref="modal"
     class="modal-dialog"
+    @will-present="onModalPresent"
   >
     <div class="ion-padding">
       <AppModalHeader
@@ -85,7 +97,7 @@ const onSaveClick = async () => {
           shape="round"
           @click="onSaveClick"
         >
-          Salvar
+          {{ willOverwriteFile ? 'Sobrescrever' : 'Salvar' }}
         </IonButton>
       </div>
     </div>
