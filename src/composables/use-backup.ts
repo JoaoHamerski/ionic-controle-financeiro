@@ -18,12 +18,12 @@ export const useBackup = () => {
     return (await Preferences.get({ key: BACKUP_FILENAME_KEY })).value || ''
   }
 
-  const getBackup = async () => {
+  const getBackupData = async () => {
     return (await database.exportToJson('full', false)).export
   }
 
   const saveBackupFile = async (filename: string) => {
-    const backup = await getBackup()
+    const data = await getBackupData()
     const normalizedFilename = filename.replaceAll('.json', '') + '.json'
 
     await setBackupFilename(normalizedFilename)
@@ -32,7 +32,7 @@ export const useBackup = () => {
       path: normalizedFilename,
       directory: Directory.Documents,
       encoding: Encoding.UTF8,
-      data: JSON.stringify(backup),
+      data: JSON.stringify(data),
     })
   }
 

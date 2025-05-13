@@ -19,10 +19,13 @@ defineProps<{
       {{ title }}
     </h3>
     <div
-      v-if="subtitle"
+      v-if="subtitle || $slots['subtitle']"
       class="text-sm text-[var(--ion-color-medium)]"
     >
-      {{ subtitle }}
+      <template v-if="subtitle">{{ subtitle }}</template>
+      <template v-else-if="$slots['subtitle']">
+        <slot name="subtitle" />
+      </template>
     </div>
   </div>
 </template>
