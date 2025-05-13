@@ -10,7 +10,7 @@ import { useModal } from '@/composables/use-modal'
 import OptionsInfoHeader from '../_partials/OptionsInfoHeader.vue'
 import OptionsPageLayout from '../_partials/OptionsPageLayout.vue'
 import BackupInfo from './partials/BackupInfo.vue'
-import SaveBackupModal from './partials/SaveBackupModal.vue'
+import BackupSaveModal from './partials/BackupSaveModal.vue'
 
 const { getBackupFileInfo } = useBackup()
 
@@ -64,7 +64,7 @@ const onBackupSaved = () => {
       </div>
     </IonContent>
 
-    <SaveBackupModal
+    <BackupSaveModal
       :is-open="saveBackupModal.isOpen.value"
       @backup-saved="onBackupSaved"
       @did-dismiss="saveBackupModal.close()"
