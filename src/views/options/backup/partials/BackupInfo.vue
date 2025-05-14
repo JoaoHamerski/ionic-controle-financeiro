@@ -9,6 +9,7 @@ import { computed } from 'vue'
 import { humanFileSize } from '@/support/helpers'
 
 import BackupInfoItem from './BackupInfoItem.vue'
+
 const props = defineProps<{
   info: Partial<StatResult>
 }>()
@@ -24,6 +25,7 @@ const humanizedTime = computed(() => {
     largest: 2,
     units: ['mo', 'w', 'd', 'h', 'm'],
     round: true,
+    conjunction: ' e ',
   })
 })
 </script>
@@ -45,7 +47,7 @@ const humanizedTime = computed(() => {
     <BackupInfoItem
       v-if="info.mtime"
       label="Feito há"
-      :text="humanizedTime"
+      :text="humanizedTime === '0 minutos' ? 'Agora há pouco' : humanizedTime"
     />
   </IonList>
 </template>
