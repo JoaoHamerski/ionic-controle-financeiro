@@ -4,6 +4,10 @@ import { PhArrowClockwise } from '@phosphor-icons/vue'
 
 import OptionsInfoHeader from '../_partials/OptionsInfoHeader.vue'
 import OptionsPageLayout from '../_partials/OptionsPageLayout.vue'
+
+const onUpdateClick = () => {
+  //
+}
 </script>
 
 <template>
@@ -19,6 +23,7 @@ import OptionsPageLayout from '../_partials/OptionsPageLayout.vue'
           <IonButton
             class="w-full"
             shape="round"
+            @click="onUpdateClick"
           >
             Procurar atualizações
           </IonButton>
