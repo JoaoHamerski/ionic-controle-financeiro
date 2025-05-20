@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { StatResult } from '@capacitor/filesystem'
 import { IonButton, IonContent, onIonViewWillEnter } from '@ionic/vue'
-import { PhArrowClockwise } from '@phosphor-icons/vue'
+import { PhFloppyDiskBack } from '@phosphor-icons/vue'
 import { ref } from 'vue'
 
 import { useBackup } from '@/composables/use-backup'
@@ -30,10 +30,10 @@ const loadLastBackupInfo = async () => {
 
 <template>
   <OptionsPageLayout title="Backup">
-    <IonContent class="ion-padding h-full">
+    <IonContent class="ion-padding">
       <div class="flex flex-col justify-between h-full">
         <OptionsInfoHeader
-          :icon="PhArrowClockwise"
+          :icon="PhFloppyDiskBack"
           title="Backup dos dados"
           description="O arquivo de backup é muito importante, pois é a única forma de recuperar os seus dados caso troque de aparelho ou reinstale o aplicativo"
         />
